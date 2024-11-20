@@ -30,7 +30,7 @@ function isHomeRoute() {
         </svg>
       </RouterLink>
     </template>
-    <slot></slot>
+    <slot class="header__title"></slot>
   </div>
 </template>
 
@@ -40,7 +40,7 @@ function isHomeRoute() {
   align-items: center;
   justify-content: flex-start;
   padding: 10px;
-  border-bottom: 4px solid #ccc;
+  border-bottom: 4px solid var(--primary-gray);
   position: fixed;
   top: 0;
   z-index: 100;
@@ -55,6 +55,9 @@ function isHomeRoute() {
     justify-content: center;
     align-items: center;
     margin-right: 30px;
+  }
+  &__title {
+    color: var(--primary-gray);
   }
 }
 </style>

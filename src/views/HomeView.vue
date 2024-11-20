@@ -47,7 +47,7 @@ function formattedDate( date ) {
                         <h3 class="event__title">{{ event.description }}</h3>
                         <div class="event__details">
                            <p class="event__date">{{ formattedDate(event.date) }}</p>
-                           <p class="event__participants">{{ event.maxParticipants }}</p>
+                           <p class="event__participants">{{ event.currentParticipants }}</p>
                         </div>
                         <hr class="event__divider">
                     </div>

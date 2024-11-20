@@ -9,6 +9,7 @@ import { BackButton } from 'vue-tg'
 import { Confirm } from 'vue-tg'
 import { ExpandedViewport } from 'vue-tg'
 
+import CustomInput  from '../components/CustomInput.vue'
 import Header from '../components/Header.vue'
 
 const eventStore = useEventStore()
@@ -45,7 +46,8 @@ function cansel() {
   <div class="event-creation">
     <Header>Создание мероприятия</Header>
     <div class="event-creation__section">
-      <textarea class="event-creation__textarea" v-model="description"></textarea> 
+      <!-- <textarea class="event-creation__textarea" v-model="description"></textarea>  -->
+      <CustomInput v-model="description" :maxLength="99" placeholder="Введите название" />
       <div class="event-creation__label">Дата</div>
       <div class="event-creation__datepicker">
           <VueDatePicker v-model="date"></VueDatePicker>
@@ -80,13 +82,14 @@ function cansel() {
 </template>
 
 <style lang="scss" scoped>
+@import '../assets/_colors.css';
 .event-creation {
     padding-top: 10px;
     &__section {
         padding: 0 12px;
     }
     &__label {
-        color: #007bff;
+        color: var(--primary-blue);
     }
 }
 </style>
