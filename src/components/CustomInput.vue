@@ -1,29 +1,52 @@
 <script setup>
-  import { ref, defineProps, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits, watch } from 'vue';
 
-  defineProps({
-    modelValue: {
-      type: String,
-      default: '',
-    },
-    placeholder: {
-      type: String,
-      default: 'Введите текст...',
-    },
-    maxLength: {
-      type: Number,
-      default: 99, 
-    },
-  });
-  
-
-  const inputValue = ref( '' )
-
-  const emit = defineEmits( [ 'update:modelValue' ] )
-
-  const handleInput = ( event ) => {
-    emit( 'update:modelValue', event.target.value )
+const props = defineProps({
+  modelValue: {
+    type: [ String, Number ],
+    default: '',
+  },
+  placeholder: {
+    type: String,
+    default: 'Введите текст...',
+  },
+  maxLength: {
+    type: Number,
+    default: 99,
+  },
+  showLabel: {
+    type: Boolean,
+    default: false,
+  },
+  label: {
+    type: String,
+    default: '',
+  },
+  acceptNumbersOnly: {
+    type: Boolean,
+    default: false,
   }
+});
+
+const inputValue = ref( props.modelValue )
+
+const emit = defineEmits( [ 'update:modelValue' ] )
+
+watch(inputValue, (newValue) => {
+  let updatedValue = newValue;
+  if ( props.acceptNumbersOnly ) {
+    updatedValue = updatedValue.toString().replace(/[^0-9]/g, '')
+    if ( updatedValue.startsWith('0') && updatedValue.length > 1 ) {
+      updatedValue = updatedValue.replace(/^0+/, '');
+    }
+    if ( +updatedValue > props.maxLength ) {
+      updatedValue = props.maxLength.toString()
+    }
+  }
+  emit( 'update:modelValue', updatedValue )
+  inputValue.value = updatedValue
+})
+
 </script>
 
 <template>
@@ -33,12 +56,11 @@
       class="custom-input__element"
       :maxLength="maxLength"
       :placeholder="placeholder"
-      @input="handleInput"
+      @input="() => {}"
     />
-    <!-- Бордер с разрывами -->
     <div class="custom-input__border">
-      <span class="custom-input__label">Название</span>
-      <span class="custom-input__char-limit">{{ maxLength }}</span>
+      <span v-if="showLabel" class="custom-input__label">{{ label }}</span>
+      <span v-if="maxLength" class="custom-input__char-limit">{{ maxLength }}</span>
     </div>
   </div>
 </template>

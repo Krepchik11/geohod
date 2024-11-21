@@ -1,13 +1,10 @@
 <script setup>
 import { ref } from 'vue'
+
 import { useRouter  } from "vue-router"
 import { useEventStore } from '@/stores/eventStore'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { MainButton } from 'vue-tg'
-import { BackButton } from 'vue-tg'
-import { Confirm } from 'vue-tg'
-import { ExpandedViewport } from 'vue-tg'
 
 import CustomInput  from '../components/CustomInput.vue'
 import Header from '../components/Header.vue'
@@ -18,10 +15,6 @@ const router = useRouter()
 const date = ref( null )
 const maxParticipants = ref( '' )
 const description = ref( '' )
-
-function handleInput( event ) {
-   event.target.value = event.target.value.replace( /[^0-9]/g, '' ) // Удаляет все нечисловые символы
-}
 
 function createEvent() {
   if ( !description.value || !date.value || !maxParticipants.value ) return 
@@ -46,20 +39,28 @@ function cansel() {
   <div class="event-creation">
     <Header>Создание мероприятия</Header>
     <div class="event-creation__section">
-      <!-- <textarea class="event-creation__textarea" v-model="description"></textarea>  -->
-      <CustomInput v-model="description" :maxLength="99" placeholder="Введите название" />
+      <CustomInput 
+        v-model="description" 
+        :maxLength="99" 
+        :showLabel="true"
+        label="Название" 
+        placeholder="Введите название" 
+      />
       <div class="event-creation__label">Дата</div>
       <div class="event-creation__datepicker">
           <VueDatePicker v-model="date"></VueDatePicker>
       </div>
       <div class="event-creation__label">Максимум участников</div>
-      <input 
-        type="number" 
-        class="event-creation__input" 
-        step="1"  
-        @input="handleInput"
-        v-model="maxParticipants"
-      />
+      <div class="event-creation__input-max-participants">
+        <CustomInput
+          v-model="maxParticipants"
+          :maxLength="99"
+          :acceptNumbersOnly="true"
+          :showLabel="false"
+          label="Максимум участников"
+          placeholder="0"
+        />
+      </div>
       <div class="event-creation__buttons">
         <button 
           class="event-creation__button event-creation__button--cancel"
@@ -75,21 +76,21 @@ function cansel() {
         </button>
       </div>
     </div> 
-
-    
-    
   </div>
 </template>
 
 <style lang="scss" scoped>
 @import '../assets/_colors.css';
 .event-creation {
-    padding-top: 10px;
-    &__section {
-        padding: 0 12px;
-    }
-    &__label {
-        color: var(--primary-blue);
-    }
+  padding-top: 10px;
+  &__section {
+      padding: 0 12px;
+  }
+  &__label {
+      color: var(--primary-blue);
+  }
+  &__input-max-participants {
+    width: 50px;
+  }
 }
 </style>
