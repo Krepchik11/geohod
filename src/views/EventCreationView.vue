@@ -61,7 +61,7 @@ function cansel() {
           placeholder="0"
         />
       </div>
-      <div class="event-creation__buttons">
+      <div class="event-creation__buttons-block">
         <button 
           class="event-creation__button event-creation__button--cancel"
           @click="cansel"
@@ -91,6 +91,26 @@ function cansel() {
   }
   &__input-max-participants {
     width: 50px;
+  }
+  &__buttons-block {
+    display: flex;
+    gap: 20px;
+    position: fixed;
+    bottom: 50px;
+    right: 30px;
+  }
+  &__button {
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: var(--bg_color);
+    border: none;
+    cursor: pointer;
+    color: var(--primary-gray);
+    transition: background-color 0.3s ease;
+    &:hover {
+      color: var(--primary-blue);
+    }
   }
 }
 </style>
