@@ -75,12 +75,6 @@ function formattedDate( date ) {
     &__section {
         padding: 0 12px 100px 12px;
     }
-    &__title {
-        white-space: normal; 
-        word-wrap: break-word; 
-        word-break: break-word; 
-        overflow-wrap: break-word;
-    }
     &__btn-wrapper {
         display: flex;
         justify-content: flex-end;
@@ -109,6 +103,9 @@ function formattedDate( date ) {
 
 .event {
     display: flex;
+    white-space: normal; 
+    overflow-wrap: anywhere; 
+    word-break: break-word; 
     &__image-wrapper {
         width: 50px;
         height: 50px;

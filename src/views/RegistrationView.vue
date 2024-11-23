@@ -76,9 +76,6 @@ function formattedDate( date ) {
           :disabled="isDisabled"
           :visible="event.currentParticipants !== event.maxParticipants"
         />
-       
-       <!-- тестовая кнопка
-        <button @click="handleRegistration">Зарегистрироваться</button>  -->
     </div>
 </template>
 
@@ -86,6 +83,9 @@ function formattedDate( date ) {
 <style lang="scss" scoped>
 .registration {
     &__section {
+        white-space: normal; 
+        overflow-wrap: anywhere; 
+        word-break: break-word; 
         padding: 0 12px;
     }
     &__title {

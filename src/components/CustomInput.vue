@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps, defineEmits, watch } from 'vue';
+import { ref, defineProps, defineEmits, watch, defineExpose } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -29,6 +29,7 @@ const props = defineProps({
 });
 
 const inputValue = ref( props.modelValue )
+const inputElement = ref( null )
 
 const emit = defineEmits( [ 'update:modelValue' ] )
 
@@ -47,11 +48,22 @@ watch(inputValue, (newValue) => {
   inputValue.value = updatedValue
 })
 
+function focusInput() {
+  if (inputElement.value) {
+    inputElement.value.focus()
+  }
+}
+
+defineExpose({
+  focusInput
+})
+
 </script>
 
 <template>
   <div class="custom-input">
     <input
+      ref="inputElement"
       v-model="inputValue"
       class="custom-input__element"
       :maxLength="maxLength"
