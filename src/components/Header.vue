@@ -23,15 +23,15 @@ function handleBackButton() {
 .header {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   padding: 10px;
-  border-bottom: 4px solid var(--primary-gray);
   position: fixed;
   top: 0;
   z-index: 100;
   width: 100%;
   font-size: 20px;
   font-weight: 500;
+  color: var(--primary-blue);
   &__link {
     width: 24px;
     height: 24px;
