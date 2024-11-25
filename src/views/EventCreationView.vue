@@ -176,7 +176,6 @@ onMounted(() => {
     display: flex;
     gap: 20px;
     align-items: center;
-    border-bottom: 4px solid var(--primary-gray);
     padding-bottom: 10px;
   }
   &__image-wrapper {
@@ -194,9 +193,12 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    border-bottom: 1px solid var(--primary-gray);
+    width: 80%;
   }
   &__date {
     color: var(--primary-gray);
+    padding-bottom: 10px;
   }
   &__input-wrapper,
   &__datepicker-wrapper {

@@ -32,6 +32,7 @@ function handleBackButton() {
   font-size: 20px;
   font-weight: 500;
   color: var(--primary-blue);
+  background-color: var(--bg_color);
   &__link {
     width: 24px;
     height: 24px;

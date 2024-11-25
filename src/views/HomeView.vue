@@ -35,21 +35,22 @@ function formattedDate( date ) {
                 :key="index" 
                 class="home__event event"
             >
-                <RouterLink :to="{ name: 'registration', params: { id: event.id } }">
-                    <div class="event__image-wrapper">
-                        <img 
-                            src="/src/assets/geohod_640-360.jpg" 
-                            alt="img avatar" 
-                            class="event__image"
-                        >
-                    </div>
-                    <div class="event__content">
-                        <h3 class="event__title">{{ event.description }}</h3>
-                        <div class="event__details">
-                           <p class="event__date">{{ formattedDate(event.date) }}</p>
-                           <p class="event__participants">{{ event.currentParticipants }}</p>
+                <RouterLink class="event__link" :to="{ name: 'registration', params: { id: event.id } }">
+                    <div class="event__inner">
+                        <div class="event__image-wrapper">
+                            <img 
+                                src="/src/assets/geohod_640-360.jpg" 
+                                alt="img avatar" 
+                                class="event__image"
+                            >
                         </div>
-                        <hr class="event__divider">
+                        <div class="event__content">
+                            <h3 class="event__title">{{ event.description }}</h3>
+                            <div class="event__details">
+                               <p class="event__date">{{ formattedDate(event.date) }}</p>
+                               <p class="event__participants">{{ event.currentParticipants }}</p>
+                            </div>
+                        </div>
                     </div>
                 </RouterLink> 
             </div>
@@ -105,13 +106,31 @@ function formattedDate( date ) {
     display: flex;
     white-space: normal; 
     overflow-wrap: anywhere; 
-    word-break: break-word; 
+    word-break: break-word;
+    &__link {
+        width: 100%;
+        text-decoration: none;
+        color: inherit;
+    }
+    &__inner {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding-bottom: 10px;
+    } 
+    &__title {
+        padding-bottom: 5px;
+    }
+    &__content {
+        width: 80%;
+        border-bottom: 1px solid var(--primary-gray);
+        padding-bottom: 10px;
+    }
     &__image-wrapper {
         width: 50px;
         height: 50px;
         overflow: hidden;
         border-radius: 50%;
-        margin-right: 20px;
     }
     &__image {
         width: 100%;
@@ -124,8 +143,15 @@ function formattedDate( date ) {
         align-items: center;
         width: 30px;
         height: 20px;
-        background-color: #007bff;
-        border-radius: 50%;
+        background-color: var(--primary-gray);
+        border-radius: 10px;
+    }
+    &__details {
+        display: flex;
+        justify-content: space-between;
+    }
+    &__date {
+        color: var(--primary-gray);
     }
 }
 </style>
