@@ -31,7 +31,7 @@ const props = defineProps({
 const inputValue = ref( props.modelValue )
 const inputElement = ref( null )
 
-const emit = defineEmits( [ 'update:modelValue' ] )
+const emit = defineEmits( [ 'update:modelValue', 'blur' ] )
 
 watch(inputValue, (newValue) => {
   let updatedValue = newValue;
@@ -69,6 +69,8 @@ defineExpose({
       :maxLength="maxLength"
       :placeholder="placeholder"
       @input="() => {}"
+      @blur="$emit('blur', $event)"
+      @focus="$emit('focus')"
     />
     <div class="custom-input__border">
       <span v-if="showLabel" class="custom-input__label">{{ label }}</span>

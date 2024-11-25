@@ -22,6 +22,8 @@ const date = ref( new Date() )
 const maxParticipants = ref( 30 )
 const description = ref( '' )
 const childInput = ref( null )
+const isInputBlurred = ref( false )
+const isEditing = ref( false )
 
 function createEvent() {
   if ( !description.value || !date.value || !maxParticipants.value ) return 
@@ -40,6 +42,36 @@ function cansel() {
   router.push( '/' )
 }
 
+function showPreview() {
+ return description.value && isInputBlurred.value
+}
+
+function editPreview() {
+  isEditing.value = true
+  nextTick(() => {
+    focusInput();
+  });
+}
+
+function blurInput() {
+  isInputBlurred.value = true
+  isEditing.value = false
+}
+
+function focusInput() {
+  isInputBlurred.value = false
+  childInput.value.focusInput()
+}
+
+function formattedDate( date ) {
+    if ( !date ) return '' 
+    return new Intl.DateTimeFormat( 'ru-RU', {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric',
+    } ).format( new Date( date ) )
+} 
+
 // Устанавливаем фокус на первый инпут при активации компонента
 onMounted(() => {
   nextTick(() => {
@@ -53,13 +85,35 @@ onMounted(() => {
   <div class="event-creation">
     <Header>Создание мероприятия</Header>
     <div class="event-creation__section">
+      <div 
+        v-if="showPreview()  && !isEditing" 
+        class="event-creation__preview" 
+        @click="editPreview"
+      >
+        <div class="event-creation__image-wrapper">
+          <img 
+            src="/src/assets/geohod_640-360.jpg" 
+            alt="img avatar" 
+            class="event-creation__image"
+          >
+        </div>
+        <div class="event-creation__content">
+          <h3 class="event-creation__title">{{ description }}</h3>
+          <div class="event-creation__details">
+             <p class="event-creation__date">{{ formattedDate( date ) }}</p>
+          </div>
+        </div>
+      </div>
       <CustomInput
+        v-else
         ref="childInput"
         v-model="description" 
         :maxLength="62" 
         :showLabel="true"
         label="Название" 
         placeholder="Введите название"
+        @blur="blurInput"
+        @focus="focusInput"        
         
       />
       <div class="event-creation__datepicker-wrapper">
@@ -108,7 +162,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '../assets/_colors.css';
 .event-creation {
   padding-top: 10px;
@@ -117,6 +171,32 @@ onMounted(() => {
       display: flex;
       flex-direction: column;
       gap: 20px;
+  }
+  &__preview {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    border-bottom: 4px solid var(--primary-gray);
+    padding-bottom: 10px;
+  }
+  &__image-wrapper {
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+  &__image{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  &__date {
+    color: var(--primary-gray);
   }
   &__input-wrapper,
   &__datepicker-wrapper {
@@ -150,11 +230,12 @@ onMounted(() => {
       color: var(--primary-blue);
     }
   }
-  //цвет border у datepicker
-  .dp__theme_dark,
-  .dp__theme_ligh {
-    --dp-border-color-focus: var(--primary-blue);
-    --dp-border-color-hover: var(--primary-blue);
-  }
+  .dp__theme_light,
+  .dp__theme_dark {
+    --dp-background-color:  var(--bg_color);
+    border: none;
+  }  
+  
+  
 }
 </style>
