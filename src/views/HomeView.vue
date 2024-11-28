@@ -2,16 +2,94 @@
 import { ref, computed } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
-import { MainButton } from 'vue-tg'
-
 
 import Header from '../components/Header.vue'
+import ContextMenu from '../components/ContextMenu.vue'
 
 const eventStore = useEventStore()
 const router = useRouter()
 
-function handleCreata() {
-    router.push( '/creation' )
+const contextMenuVisible = ref( false )
+const contextMenuPosition = ref( { x: 0, y: 0 } )
+const menuItems = ref([
+  { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link.svg' },
+  { label: 'Копировать', action: 'copy', icon: 'copy.svg' },
+  { label: 'Редактировать', action: 'edit', icon: 'edit.svg' },
+  { label: 'Участники', action: 'participants', icon: 'people.svg' },
+  { label: 'Удалить', action: 'delete', icon: 'delete.svg' },
+]);
+
+
+function handleMenuSelect( item ) {
+    console.log( 'Выбрано действие:', item.action )
+
+    switch ( item.action ) {
+        case 'copy-link':
+            // Логика копирования ссылки
+            break
+        case 'copy':
+            // Логика копирования мероприятия
+            break
+        case 'edit':
+            // Логика редактирования
+            break
+        case 'participants':
+            // Логика перехода к участникам
+            break
+        case 'delete':
+            router.push( { name: 'delete', params: { id: contextMenuPosition.value.eventId } } )
+            // handleDelete( contextMenuPosition.value.eventId )  
+            break
+
+            default:
+              console.log( 'Неизвестное действие' )
+    }
+
+    closeContextMenu()
+}
+
+function handleDelete(eventId) {
+    // eventStore.deleteEvent( eventId )  нужно преминить на странице удаления 
+    console.log(`Событие с ID ${eventId} удалено`)
+}
+
+
+let touchTimer = null
+let isLongPress = false
+
+function startTouch( event, eventId ) {
+    isLongPress = false
+
+    touchTimer = setTimeout(() => {
+        isLongPress = true
+        showContextMenu( event.touches[ 0 ], eventId )
+    }, 600)
+
+    event.target.addEventListener( 'touchmove', cancelTouch, { passive: false } )
+    event.target.addEventListener( 'touchcancel', cancelTouch, { passive: false } )
+}
+
+function cancelTouch( event ) {
+    clearTimeout( touchTimer )
+    if ( isLongPress ) {
+        event.preventDefault()
+        event.stopPropagation()
+    }
+    event.target.removeEventListener( 'touchmove', cancelTouch )
+}
+
+function showContextMenu( event, eventId  ) {
+    event.preventDefault()
+
+    contextMenuPosition.value = { x: event.clientX, y: event.clientY, eventId  }
+    contextMenuVisible.value = true
+
+    document.addEventListener( 'click', closeContextMenu )
+}
+
+function closeContextMenu() {
+    contextMenuVisible.value = false
+    document.removeEventListener( 'click', closeContextMenu )
 }
 
 function formattedDate( date ) {
@@ -31,9 +109,12 @@ function formattedDate( date ) {
         <Header>Мои мероприятия</Header>
         <div class="home__section">
             <div 
-                v-for="(event, index) in eventStore.events" 
+                v-for="( event, index ) in eventStore.events" 
                 :key="index" 
                 class="home__event event"
+                @contextmenu.prevent="( e ) => showContextMenu( e, event.id )"
+                @touchstart="( e ) => startTouch (e, event.id )"
+                @touchend="cancelTouch"
             >
                 <RouterLink class="event__link" :to="{ name: 'registration', params: { id: event.id } }">
                     <div class="event__inner">
@@ -53,6 +134,13 @@ function formattedDate( date ) {
                         </div>
                     </div>
                 </RouterLink> 
+                <ContextMenu 
+                    :visible="contextMenuVisible && contextMenuPosition.eventId === event.id"
+                    :position="contextMenuPosition"
+                    :items="menuItems"
+                    @select="handleMenuSelect"
+                    @close="closeContextMenu"
+               />
             </div>
         </div>
         <div class="home__btn-wrapper">
@@ -62,10 +150,8 @@ function formattedDate( date ) {
                         <path d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"/>
                     </svg>
                 </button>
-                <!-- <MainButton  text="Создать мероприятие"  @click="handleCreata"/>    -->
             </RouterLink>
         </div>
-
     </div>
 </template>
 
@@ -154,4 +240,5 @@ function formattedDate( date ) {
         color: var(--primary-gray);
     }
 }
+
 </style>

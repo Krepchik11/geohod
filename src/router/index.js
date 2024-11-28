@@ -14,6 +14,11 @@ const router = createRouter({
       component: () => import('../views/RegistrationView.vue'), 
       props: true, 
     },
+    { 
+      path: '/delete-event/:id', 
+      name: 'delete',
+      component: () => import('../views/DeleteEventView.vue') 
+    },
   ],
 })
 

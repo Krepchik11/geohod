@@ -38,7 +38,7 @@ export const useEventStore = defineStore( 'event', {
     },
     deleteEvent(id) {
       this.events = this.events.filter(event => event.id !== id);
-      localStorage.setItem('events', JSON.stringify(this.events));
+      localStorage.setItem('events', JSON.stringify(this.events));     
     },
   },
 })
