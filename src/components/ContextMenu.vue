@@ -41,18 +41,18 @@ onBeforeUnmount(() => {
   <div
     v-if="visible"
     class="context-menu"
-    :style="{ top: `${position.y}px`, left: `${position.x}px` }"
+    :style="{ top: `${ position.y }px`, left: `${ position.x }px` }"
   >
     <ul class="context-menu__list">
       <li
         class="context-menu__item"
         v-for="item in items"
         :key="item.action"
-        @click="handleAction(item)"
+        @click.stop="handleAction( item )"
       >
         <img
           v-if="item.icon"
-          :src="`/src/assets/${item.icon}`"
+          :src="`/src/assets/${ item.icon }`"
           alt="icon"
           class="context-menu__icon"
         />

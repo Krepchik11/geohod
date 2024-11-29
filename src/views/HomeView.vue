@@ -21,8 +21,6 @@ const menuItems = ref([
 
 
 function handleMenuSelect( item ) {
-    console.log( 'Выбрано действие:', item.action )
-
     switch ( item.action ) {
         case 'copy-link':
             // Логика копирования ссылки
@@ -38,7 +36,6 @@ function handleMenuSelect( item ) {
             break
         case 'delete':
             router.push( { name: 'delete', params: { id: contextMenuPosition.value.eventId } } )
-            // handleDelete( contextMenuPosition.value.eventId )  
             break
 
             default:
@@ -47,12 +44,6 @@ function handleMenuSelect( item ) {
 
     closeContextMenu()
 }
-
-function handleDelete(eventId) {
-    // eventStore.deleteEvent( eventId )  нужно преминить на странице удаления 
-    console.log(`Событие с ID ${eventId} удалено`)
-}
-
 
 let touchTimer = null
 let isLongPress = false
@@ -78,14 +69,28 @@ function cancelTouch( event ) {
     event.target.removeEventListener( 'touchmove', cancelTouch )
 }
 
-function showContextMenu( event, eventId  ) {
-    event.preventDefault()
+function showContextMenu( event, eventId ) {
+    event.preventDefault();
 
-    contextMenuPosition.value = { x: event.clientX, y: event.clientY, eventId  }
+    const menuWidth = 200
+    const menuHeight = 150 
+    const windowWidth = window.innerWidth
+    const windowHeight = window.innerHeight
+
+    // Расчет позиции с учетом границ экрана
+    let x = event.clientX
+    let y = event.clientY
+    if (x + menuWidth > windowWidth) {
+        x = windowWidth - menuWidth - 10;
+    }
+    if (y + menuHeight > windowHeight) {
+        y = windowHeight - menuHeight - 10
+    }
+    contextMenuPosition.value = { x, y, eventId }
     contextMenuVisible.value = true
-
     document.addEventListener( 'click', closeContextMenu )
 }
+
 
 function closeContextMenu() {
     contextMenuVisible.value = false
@@ -112,11 +117,12 @@ function formattedDate( date ) {
                 v-for="( event, index ) in eventStore.events" 
                 :key="index" 
                 class="home__event event"
-                @contextmenu.prevent="( e ) => showContextMenu( e, event.id )"
-                @touchstart="( e ) => startTouch (e, event.id )"
+                @click.stop="( e ) => showContextMenu( e, event.id )"
+                @touchstart="( e ) => startTouch( e, event.id )"
                 @touchend="cancelTouch"
             >
-                <RouterLink class="event__link" :to="{ name: 'registration', params: { id: event.id } }">
+                <!-- <RouterLink class="event__link" :to="{ name: 'registration', params: { id: event.id } }"> -->
+                <div class="event__link">
                     <div class="event__inner">
                         <div class="event__image-wrapper">
                             <img 
@@ -133,7 +139,8 @@ function formattedDate( date ) {
                             </div>
                         </div>
                     </div>
-                </RouterLink> 
+                </div>    
+                <!-- </RouterLink>  -->
                 <ContextMenu 
                     :visible="contextMenuVisible && contextMenuPosition.eventId === event.id"
                     :position="contextMenuPosition"
@@ -197,6 +204,7 @@ function formattedDate( date ) {
         width: 100%;
         text-decoration: none;
         color: inherit;
+        cursor: pointer;
     }
     &__inner {
         display: flex;
