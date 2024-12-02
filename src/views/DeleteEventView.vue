@@ -91,7 +91,7 @@ function deleteEvent() {
     justify-content: flex-end;
     gap: 4px;
   }
-  &__members-all{
+  &__members-registered{
     color: var(--primary-blue);
   }
 
