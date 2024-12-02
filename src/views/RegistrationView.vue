@@ -23,9 +23,9 @@ const event = computed(() => {
 const isDisabled = computed( () => eventStore.disabledEventId === eventId )
 
 function handleRegistration() {  
-    if (event.value) {
-      eventStore.incrementParticipants(eventId)
-      eventStore.setDisabledEventId(eventId) // Блокируем кнопку, сохраняя в хранилище     
+    if ( event.value ) {
+      eventStore.incrementParticipants( eventId )
+      eventStore.setDisabledEventId( eventId ) // Блокируем кнопку, сохраняя в хранилище     
     }
     setTimeout(() => {
       router.push( '/' )

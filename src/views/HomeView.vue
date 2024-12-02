@@ -17,7 +17,7 @@ const menuItems = ref([
   { label: 'Редактировать', action: 'edit', icon: 'edit.svg' },
   { label: 'Участники', action: 'participants', icon: 'people.svg' },
   { label: 'Удалить', action: 'delete', icon: 'delete.svg' },
-]);
+])
 
 
 function handleMenuSelect( item ) {

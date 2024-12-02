@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import EventCreationView from '../views/EventCreationView.vue'
 import RegistrationView from '../views/RegistrationView.vue'
+import DeleteEventView from '../views/DeleteEventView.vue'
 
 const router = createRouter({
   history: createWebHistory( import.meta.env.BASE_URL ),
@@ -17,7 +18,8 @@ const router = createRouter({
     { 
       path: '/delete-event/:id', 
       name: 'delete',
-      component: () => import('../views/DeleteEventView.vue') 
+      component: DeleteEventView,
+      props: true,  
     },
   ],
 })
