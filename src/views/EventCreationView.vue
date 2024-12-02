@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted, onActivated, nextTick } from 'vue'
-import { useRouter  } from "vue-router"
+import { ref, onMounted, onActivated, nextTick, computed } from 'vue'
+import { useRouter, useRoute  } from "vue-router"
 import { useWebAppTheme } from 'vue-tg'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
@@ -13,6 +13,7 @@ import Header from '../components/Header.vue'
 
 const eventStore = useEventStore()
 const router = useRouter()
+const route = useRoute()
 
 const theme = useWebAppTheme()
 
@@ -20,25 +21,43 @@ const dataPickerTheme = ref( theme.colorScheme.value === 'dark' ? true : false )
 
 const date = ref( new Date() )
 const maxParticipants = ref( 30 )
+const currentParticipants = ref( 0 )
 const description = ref( '' )
 const childInput = ref( null )
 const isInputBlurred = ref( false )
 const isEditing = ref( false )
 
-function createEvent() {
+const isEditMode = computed( () => !!eventId.value )
+
+// Получаем ID из маршрута
+const eventId = computed(() => Number( route.params.id ))
+
+// Ищем событие в хранилище
+const eventData = computed(() => 
+  eventStore.events.find( event => event.id === eventId.value )
+)
+
+function saveEvent() {
   if ( !description.value || !date.value || !maxParticipants.value ) return 
 
-  const newEvent = {
+  const updatedEvent = {
+    id: eventId.value || Date.now(), 
     description: description.value,
     date: date.value,
     maxParticipants: maxParticipants.value,
+    currentParticipants: eventData.value ? eventData.value.currentParticipants : 0,
   }
 
-  eventStore.addEvent( newEvent ) 
+  if ( isEditMode.value ) {
+    eventStore.updateEvent( updatedEvent )
+  } else {
+    eventStore.addEvent( updatedEvent )
+  }
+
   router.push( '/' )
 }
 
-function cansel() {
+function cancel() {
   router.push( '/' )
 }
 
@@ -64,25 +83,31 @@ function focusInput() {
 }
 
 function formattedDate( date ) {
-    if ( !date ) return '' 
-    return new Intl.DateTimeFormat( 'ru-RU', {
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric',
-    } ).format( new Date( date ) )
+  if ( !date ) return '' 
+  return new Intl.DateTimeFormat( 'ru-RU', {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+  } ).format( new Date( date ) )
 } 
 
-// Устанавливаем фокус на первый инпут при активации компонента
 onMounted(() => {
   nextTick(() => {
-    childInput.value.focusInput()
+    childInput.value.focusInput() // Устанавливаем фокус на первый инпут при активации компонента
   })
+  if ( isEditMode.value && eventData.value ) {
+    description.value = eventData.value.description
+    date.value = new Date( eventData.value.date )
+    maxParticipants.value = eventData.value.maxParticipants
+    currentParticipants.value = eventData.value.currentParticipants
+  }
 })
 
 </script>
 
 <template>
   <div class="event-creation">
+    <!-- <Header>{{ isEditMode ? 'Редактирование мероприятия' : 'Создание мероприятия' }}</Header> -->
     <Header>Создание мероприятия</Header>
     <div class="event-creation__section">
       <div 
@@ -128,7 +153,7 @@ onMounted(() => {
               auto-apply
               :locale="ru"
               :enableTimePicker="false" 
-              ></VueDatePicker>
+            ></VueDatePicker>
         </div>
       </div>
       <div class="event-creation__input-wrapper">
@@ -147,15 +172,16 @@ onMounted(() => {
       <div class="event-creation__buttons-block">
         <button 
           class="event-creation__button event-creation__button--cancel"
-          @click="cansel"
+          @click="cancel"
         >
           Отмена
         </button>
         <button 
           class="event-creation__button event-creation__button--confirm"
-          @click="createEvent" 
+          @click="saveEvent" 
         >
           Ок
+          <!-- {{ isEditMode ? 'Сохранить' : 'Создать' }} -->
         </button>
       </div>
     </div> 

@@ -29,7 +29,7 @@ function handleMenuSelect( item ) {
             // Логика копирования мероприятия
             break
         case 'edit':
-            // Логика редактирования
+            router.push({ name: 'edit', params: { id: contextMenuPosition.value.eventId } }); 
             break
         case 'participants':
             // Логика перехода к участникам
