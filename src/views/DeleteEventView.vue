@@ -21,7 +21,7 @@ function formattedDate( date ) {
   if ( !date ) return ''
   return new Intl.DateTimeFormat( 'ru-RU', {
       day: 'numeric',
-      month: 'long',
+      month: 'numeric',
       year: 'numeric',
   }).format( new Date( date ) )
 }
