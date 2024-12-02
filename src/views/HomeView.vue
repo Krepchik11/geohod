@@ -217,7 +217,7 @@ function formattedDate( date ) {
     }
     &__content {
         width: 80%;
-        border-bottom: 1px solid var(--primary-gray);
+        border-bottom: 0.5px solid var(--primary-gray);
         padding-bottom: 10px;
     }
     &__image-wrapper {
