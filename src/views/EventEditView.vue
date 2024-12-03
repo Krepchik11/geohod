@@ -1,50 +1,54 @@
 <script setup>
-import { ref, onMounted, nextTick, computed } from 'vue'
-import { useRouter, useRoute  } from "vue-router"
-import { useWebAppTheme } from 'vue-tg'
+import { ref, onMounted, computed, nextTick, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useEventStore } from '../stores/eventStore.js'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { ru } from 'date-fns/locale'
 
-import { useEventStore } from '../stores/eventStore.js'
-import CustomInput  from '../components/CustomInput.vue'
+import { useWebAppTheme } from 'vue-tg'
+
+import CustomInput from '../components/CustomInput.vue'
 import Header from '../components/Header.vue'
 
-const eventStore = useEventStore()
 const router = useRouter()
 const route = useRoute()
+const eventStore = useEventStore()
+
+onMounted(() => {
+  if ( eventData.value ) {
+    description.value = eventData.value.description
+    date.value = new Date( eventData.value.date )
+    maxParticipants.value = eventData.value.maxParticipants
+    currentParticipants.value = eventData.value.currentParticipants
+  }
+})
+
+const eventId = computed( () => Number( route.params.id )) 
+const eventData = computed( () => eventStore.events.find( event => event.id === eventId.value ) )
 
 const theme = useWebAppTheme()
-
 const dataPickerTheme = ref( theme.colorScheme.value === 'dark' ? true : false )
 
-const date = ref( new Date() )
-const maxParticipants = ref( 30 )
-const currentParticipants = ref( 0 )
 const description = ref( '' )
-const childInput = ref( null )
-const isInputBlurred = ref( false )
+const date = ref( new Date() )
+const currentParticipants = ref( 0 )
 const isEditing = ref( false )
+const childInput = ref( null )
+const maxParticipants = ref( eventData.value.maxParticipants || 30 )
 
-// Получаем ID из маршрута
-const eventId = computed(() => Number( route.params.id ))
-
-// Ищем событие в хранилище
-const eventData = computed(() => 
-  eventStore.events.find( event => event.id === eventId.value )
-)
-
-function createEvent() {
-  if ( !description.value || !date.value || !maxParticipants.value ) return 
-
-  const newEvent = {
+function saveEvent() {
+  if ( !description.value || !date.value || !maxParticipants.value ) return
+  const updatedEvent = {
+    id: eventId.value,
     description: description.value,
     date: date.value,
     maxParticipants: maxParticipants.value,
-    currentParticipants: currentParticipants.value,
+    currentParticipants: currentParticipants.value, 
   }
-  eventStore.addEvent( newEvent ) 
+
+  eventStore.updateEvent( updatedEvent )
   router.push( '/' )
 }
 
@@ -52,25 +56,17 @@ function cancel() {
   router.push( '/' )
 }
 
-function showPreview() {
- return description.value && isInputBlurred.value
-}
-
 function editPreview() {
   isEditing.value = true
   nextTick(() => {
-    focusInput();
-  });
+    if (childInput.value) {
+      childInput.value.focusInput();
+    }
+  })
 }
 
 function blurInput() {
-  isInputBlurred.value = true
   isEditing.value = false
-}
-
-function focusInput() {
-  isInputBlurred.value = false
-  childInput.value.focusInput()
 }
 
 function formattedDate( date ) {
@@ -82,20 +78,15 @@ function formattedDate( date ) {
   } ).format( new Date( date ) )
 } 
 
-onMounted(() => {
-  nextTick(() => {
-    childInput.value.focusInput() // Устанавливаем фокус на первый инпут при активации компонента
-  })
-})
-
 </script>
 
 <template>
   <div class="event-creation">
+    <!-- <Header>{{ isEditMode ? 'Редактирование мероприятия' : 'Создание мероприятия' }}</Header> -->
     <Header>Создание мероприятия</Header>
     <div class="event-creation__section">
       <div 
-        v-if="showPreview()  && !isEditing" 
+        v-if="!isEditing" 
         class="event-creation__preview" 
         @click="editPreview"
       >
@@ -133,7 +124,7 @@ onMounted(() => {
               :dark="dataPickerTheme" 
               inline
               auto-apply
-              :locale="ru"
+              locale="ru"
               :enableTimePicker="false" 
             ></VueDatePicker>
         </div>
@@ -147,7 +138,7 @@ onMounted(() => {
             :acceptNumbersOnly="true"
             :showLabel="false"
             label="Максимум участников"
-            placeholder="30"
+            :placeholder="maxParticipants"
           />
         </div>
       </div>
@@ -160,9 +151,10 @@ onMounted(() => {
         </button>
         <button 
           class="event-creation__button event-creation__button--confirm"
-          @click="createEvent" 
+          @click="saveEvent" 
         >
           Ок
+          <!-- {{ isEditMode ? 'Сохранить' : 'Создать' }} -->
         </button>
       </div>
     </div> 
@@ -184,6 +176,7 @@ onMounted(() => {
     gap: 20px;
     align-items: center;
     padding-bottom: 10px;
+    cursor: pointer;
   }
   &__image-wrapper {
     width: 50px;
@@ -243,8 +236,6 @@ onMounted(() => {
   .dp__theme_dark {
     --dp-background-color:  var(--bg_color);
     border: none;
-  }  
-  
-  
+  }    
 }
 </style>

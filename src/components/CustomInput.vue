@@ -7,7 +7,7 @@ const props = defineProps({
     default: '',
   },
   placeholder: {
-    type: String,
+    type: [ String, Number ],
     default: 'Введите текст...',
   },
   maxLength: {
