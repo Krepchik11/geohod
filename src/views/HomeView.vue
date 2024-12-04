@@ -70,26 +70,33 @@ function cancelTouch( event ) {
 }
 
 function showContextMenu( event, eventId ) {
-    event.preventDefault();
+    event.preventDefault()
 
     const menuWidth = 200
-    const menuHeight = 150 
+    const menuHeight = 150
     const windowWidth = window.innerWidth
     const windowHeight = window.innerHeight
 
-    // Расчет позиции с учетом границ экрана
     let x = event.clientX
     let y = event.clientY
-    if (x + menuWidth > windowWidth) {
-        x = windowWidth - menuWidth - 10;
+    if ( x + menuWidth > windowWidth ) {
+        x = windowWidth - menuWidth - 10
     }
-    if (y + menuHeight > windowHeight) {
-        y = windowHeight - menuHeight - 10
+    if ( y + menuHeight > windowHeight ) {
+        if ( y - menuHeight > 0 ) {
+            y = y - menuHeight - 10
+        } else {
+            y = windowHeight - menuHeight - 10
+        }
     }
+
     contextMenuPosition.value = { x, y, eventId }
     contextMenuVisible.value = true
+
     document.addEventListener( 'click', closeContextMenu )
 }
+
+
 
 
 function closeContextMenu() {
