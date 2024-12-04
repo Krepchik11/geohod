@@ -26,10 +26,20 @@ function handleMenuSelect( item ) {
             // Логика копирования ссылки
             break
         case 'copy':
-            // Логика копирования мероприятия
+            const eventToCopy = eventStore.events.find( event => event.id === contextMenuPosition.value.eventId )
+            if ( eventToCopy ) {
+                router.push({
+                    name: 'createEvent',
+                    query: {
+                        description: eventToCopy.description,
+                        date: eventToCopy.date,
+                        maxParticipants: eventToCopy.maxParticipants,
+                    }
+                });
+            }
             break
         case 'edit':
-            router.push({ name: 'edit', params: { id: contextMenuPosition.value.eventId } }); 
+            router.push({ name: 'edit', params: { id: contextMenuPosition.value.eventId } })
             break
         case 'participants':
             // Логика перехода к участникам

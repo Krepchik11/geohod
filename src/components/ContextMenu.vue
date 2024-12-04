@@ -15,25 +15,25 @@ defineProps({
   }
 })
 
-const emit = defineEmits(['close', 'select'])
+const emit = defineEmits( [ 'close', 'select' ] )
 
-function handleClickOutside(event) {
-  const contextMenu = document.querySelector('.context-menu')
-  if (contextMenu && !contextMenu.contains(event.target)) {
-    emit('close')
+function handleClickOutside( event ) {
+  const contextMenu = document.querySelector( '.context-menu' )
+  if ( contextMenu && !contextMenu.contains( event.target ) ) {
+    emit( 'close' )
   }
 }
 
-function handleAction(action) {
-  emit('select', action)
+function handleAction( action ) {
+  emit( 'select', action )
 }
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
+  document.addEventListener( 'click', handleClickOutside )
 })
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener( 'click', handleClickOutside )
 })
 </script>
 

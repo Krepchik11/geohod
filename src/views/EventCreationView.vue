@@ -19,10 +19,11 @@ const theme = useWebAppTheme()
 
 const dataPickerTheme = ref( theme.colorScheme.value === 'dark' ? true : false )
 
-const date = ref( new Date() )
-const maxParticipants = ref( 30 )
+const description = ref( route.query.description || '' )
+const date = ref( new Date( route.query.date || Date.now() ) )
+const maxParticipants = ref( Number( route.query.maxParticipants ) || 30 )
 const currentParticipants = ref( 0 )
-const description = ref( '' )
+
 const childInput = ref( null )
 const isInputBlurred = ref( false )
 const isEditing = ref( false )
@@ -133,7 +134,7 @@ onMounted(() => {
               :dark="dataPickerTheme" 
               inline
               auto-apply
-              :locale="ru"
+              locale="ru"
               :enableTimePicker="false" 
             ></VueDatePicker>
         </div>
