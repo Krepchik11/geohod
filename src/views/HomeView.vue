@@ -122,20 +122,41 @@ function formattedDate( date ) {
     } ).format( new Date( date ) )
 } 
 
+// function copyLink() {
+//   const eventId = contextMenuPosition.value.eventId
+//   const eventToCopy = eventStore.events.find( event => event.id === eventId )
+
+//   if ( eventToCopy ) {
+//     const eventLink = `${ window.location.origin }/event/${ eventId }`  // Формируем ссылку на мероприятие
+//     navigator.clipboard.writeText( eventLink ).then(() => {
+//       showToast.value = true
+//       setTimeout(() => {
+//         showToast.value = false
+//       }, 2000) 
+//     })
+//   }
+// }
+
 function copyLink() {
   const eventId = contextMenuPosition.value.eventId
-  const eventToCopy = eventStore.events.find( event => event.id === eventId )
+  const eventToCopy = eventStore.events.find(( event ) => event.id === eventId )
 
   if ( eventToCopy ) {
-    const eventLink = `${ window.location.origin }/event/${ eventId }`  // Формируем ссылку на мероприятие
-    navigator.clipboard.writeText( eventLink ).then(() => {
-      showToast.value = true
-      setTimeout(() => {
-        showToast.value = false
-      }, 2000) 
-    })
+    const eventLink = `${ window.location.origin }/event/${ eventId }`
+    const tempInput = document.createElement( "textarea" )
+    tempInput.value = eventLink
+    document.body.appendChild( tempInput )
+    tempInput.select()
+    document.execCommand( "copy" )
+    document.body.removeChild( tempInput )
+    
+    showToast.value = true
+    setTimeout(() => {
+      showToast.value = false
+    }, 2000)
   }
 }
+
 </script>
 
 <template>
