@@ -44,17 +44,20 @@ const positionClass = 'toast--bottom'
 @keyframes fadeInOut {
   0% {
     opacity: 0;
-    bottom: 40px;
+    transform: translateY(20px);
   }
   30% {
     opacity: 1;
+    transform: translateY(0);
   }
   70% {
     opacity: 1;
+    transform: translateY(0);
   }
   100% {
     opacity: 0;
-    bottom: -40px;
+    transform: translateY(20px);
   }
 }
+
 </style>
