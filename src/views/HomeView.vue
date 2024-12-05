@@ -3,6 +3,8 @@ import { ref, computed } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 
+import { Popup, Alert } from 'vue-tg'
+
 import Header from '../components/Header.vue'
 import ContextMenu from '../components/ContextMenu.vue'
 
@@ -123,12 +125,22 @@ function formattedDate( date ) {
     } ).format( new Date( date ) )
 } 
 
+function handlePopupClose() {
+    console.log( 'Popup closed' )
+}
+
+function handleAlertClose() {
+    console.log( 'Alert closed' )
+}
+
 
 </script>
 
 <template>
     <div class="home">
         <Header>Мои мероприятия</Header>
+        <Popup message="Hello Popup" @close="handlePopupClose" />
+        <Alert message="Hello! Alert" @close="handleAlertClose" />
         <div class="home__section">
             <div 
                 v-for="( event, index ) in eventStore.events" 
