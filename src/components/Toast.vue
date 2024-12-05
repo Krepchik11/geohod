@@ -37,7 +37,7 @@ const positionClass = 'toast--bottom'
 }
 
 .toast__message {
-  font-size: 14px;
+  font-size: 12px;
   text-align: center;
 }
 
