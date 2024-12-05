@@ -25,7 +25,7 @@ const positionClass = 'toast--bottom'
   transform: translateX(-50%);
   background-color: var(--bg_color);
   color: var(--text-color);
-  padding: 10px 20px;
+  padding: 10px;
   border-radius: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   opacity: 0;
@@ -37,7 +37,7 @@ const positionClass = 'toast--bottom'
 }
 
 .toast__message {
-  font-size: 12px;
+  font-size: 0.7rem;
   text-align: center;
 }
 
