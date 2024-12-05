@@ -23,7 +23,6 @@ const positionClass = 'toast--bottom'
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 20px;
   background-color: var(--bg_color);
   color: var(--text-color);
   padding: 10px 20px;
@@ -45,7 +44,7 @@ const positionClass = 'toast--bottom'
 @keyframes fadeInOut {
   0% {
     opacity: 0;
-    bottom: 0;
+    bottom: 40px;
   }
   30% {
     opacity: 1;
@@ -55,7 +54,7 @@ const positionClass = 'toast--bottom'
   }
   100% {
     opacity: 0;
-    bottom: -50px;
+    bottom: -40px;
   }
 }
 </style>
