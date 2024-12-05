@@ -28,8 +28,7 @@ const positionClass = 'toast--bottom'
   padding: 10px;
   border-radius: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  opacity: 0;
-  animation: fadeInOut 2s ease-out forwards;
+  opacity: 1;
 }
 
 .toast--bottom {
