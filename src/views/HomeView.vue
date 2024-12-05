@@ -139,22 +139,28 @@ function formattedDate( date ) {
 
 function copyLink() {
   const eventId = contextMenuPosition.value.eventId
-  const eventToCopy = eventStore.events.find(( event) => event.id === eventId )
+  const eventToCopy = eventStore.events.find(( event ) => event.id === eventId )
 
   if ( eventToCopy ) {
     const eventLink = `${ window.location.origin }/event/${ eventId }`
 
-    navigator.clipboard.writeText(eventLink).then(() => {
-      showToast.value = true
+    // Сначала копируем пустую строку, чтобы подавить системный Toast
+    navigator.clipboard.writeText( "" ).then(() => {
+      navigator.clipboard.writeText( eventLink ).then(() => {
 
-      // Быстрая "очистка" буфера обмена после копирования
-      setTimeout(() => {
-        navigator.clipboard.writeText( " " )
-        showToast.value = false
-      }, 2000)
-    });
+        showToast.value = true
+        setTimeout(() => {
+          showToast.value = false
+        }, 2000)
+      }).catch(( error ) => {
+        console.error( "Ошибка при копировании ссылки:", error )
+      });
+    }).catch(( error ) => {
+      console.error( "Ошибка при предварительном копировании:", error )
+    })
   }
 }
+
 
 
 </script>
