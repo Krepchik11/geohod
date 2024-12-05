@@ -3,16 +3,16 @@ import { ref, computed } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 
-import { Popup, Alert } from 'vue-tg'
-
 import Header from '../components/Header.vue'
 import ContextMenu from '../components/ContextMenu.vue'
+import Toast from '../components/Toast.vue'
 
 const eventStore = useEventStore()
 const router = useRouter()
 
 const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
+const showToast = ref( false )
 const menuItems = ref([
   { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link.svg' },
   { label: 'Копировать', action: 'copy', icon: 'copy.svg' },
@@ -25,7 +25,7 @@ const menuItems = ref([
 function handleMenuSelect( item ) {
     switch ( item.action ) {
         case 'copy-link':
-            // Логика копирования ссылки
+            copyLink()
             break
         case 'copy':
             const eventToCopy = eventStore.events.find( event => event.id === contextMenuPosition.value.eventId )
@@ -108,9 +108,6 @@ function showContextMenu( event, eventId ) {
     document.addEventListener( 'click', closeContextMenu )
 }
 
-
-
-
 function closeContextMenu() {
     contextMenuVisible.value = false
     document.removeEventListener( 'click', closeContextMenu )
@@ -125,22 +122,25 @@ function formattedDate( date ) {
     } ).format( new Date( date ) )
 } 
 
-function handlePopupClose() {
-    console.log( 'Popup closed' )
+function copyLink() {
+  const eventId = contextMenuPosition.value.eventId
+  const eventToCopy = eventStore.events.find( event => event.id === eventId )
+
+  if ( eventToCopy ) {
+    const eventLink = `${ window.location.origin }/event/${ eventId }`  // Формируем ссылку на мероприятие
+    navigator.clipboard.writeText( eventLink ).then(() => {
+      showToast.value = true
+      setTimeout(() => {
+        showToast.value = false
+      }, 2000) 
+    })
+  }
 }
-
-function handleAlertClose() {
-    console.log( 'Alert closed' )
-}
-
-
 </script>
 
 <template>
     <div class="home">
         <Header>Мои мероприятия</Header>
-        <Popup message="Hello Popup" @close="handlePopupClose" />
-        <Alert message="Hello! Alert" @close="handleAlertClose" />
         <div class="home__section">
             <div 
                 v-for="( event, index ) in eventStore.events" 
@@ -188,6 +188,7 @@ function handleAlertClose() {
                 </button>
             </RouterLink>
         </div>
+        <Toast :visible="showToast">Скопировано в буфер обмена</Toast>
     </div>
 </template>
 
