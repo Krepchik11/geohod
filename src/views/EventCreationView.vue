@@ -20,7 +20,7 @@ const theme = useWebAppTheme()
 const dataPickerTheme = ref( theme.colorScheme.value === 'dark' ? true : false )
 
 const description = ref( route.query.description || '' )
-const date = ref( new Date( route.query.date || Date.now() ) )
+const date = ref( new Date( Date.now() ) )
 const maxParticipants = ref( Number( route.query.maxParticipants ) || 30 )
 const currentParticipants = ref( 0 )
 
@@ -28,10 +28,9 @@ const childInput = ref( null )
 const isInputBlurred = ref( false )
 const isEditing = ref( false )
 
-// Получаем ID из маршрута
-const eventId = computed(() => Number( route.params.id ))
+const isNewEvent = computed( () => !route.query.description )
 
-// Ищем событие в хранилище
+const eventId = computed(() => Number( route.params.id ))
 const eventData = computed(() => 
   eventStore.events.find( event => event.id === eventId.value )
 )
@@ -85,7 +84,11 @@ function formattedDate( date ) {
 
 onMounted(() => {
   nextTick(() => {
-    childInput.value.focusInput() // Устанавливаем фокус на первый инпут при активации компонента
+    if (isNewEvent.value) {
+      childInput.value.focusInput() // Устанавливаем фокус на первый инпут при активации компонента, если это новое событие
+    } else {
+      isInputBlurred.value = true
+    }
   })
 })
 
