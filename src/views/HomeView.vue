@@ -12,7 +12,10 @@ const router = useRouter()
 
 const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
+
 const showToast = ref( false )
+const isAndroid = /Android/i.test( navigator.userAgent )
+
 const menuItems = ref([
   { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link.svg' },
   { label: 'Копировать', action: 'copy', icon: 'copy.svg' },
@@ -122,49 +125,22 @@ function formattedDate( date ) {
     } ).format( new Date( date ) )
 } 
 
-// function copyLink() {
-//   const eventId = contextMenuPosition.value.eventId
-//   const eventToCopy = eventStore.events.find( event => event.id === eventId )
-
-//   if ( eventToCopy ) {
-//     const eventLink = `${ window.location.origin }/event/${ eventId }`  // Формируем ссылку на мероприятие
-//     navigator.clipboard.writeText( eventLink ).then(() => {
-//       showToast.value = true
-//       setTimeout(() => {
-//         showToast.value = false
-//       }, 2000) 
-//     })
-//   }
-// }
-
 function copyLink() {
-    const eventId = contextMenuPosition.value.eventId
-    const eventLink = `${ window.location.origin }/event/${ eventId }`
+  const eventId = contextMenuPosition.value.eventId
+  const eventToCopy = eventStore.events.find( event => event.id === eventId )
 
-    const tempInput = document.createElement( 'input' )
-    tempInput.value = eventLink
-    document.body.appendChild( tempInput )
-    tempInput.select()
-    tempInput.setSelectionRange( 0, 99999 )
-    try {
-        const successful = document.execCommand( 'copy' )
-        if (successful) {
-            console.log( 'Link copied successfully' )
-        } else {
-            console.error( 'Failed to copy the link' )
-        }
-    } catch (err) {
-        console.error( 'Error during copying:', err )
-    }
-
-    document.body.removeChild( tempInput )
-
-    showToast.value = true
-    setTimeout(() => {
-        showToast.value = false
-    }, 2000)
+  if ( eventToCopy ) {
+    const eventLink = `${ window.location.origin }/event/${ eventId }`  // Формируем ссылку на мероприятие
+    navigator.clipboard.writeText( eventLink ).then(() => {
+      if (!isAndroid) {
+        showToast.value = true
+        setTimeout(() => {
+          showToast.value = false
+        }, 2000)
+      }   
+    })
+  }
 }
-
 
 </script>
 
