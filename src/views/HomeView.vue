@@ -126,20 +126,33 @@ function formattedDate( date ) {
 } 
 
 function copyLink( text ) {
-    const input = document.createElement( 'input' )
-    input.style.position = 'fixed'
-    input.style.opacity = '0'
-    input.value = text
-    document.body.appendChild( input )
-    input.select();
-    document.execCommand( 'copy' )
-    document.body.removeChild( input )
+    if ( window.Telegram?.WebApp ) {
+        if ( Telegram.WebApp.platform === 'android' ) {
+            Telegram.WebApp.showAlert( 'Ссылка скопирована!' )
+        } else {
+            showToast.value = true
+            setTimeout(() => {
+                showToast.value = false
+            }, 2000)
+        }
+    } else {
+        // Если Telegram WebApp API недоступно, используем альтернативный метод копирования
+        const input = document.createElement( 'input' )
+        input.style.position = 'fixed'
+        input.style.opacity = '0'
+        input.value = text
+        document.body.appendChild( input )
+        input.select()
+        document.execCommand( 'copy' )
+        document.body.removeChild( input )
 
-    showToast.value = true
-    setTimeout(() => {
-        showToast.value = false
-    }, 2000)
+        showToast.value = true
+        setTimeout(() => {
+            showToast.value = false
+        }, 2000)
+    }
 }
+
 
 </script>
 
