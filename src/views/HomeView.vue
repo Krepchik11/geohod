@@ -138,29 +138,32 @@ function formattedDate( date ) {
 // }
 
 function copyLink() {
-  const eventId = contextMenuPosition.value.eventId
-  const eventToCopy = eventStore.events.find(( event ) => event.id === eventId )
-
-  if ( eventToCopy ) {
+    const eventId = contextMenuPosition.value.eventId
     const eventLink = `${ window.location.origin }/event/${ eventId }`
 
-    // Сначала копируем пустую строку, чтобы подавить системный Toast
-    navigator.clipboard.writeText( "" ).then(() => {
-      navigator.clipboard.writeText( eventLink ).then(() => {
+    const tempInput = document.createElement( 'input' )
+    tempInput.value = eventLink
+    document.body.appendChild( tempInput )
+    tempInput.select()
+    tempInput.setSelectionRange( 0, 99999 )
+    try {
+        const successful = document.execCommand( 'copy' )
+        if (successful) {
+            console.log( 'Link copied successfully' )
+        } else {
+            console.error( 'Failed to copy the link' )
+        }
+    } catch (err) {
+        console.error( 'Error during copying:', err )
+    }
 
-        showToast.value = true
-        setTimeout(() => {
-          showToast.value = false
-        }, 2000)
-      }).catch(( error ) => {
-        console.error( "Ошибка при копировании ссылки:", error )
-      });
-    }).catch(( error ) => {
-      console.error( "Ошибка при предварительном копировании:", error )
-    })
-  }
+    document.body.removeChild( tempInput )
+
+    showToast.value = true
+    setTimeout(() => {
+        showToast.value = false
+    }, 2000)
 }
-
 
 
 </script>
