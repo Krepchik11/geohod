@@ -126,16 +126,16 @@ function formattedDate( date ) {
 } 
 
 function copyLink( text ) {
-    if ( window.Telegram?.WebApp ) {
-        if ( Telegram.WebApp.platform === 'android' ) {
-            Telegram.WebApp.showAlert( 'Ссылка скопирована!' )
-        } else {
-            showToast.value = true
-            setTimeout(() => {
-                showToast.value = false
-            }, 2000)
-        }
-    } else {
+    // if ( window.Telegram?.WebApp ) {
+    //     if ( Telegram.WebApp.platform === 'android' ) {
+    //         Telegram.WebApp.showAlert( 'Ссылка скопирована в буфер обмена.' )
+    //     } else {
+    //         showToast.value = true
+    //         setTimeout(() => {
+    //             showToast.value = false
+    //         }, 2000)
+    //     }
+    // } else {
         // Если Telegram WebApp API недоступно, используем альтернативный метод копирования
         const input = document.createElement( 'input' )
         input.style.position = 'fixed'
@@ -150,7 +150,7 @@ function copyLink( text ) {
         setTimeout(() => {
             showToast.value = false
         }, 2000)
-    }
+    // }
 }
 
 
