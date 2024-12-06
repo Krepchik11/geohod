@@ -127,20 +127,45 @@ function formattedDate( date ) {
 
 function copyLink() {
   const eventId = contextMenuPosition.value.eventId
-  const eventToCopy = eventStore.events.find( event => event.id === eventId )
+//   const eventToCopy = eventStore.events.find( event => event.id === eventId )
+  const eventLink = `${ window.location.origin }/event/${ eventId }`  // Формируем ссылку на мероприятие
 
-  if ( eventToCopy ) {
-    const eventLink = `${ window.location.origin }/event/${ eventId }`  // Формируем ссылку на мероприятие
-    navigator.clipboard.writeText( eventLink ).then(() => {
-      if (!isAndroid) {
-        showToast.value = true
-        setTimeout(() => {
-          showToast.value = false
-        }, 2000)
-      }   
-    })
-  }
+    if ( isAndroid ) {
+        copyLinkUsingExecCommand( eventLink )
+    } else {
+        navigator.clipboard.writeText( eventLink ).then(() => {
+          showToast.value = true
+          setTimeout(() => {
+            showToast.value = false
+          }, 2000);
+        });
+    }
+ 
 }
+
+function copyLinkUsingExecCommand( text ) {
+  const textarea = document.createElement( 'textarea' )
+  textarea.value = text
+  textarea.style.position = 'fixed'
+  document.body.appendChild( textarea )
+  textarea.select()
+
+  try {
+    const successful = document.execCommand( 'copy' )
+    if (successful) {
+      showToast.value = true
+      setTimeout(() => {
+        showToast.value = false
+      }, 2000)
+    }
+  } catch ( err ) {
+    console.error( 'Ошибка при копировании текста: ', err )
+  }
+
+  document.body.removeChild( textarea );
+}
+
+
 
 </script>
 
