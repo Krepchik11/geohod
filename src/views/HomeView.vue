@@ -125,47 +125,21 @@ function formattedDate( date ) {
     } ).format( new Date( date ) )
 } 
 
-function copyLink() {
-  const eventId = contextMenuPosition.value.eventId
-//   const eventToCopy = eventStore.events.find( event => event.id === eventId )
-  const eventLink = `${ window.location.origin }/event/${ eventId }`  // Формируем ссылку на мероприятие
+function copyLink( text ) {
+    const input = document.createElement( 'input' )
+    input.style.position = 'fixed'
+    input.style.opacity = '0'
+    input.value = text
+    document.body.appendChild( input )
+    input.select();
+    document.execCommand( 'copy' )
+    document.body.removeChild( input )
 
-    if ( isAndroid ) {
-        copyLinkUsingExecCommand( eventLink )
-    } else {
-        navigator.clipboard.writeText( eventLink ).then(() => {
-          showToast.value = true
-          setTimeout(() => {
-            showToast.value = false
-          }, 2000);
-        });
-    }
- 
-}
-
-function copyLinkUsingExecCommand( text ) {
-  const textarea = document.createElement( 'textarea' )
-  textarea.value = text
-  textarea.style.position = 'fixed'
-  document.body.appendChild( textarea )
-  textarea.select()
-
-  try {
-    const successful = document.execCommand( 'copy' )
-    if (successful) {
-      showToast.value = true
-      setTimeout(() => {
+    showToast.value = true
+    setTimeout(() => {
         showToast.value = false
-      }, 2000)
-    }
-  } catch ( err ) {
-    console.error( 'Ошибка при копировании текста: ', err )
-  }
-
-  document.body.removeChild( textarea );
+    }, 2000)
 }
-
-
 
 </script>
 
