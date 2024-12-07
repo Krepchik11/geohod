@@ -5,7 +5,7 @@ import { useEventStore } from '../stores/eventStore'
 
 import Header from '../components/Header.vue'
 import ContextMenu from '../components/ContextMenu.vue'
-import Toast from '../components/Toast.vue'
+// import Toast from '../components/Toast.vue'
 
 const eventStore = useEventStore()
 const router = useRouter()
@@ -47,7 +47,7 @@ function handleMenuSelect( item ) {
             router.push({ name: 'edit', params: { id: contextMenuPosition.value.eventId } })
             break
         case 'participants':
-            // Логика перехода к участникам
+            router.push({ name: 'participants', params: { id: contextMenuPosition.value.eventId } })
             break
         case 'delete':
             router.push( { name: 'delete', params: { id: contextMenuPosition.value.eventId } } )
@@ -142,20 +142,20 @@ function formattedDate( date ) {
 
 function copyLink() {
   const eventId = contextMenuPosition.value.eventId
-  const eventToCopy = eventStore.events.find(event => event.id === eventId)
+  const eventToCopy = eventStore.events.find( event => event.id === eventId )
 
-  if (eventToCopy) {
-    const eventLink = `${window.location.origin}/event/${eventId}`
+  if ( eventToCopy ) {
+    const eventLink = `${ window.location.origin}/event/${ eventId }`
 
-    if (window.Telegram?.WebApp) {
-      Telegram.WebApp.showAlert('Ссылка скопирована в буфер обмена.')
-    } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(eventLink)
+    if ( window.Telegram?.WebApp ) {
+      Telegram.WebApp.showAlert( 'Ссылка скопирована в буфер обмена.' )
+    } else if ( navigator.clipboard ) {
+      navigator.clipboard.writeText( eventLink )
         .then(() => {
-          alert('Ссылка скопирована в буфер обмена.') // Для iPhone и старых устройств
+          alert( 'Ссылка скопирована в буфер обмена.' ) // Для iPhone и старых устройств
         })
         .catch(() => {
-          console.error('Ошибка копирования')
+          console.error( 'Ошибка копирования' )
         })
     } 
   }
