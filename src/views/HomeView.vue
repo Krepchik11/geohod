@@ -28,7 +28,7 @@ const menuItems = ref([
 function handleMenuSelect( item ) {
     switch ( item.action ) {
         case 'copy-link':
-            copyLink( 'Ссылка скопирована в буфер обмена.' )
+            copyLink()
             break
         case 'copy':
             const eventToCopy = eventStore.events.find( event => event.id === contextMenuPosition.value.eventId )
@@ -125,32 +125,19 @@ function formattedDate( date ) {
     } ).format( new Date( date ) )
 } 
 
-function copyLink( text ) {
-    // if ( window.Telegram?.WebApp ) {
-    //     if ( Telegram.WebApp.platform === 'android' ) {
-    //         Telegram.WebApp.showAlert( 'Ссылка скопирована в буфер обмена.' )
-    //     } else {
-    //         showToast.value = true
-    //         setTimeout(() => {
-    //             showToast.value = false
-    //         }, 2000)
-    //     }
-    // } else {
-        // Если Telegram WebApp API недоступно, используем альтернативный метод копирования
-        const input = document.createElement( 'input' )
-        input.style.position = 'fixed'
-        input.style.opacity = '0'
-        input.value = text
-        document.body.appendChild( input )
-        input.select()
-        document.execCommand( 'copy' )
-        document.body.removeChild( input )
-
-        // showToast.value = true
-        // setTimeout(() => {
-        //     showToast.value = false
-        // }, 2000)
-    // }
+function copyLink() {
+  const eventId = contextMenuPosition.value.eventId
+  const eventToCopy = eventStore.events.find( event => event.id === eventId )
+  if ( eventToCopy ) {
+    const eventLink = `${ window.location.origin }/event/${ eventId }`  // Формируем ссылку на мероприятие
+    navigator.clipboard.writeText( eventLink )
+    // .then(() => {
+    //   showToast.value = true
+    //   setTimeout(() => {
+    //     showToast.value = false
+    //   }, 2000) 
+    // })
+  }
 }
 
 
