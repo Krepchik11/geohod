@@ -13,8 +13,8 @@ const router = useRouter()
 const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
 
-const showToast = ref( false )
-const isAndroid = /Android/i.test( navigator.userAgent )
+// const showToast = ref( false )
+// const isAndroid = /Android/i.test( navigator.userAgent )
 
 const menuItems = ref([
   { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link.svg' },
@@ -28,7 +28,7 @@ const menuItems = ref([
 function handleMenuSelect( item ) {
     switch ( item.action ) {
         case 'copy-link':
-            copyLink()
+            copyLink( 'Ссылка скопирована в буфер обмена.' )
             break
         case 'copy':
             const eventToCopy = eventStore.events.find( event => event.id === contextMenuPosition.value.eventId )
@@ -146,10 +146,10 @@ function copyLink( text ) {
         document.execCommand( 'copy' )
         document.body.removeChild( input )
 
-        showToast.value = true
-        setTimeout(() => {
-            showToast.value = false
-        }, 2000)
+        // showToast.value = true
+        // setTimeout(() => {
+        //     showToast.value = false
+        // }, 2000)
     // }
 }
 
@@ -206,7 +206,7 @@ function copyLink( text ) {
                 </button>
             </RouterLink>
         </div>
-        <Toast :visible="showToast">Скопировано в буфер обмена</Toast>
+        <!-- <Toast :visible="showToast">Скопировано в буфер обмена</Toast> -->
     </div>
 </template>
 
