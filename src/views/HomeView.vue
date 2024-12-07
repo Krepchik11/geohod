@@ -125,18 +125,39 @@ function formattedDate( date ) {
     } ).format( new Date( date ) )
 } 
 
+// function copyLink() {
+//   const eventId = contextMenuPosition.value.eventId
+//   const eventToCopy = eventStore.events.find( event => event.id === eventId )
+//   if ( eventToCopy ) {
+//     const eventLink = `${ window.location.origin }/event/${ eventId }`  // Формируем ссылку на мероприятие
+//     navigator.clipboard.writeText( eventLink )
+//     // .then(() => {
+//     //   showToast.value = true
+//     //   setTimeout(() => {
+//     //     showToast.value = false
+//     //   }, 2000) 
+//     // })
+//   }
+// }
+
 function copyLink() {
   const eventId = contextMenuPosition.value.eventId
-  const eventToCopy = eventStore.events.find( event => event.id === eventId )
-  if ( eventToCopy ) {
-    const eventLink = `${ window.location.origin }/event/${ eventId }`  // Формируем ссылку на мероприятие
-    navigator.clipboard.writeText( eventLink )
-    // .then(() => {
-    //   showToast.value = true
-    //   setTimeout(() => {
-    //     showToast.value = false
-    //   }, 2000) 
-    // })
+  const eventToCopy = eventStore.events.find(event => event.id === eventId)
+
+  if (eventToCopy) {
+    const eventLink = `${window.location.origin}/event/${eventId}`
+
+    if (window.Telegram?.WebApp) {
+      Telegram.WebApp.showAlert('Ссылка скопирована в буфер обмена.')
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(eventLink)
+        .then(() => {
+          alert('Ссылка скопирована в буфер обмена.') // Для iPhone и старых устройств
+        })
+        .catch(() => {
+          console.error('Ошибка копирования')
+        })
+    } 
   }
 }
 
