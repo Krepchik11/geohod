@@ -4,6 +4,7 @@ import EventCreationView from '../views/EventCreationView.vue'
 import EventEditView from '../views/EventEditView.vue'
 import RegistrationView from '../views/RegistrationView.vue'
 import DeleteEventView from '../views/DeleteEventView.vue'
+import ParticipantListView from '../views/ParticipantListView.vue'
 
 const router = createRouter({
   history: createWebHistory( import.meta.env.BASE_URL ),
@@ -27,6 +28,12 @@ const router = createRouter({
       path: '/registration/:id', 
       name: 'registration', 
       component: () => import('../views/RegistrationView.vue'), 
+      props: true, 
+    },
+    {
+      path: '/participants/:id',
+      name: 'participants',
+      component: ParticipantListView,
       props: true, 
     },
     { 
