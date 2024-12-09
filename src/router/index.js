@@ -5,6 +5,7 @@ import EventEditView from '../views/EventEditView.vue'
 import RegistrationView from '../views/RegistrationView.vue'
 import DeleteEventView from '../views/DeleteEventView.vue'
 import ParticipantListView from '../views/ParticipantListView.vue'
+import FinishEventView from '../views/FinishEventView.vue'
 
 const router = createRouter({
   history: createWebHistory( import.meta.env.BASE_URL ),
@@ -40,6 +41,12 @@ const router = createRouter({
       path: '/delete-event/:id', 
       name: 'delete',
       component: DeleteEventView,
+      props: true,  
+    },
+    { 
+      path: '/finish-event/:id', 
+      name: 'finish',
+      component: FinishEventView,
       props: true,  
     },
   ],

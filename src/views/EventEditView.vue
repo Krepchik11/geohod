@@ -179,8 +179,8 @@ function formattedDate( date ) {
     cursor: pointer;
   }
   &__image-wrapper {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     overflow: hidden;
     border-radius: 50%;
   }

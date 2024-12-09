@@ -161,6 +161,10 @@ function copyLink() {
   }
 }
 
+function isEventFinished( eventDate ) {
+  if ( !eventDate ) return false
+  return new Date( eventDate ) < new Date()
+}
 
 </script>
 
@@ -176,7 +180,6 @@ function copyLink() {
                 @touchstart="( e ) => startTouch( e, event.id )"
                 @touchend="cancelTouch"
             >
-                <!-- <RouterLink class="event__link" :to="{ name: 'registration', params: { id: event.id } }"> -->
                 <div class="event__link">
                     <div class="event__inner">
                         <div class="event__image-wrapper">
@@ -189,13 +192,19 @@ function copyLink() {
                         <div class="event__content">
                             <h3 class="event__title">{{ event.description }}</h3>
                             <div class="event__details">
-                               <p class="event__date">{{ formattedDate(event.date) }}</p>
+                               <p class="event__date">{{ formattedDate( event.date ) }}</p>
                                <p class="event__participants">{{ event.currentParticipants }}</p>
                             </div>
+                            <RouterLink
+                              v-if="isEventFinished( event.date )"
+                              :to="{ name: 'finish', params: { id: event.id } }"
+                              class="event__finish-link"
+                            >
+                              Завершить
+                            </RouterLink>
                         </div>
                     </div>
                 </div>    
-                <!-- </RouterLink>  -->
                 <ContextMenu 
                     :visible="contextMenuVisible && contextMenuPosition.eventId === event.id"
                     :position="contextMenuPosition"
@@ -277,8 +286,8 @@ function copyLink() {
         padding-bottom: 10px;
     }
     &__image-wrapper {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         overflow: hidden;
         border-radius: 50%;
     }
@@ -302,6 +311,15 @@ function copyLink() {
     }
     &__date {
         color: var(--primary-gray);
+    }
+    &__finish-link {
+        display: flex;
+        justify-content: flex-end;
+        color: var(--primary-blue);
+        text-decoration: none;
+        font-weight: 500;
+        padding-top: 10px;
+        padding-right: 12px;
     }
 }
 

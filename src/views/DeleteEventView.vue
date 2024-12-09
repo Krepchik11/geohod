@@ -57,7 +57,7 @@ function deleteEvent() {
 
     <div v-else>
       <p>Мероприятие не найдено</p>
-      <button @click="router.push( '/' )">Назад</button>
+      <MainButton text="Назад" @click="router.push( '/' )" />
     </div>
   </div>
 </template>
