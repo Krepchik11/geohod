@@ -17,7 +17,7 @@ const eventId = Number( route.params.id )
 
 // Находим событие по ID
 const event = computed(() => {
-  return eventStore.getEventById( Number( route.params.id ) ) 
+  return eventStore.getEventById( eventId ) 
 })
 
 const isDisabled = computed( () => eventStore.disabledEventId === eventId )

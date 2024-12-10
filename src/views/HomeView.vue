@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 
@@ -9,6 +9,18 @@ import ContextMenu from '../components/ContextMenu.vue'
 
 const eventStore = useEventStore()
 const router = useRouter()
+
+const isLoading = ref( true )
+
+onMounted( async () => {
+  try {
+    await eventStore.fetchEvents() // Загрузка данных с API при монтировании компонента
+  } catch ( error ) {
+    console.error( "Failed to fetch events:", error )
+  } finally {
+    isLoading.value = false;
+  }
+})
 
 const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
@@ -171,6 +183,7 @@ function isEventFinished( eventDate ) {
 <template>
     <div class="home">
         <Header>Мои мероприятия</Header>
+        <div v-if="isLoading">Загрузка...</div>
         <div class="home__section">
             <div 
                 v-for="( event, index ) in eventStore.events" 
