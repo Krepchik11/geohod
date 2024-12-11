@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: '',
+  baseURL: 'https://geohod.vercel.app',
   headers: {
     'Content-Type': 'application/json',
     // 'Authorization': `Bearer 7686811149:AAG0SNhXi5SGRQF15yzq4bfmfcRDhbY03uU`  Сергея
