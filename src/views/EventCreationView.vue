@@ -2,12 +2,13 @@
 import { ref, onMounted, nextTick, computed } from 'vue'
 import { useRouter, useRoute  } from "vue-router"
 import { useWebAppTheme } from 'vue-tg'
+import { useEventStore } from '../stores/eventStore.js'
+import { post } from '../utils/api'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { ru } from 'date-fns/locale'
 
-import { useEventStore } from '../stores/eventStore.js'
 import CustomInput  from '../components/CustomInput.vue'
 import Header from '../components/Header.vue'
 
@@ -30,22 +31,26 @@ const isEditing = ref( false )
 
 const isNewEvent = computed( () => !route.query.description )
 
-const eventId = computed(() => Number( route.params.id ))
-const eventData = computed(() => 
-  eventStore.events.find( event => event.id === eventId.value )
-)
-
 function createEvent() {
   if ( !description.value || !date.value || !maxParticipants.value ) return 
 
   const newEvent = {
     description: description.value,
-    date: date.value,
+    date: date.value.toISOString(),
     maxParticipants: maxParticipants.value,
     currentParticipants: currentParticipants.value,
   }
-  eventStore.addEvent( newEvent ) 
-  router.push( '/' )
+
+  post( '/events', newEvent ) 
+    .then( response => {
+      console.log( 'Event created:', response )
+      eventStore.fetchEvents() 
+      router.push( '/' ) 
+    })
+    .catch( error => {
+      console.error( 'Failed to create event:', error )
+      alert( 'Произошла ошибка при создании события. Пожалуйста, попробуйте снова.' )
+    })
 }
 
 function cancel() {
