@@ -1,7 +1,11 @@
 import axios from 'axios'
 
-const urlParams = new URLSearchParams( window.location.search )
-const initData = urlParams.get( 'initData' )
+// const urlParams = new URLSearchParams( window.location.search )
+// const initData = urlParams.get( 'initData' )
+
+const initData = window.Telegram.WebApp.initData
+
+
 
 if ( !initData ) {
   console.error( 'initData отсутствует в URL' )
