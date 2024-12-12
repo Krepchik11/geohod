@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const initData = window.Telegram?.WebApp?.initData || ''
-console.log("Telegram initData:", window.Telegram.WebApp.initData);
+const urlParams = new URLSearchParams (window.location.search )
+const initData = urlParams.get( 'initData' )
 
 const api = axios.create({
   baseURL: '',
