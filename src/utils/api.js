@@ -1,32 +1,36 @@
 import axios from 'axios'
 
-const urlParams = new URLSearchParams (window.location.search )
+const urlParams = new URLSearchParams( window.location.search )
 const initData = urlParams.get( 'initData' )
 
+if ( !initData ) {
+  console.error( 'initData отсутствует в URL' )
+}
+
 const api = axios.create({
-  baseURL: '',
+  baseURL: '', 
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': initData
+    Authorization: initData || '', 
   },
 })
 
-export const get = async ( url ) => {
+export const get = async (url) => {
   try {
-    const response = await api.get( url )
-    return response.data
-  } catch ( error ) {
-    console.error( "API error:", error )
-    throw error
+    const response = await api.get(url);
+    return response.data;
+  } catch (error) {
+    console.error('Ошибка при выполнении GET-запроса:', error.response || error);
+    throw error;
   }
 }
 
-export const post = async ( url, data ) => {
+export const post = async (url, data) => {
   try {
-    const response = await api.post( url, data )
-    return response.data
-  } catch ( error ) {
-    console.error( "API error:", error )
-    throw error
+    const response = await api.post(url, data);
+    return response.data;
+  } catch (error) {
+    console.error('Ошибка при выполнении POST-запроса:', error.response || error);
+    throw error;
   }
-}
+};
