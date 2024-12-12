@@ -1,11 +1,13 @@
 import axios from 'axios'
 
+const initData = window.Telegram?.WebApp?.initData || ''
+console.log("Telegram initData:", window.Telegram.WebApp.initData);
+
 const api = axios.create({
   baseURL: '',
   headers: {
     'Content-Type': 'application/json',
-    // 'Authorization': `Bearer 7686811149:AAG0SNhXi5SGRQF15yzq4bfmfcRDhbY03uU`  Сергея
-    'Authorization': `Bearer 5965981285:AAHE-YMoEm2Tly-QwyRcAjh291Z6TfCueNw`
+    'Authorization': initData
   },
 })
 

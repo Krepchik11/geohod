@@ -3,9 +3,10 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 
+
+
 import Header from '../components/Header.vue'
 import ContextMenu from '../components/ContextMenu.vue'
-// import Toast from '../components/Toast.vue'
 
 const eventStore = useEventStore()
 const router = useRouter()
@@ -14,19 +15,16 @@ const isLoading = ref( true )
 
 onMounted( async () => {
   try {
-    await eventStore.fetchEvents() // Загрузка данных с API при монтировании компонента
+    await eventStore.fetchEvents()
+    isLoading.value = false
   } catch ( error ) {
-    console.error( "Failed to fetch events:", error )
-  } finally {
-    isLoading.value = false;
+    console.error( 'Error fetching events on mount:', error )
   }
 })
 
+
 const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
-
-// const showToast = ref( false )
-// const isAndroid = /Android/i.test( navigator.userAgent )
 
 const menuItems = ref([
   { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link.svg' },
@@ -136,21 +134,6 @@ function formattedDate( date ) {
         year: 'numeric',
     } ).format( new Date( date ) )
 } 
-
-// function copyLink() {
-//   const eventId = contextMenuPosition.value.eventId
-//   const eventToCopy = eventStore.events.find( event => event.id === eventId )
-//   if ( eventToCopy ) {
-//     const eventLink = `${ window.location.origin }/event/${ eventId }`  // Формируем ссылку на мероприятие
-//     navigator.clipboard.writeText( eventLink )
-//     // .then(() => {
-//     //   showToast.value = true
-//     //   setTimeout(() => {
-//     //     showToast.value = false
-//     //   }, 2000) 
-//     // })
-//   }
-// }
 
 function copyLink() {
   const eventId = contextMenuPosition.value.eventId

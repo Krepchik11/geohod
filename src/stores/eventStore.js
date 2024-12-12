@@ -9,28 +9,15 @@ export const useEventStore = defineStore( 'eventStore', {
   actions: {
     async fetchEvents() {
       try {
-        const data = await get( 'api/events' )
-        this.events = data
-      } catch ( error ) {
-        console.error( "Failed to fetch events:", error )
+        const data = await get('/api/v1/events')
+        this.events = data; // Присваивание данных в состояние
+        console.log('data:', data)
+        
+      } catch (error) {
+        console.error( 'Failed to fetch events:', error );
+        throw error; 
       }
-    },
-
-    async incrementParticipants( eventId ) {
-      try {
-        await post( `api/events/${ eventId }/register`, { } ) // Пример запроса для регистрации
-        const event = this.events.find( event => event.id === eventId )
-        if ( event ) {
-          event.currentParticipants += 1
-        }
-      } catch ( error ) {
-        console.error( "Failed to register:", error )
-      }
-    },
-
-    async getEventById( id ) {
-      return this.events.find( event => event.id === id )
-    },
+    },    
   },
 })
 
