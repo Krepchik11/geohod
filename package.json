@@ -10,6 +10,7 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "@telegram-apps/sdk": "^2.9.1",
     "@telegram-apps/telegram-ui": "^2.1.8",
     "@vuepic/vue-datepicker": "^10.0.0",
     "axios": "^1.7.9",
