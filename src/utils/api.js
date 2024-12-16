@@ -72,6 +72,21 @@ export const get = async (url) => {
 };
 
 
+export const post = async (url, data) => {
+  try {
+    const response = await api.post(url, data);
+    return response.data;
+  } catch (error) {
+    console.error('Ошибка при выполнении POST-запроса:', error.response || error);
+    throw error;
+  }
+};
+
+
+
+
+
+
 // import axios from 'axios'
 
 // // const urlParams = new URLSearchParams( window.location.search )
