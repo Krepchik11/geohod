@@ -9,14 +9,15 @@ function validateInitData(initData, botToken) {
   
 
   const checkString = Object.keys(data)
-    .filter((key) => key !== 'hash')
-    .map((key) => `${key}=${data[key]}`)
-    .sort()
-    .join('\n');
+  .filter((key) => key !== 'hash')
+  .sort() 
+  .map((key) => `${key}=${data[key]}`)
+  .join('\n'); 
 
-  const secretKey = CryptoJS.HmacSHA256('WebAppData', botToken).toString();
 
-  const signature = CryptoJS.HmacSHA256(checkString, secretKey).toString();
+  const secretKey = CryptoJS.HmacSHA256('WebAppData', botToken);
+
+  const signature = CryptoJS.HmacSHA256(checkString, secretKey).toString(CryptoJS.enc.Hex);
 
   console.log('Совпадают:  ', data.hash === signature);
   
