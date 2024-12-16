@@ -16,10 +16,9 @@ function validateInitData(initData, botToken) {
 
   console.log('checkString:', checkString);
 
-  const secretKey = CryptoJS.HmacSHA256('WebAppData', botToken);
+  const secretKey = CryptoJS.enc.Hex.parse(CryptoJS.SHA256(botToken).toString());
 
-  const signature = CryptoJS.HmacSHA256(checkString, secretKey)
-    .toString(CryptoJS.enc.Hex);
+  const signature = CryptoJS.HmacSHA256(checkString, secretKey).toString();
 
   console.log('signature:', signature);
   console.log('data.hash:', data.hash);
