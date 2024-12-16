@@ -6,24 +6,29 @@ function validateInitData(initData, botToken) {
   const data = Object.fromEntries(urlSearchParams.entries());
 
   console.log('data:', data);
-  
 
   const checkString = Object.keys(data)
-  .filter((key) => key !== 'hash')
-  .sort() 
-  .map((key) => `${key}=${data[key]}`)
-  .join('\n'); 
+    .filter((key) => key !== 'hash') 
+    .sort()
+    .map((key) => `${key}=${data[key]}`)
+    .join('\n');
 
+  console.log('checkString:', checkString);
 
   const secretKey = CryptoJS.HmacSHA256('WebAppData', botToken);
 
-  const signature = CryptoJS.HmacSHA256(checkString, secretKey).toString(CryptoJS.enc.Hex);
+  const signature = CryptoJS.HmacSHA256(checkString, secretKey)
+    .toString(CryptoJS.enc.Hex);
 
-  console.log('Совпадают:  ', data.hash === signature);
-  
+  console.log('signature:', signature);
+  console.log('data.hash:', data.hash);
 
-  return data.hash === signature;
+  const isValid = data.hash === signature;
+  console.log('Совпадают:', isValid);
+
+  return isValid;
 }
+
 
 
 
