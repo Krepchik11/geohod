@@ -1,6 +1,5 @@
 import axios from 'axios';
-import crypto from 'crypto';
-
+import CryptoJS from 'crypto-js';
 
 function validateInitData(initData, botToken) {
   const urlSearchParams = new URLSearchParams(initData);
@@ -9,31 +8,22 @@ function validateInitData(initData, botToken) {
   console.log('data:', data);
   
 
-
   const checkString = Object.keys(data)
     .filter((key) => key !== 'hash')
     .map((key) => `${key}=${data[key]}`)
     .sort()
     .join('\n');
 
-  console.log('checkString:', checkString);
+  const secretKey = CryptoJS.HmacSHA256('WebAppData', botToken).toString();
+
+  const signature = CryptoJS.HmacSHA256(checkString, secretKey).toString();
+
+  console.log('Совпадают:  ', data.hash === signature);
   
-    
-
-  const secretKey = crypto.createHmac('sha256', 'WebAppData').update(botToken).digest();
-
-  console.log('secretKey:', secretKey);
-
-  const signature = crypto.createHmac('sha256', secretKey)
-    .update(checkString)
-    .digest('hex');
-
-  console.log('signature:', signature);
-
-  console.log('СОВПАДАЮТ?:', data.hash === signature);
 
   return data.hash === signature;
 }
+
 
 
 const initData = window.Telegram.WebApp.initData;
