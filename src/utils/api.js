@@ -8,10 +8,11 @@ function validateInitData(initData, botToken) {
   console.log('data:', data);
 
   const checkString = Object.keys(data)
-    .filter((key) => key !== 'hash') 
-    .sort()
-    .map((key) => `${key}=${data[key]}`)
-    .join('\n');
+  .filter((key) => key !== 'hash' && key !== 'signature') 
+  .sort()
+  .map((key) => `${key}=${data[key]}`)
+  .join('\n');
+
 
   console.log('checkString:', checkString);
 
