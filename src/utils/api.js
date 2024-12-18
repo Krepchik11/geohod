@@ -1,7 +1,18 @@
-import { retrieveLaunchParams } from '@telegram-apps/sdk';
+// import { retrieveLaunchParams } from '@telegram-apps/sdk';
 import axios from 'axios';
 
-const { initDataRaw } = retrieveLaunchParams();
+const initData = window.Telegram.WebApp.initData;
+
+const api = axios.create({
+  baseURL: '', 
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `${initData}`,
+  },
+});
+
+
+// const { initDataRaw } = retrieveLaunchParams();
 
 // fetch('https://example.com/api/authorize', {
 //   method: 'POST',
@@ -18,18 +29,16 @@ const { initDataRaw } = retrieveLaunchParams();
 //     console.error('Authorization failed:', error);
 //   });
 
-console.log('initDataRaw:', initDataRaw);
+// console.log('initDataRaw:', initDataRaw);
 
 
-const api = axios.create({
-  baseURL: '', 
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `tma ${initDataRaw}`, 
-  },
-});
-
-console.log('api:', api);
+// const api = axios.create({
+//   baseURL: '', 
+//   headers: {
+//     'Content-Type': 'application/json',
+//     Authorization: `tma ${initDataRaw}`, 
+//   },
+// });
 
 export const get = async (url) => {
   try {
