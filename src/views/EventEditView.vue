@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, nextTick, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useEventStore } from '../stores/eventStore.js'
+import axios from 'axios'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -16,17 +17,21 @@ const router = useRouter()
 const route = useRoute()
 const eventStore = useEventStore()
 
+// onMounted(() => {
+//   if ( eventData.value ) {
+//     description.value = eventData.value.description
+//     date.value = new Date( eventData.value.date )
+//     maxParticipants.value = eventData.value.maxParticipants
+//     currentParticipants.value = eventData.value.currentParticipants
+//   }
+// })
+
 onMounted(() => {
-  if ( eventData.value ) {
-    description.value = eventData.value.description
-    date.value = new Date( eventData.value.date )
-    maxParticipants.value = eventData.value.maxParticipants
-    currentParticipants.value = eventData.value.currentParticipants
-  }
+  loadEvent()
 })
 
 const eventId = computed( () => Number( route.params.id )) 
-const eventData = computed( () => eventStore.events.find( event => event.id === eventId.value ) )
+// const eventData = computed( () => eventStore.events.find( event => event.id === eventId.value ) )
 
 const theme = useWebAppTheme()
 const dataPickerTheme = ref( theme.colorScheme.value === 'dark' ? true : false )
@@ -36,20 +41,39 @@ const date = ref( new Date() )
 const currentParticipants = ref( 0 )
 const isEditing = ref( false )
 const childInput = ref( null )
-const maxParticipants = ref( eventData.value.maxParticipants || 30 )
+// const maxParticipants = ref( eventData.value.maxParticipants || 30 )
+const maxParticipants = ref( null )
+
+const loadEvent = async () => {
+  try {
+    const { data } = await axios.get( `/api/v1/events/${ eventId.value }` )
+    description.value = data.description
+    date.value = new Date( data.date )
+    maxParticipants.value = data.maxParticipants
+    currentParticipants.value = data.currentParticipants || 0
+  } catch ( error ) {
+    console.error( 'Ошибка загрузки данных мероприятия:', error )
+    router.push( '/' )
+  }
+}
 
 function saveEvent() {
   if ( !description.value || !date.value || !maxParticipants.value ) return
+
   const updatedEvent = {
-    id: eventId.value,
-    description: description.value,
+    name: description.value,
     date: date.value,
+    description: description.value,
     maxParticipants: maxParticipants.value,
-    currentParticipants: currentParticipants.value, 
   }
 
-  eventStore.updateEvent( updatedEvent )
-  router.push( '/' )
+  try {
+    const response = await axios.put( `/events/${ eventId.value }`, updatedEvent )
+    console.log( 'Мероприятие обновлено:', response.data )
+    router.push( '/' )
+  } catch ( error ) {
+    console.error( 'Ошибка при обновлении мероприятия:', error.response || error )
+  }
 }
 
 function cancel() {
@@ -59,8 +83,8 @@ function cancel() {
 function editPreview() {
   isEditing.value = true
   nextTick(() => {
-    if (childInput.value) {
-      childInput.value.focusInput();
+    if ( childInput.value ) {
+      childInput.value.focusInput()
     }
   })
 }
@@ -166,10 +190,10 @@ function formattedDate( date ) {
 .event-creation {
   padding-top: 10px;
   &__section {
-      padding: 0 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    padding: 0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
   &__preview {
     display: flex;
