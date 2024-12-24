@@ -37,6 +37,7 @@ const theme = useWebAppTheme()
 const dataPickerTheme = ref( theme.colorScheme.value === 'dark' ? true : false )
 
 const description = ref( '' )
+const name = ref( '' )
 const date = ref( new Date() )
 const currentParticipants = ref( 0 )
 const isEditing = ref( false )
@@ -47,6 +48,7 @@ const maxParticipants = ref( null )
 const loadEvent = async () => {
   try {
     const { data } = await axios.get( `/api/v1/events/${ eventId.value }` )
+    name.value = data.description
     description.value = data.description
     date.value = new Date( data.date )
     maxParticipants.value = data.maxParticipants
