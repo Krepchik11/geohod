@@ -40,7 +40,7 @@ async function loadEvent() {
   }
 }
 
-function deleteEvent() {
+async function deleteEvent() {
   // if ( eventId.value ) {  
   //   eventStore.deleteEvent( eventId.value )
   //   router.push( '/' )
