@@ -2,6 +2,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
 import { MainButton } from 'vue-tg'
+import { get, post, patch } from '../utils/api'
 import axios from 'axios'
 
 import Header from '../components/Header.vue'
@@ -49,7 +50,7 @@ async function deleteEvent() {
   // }
 
   try {
-    await axios.patch( `/api/v1/events/${ eventId.value }/cancel` )
+    await patch( `/api/v1/events/${ eventId.value }/cancel` )
     router.push( '/' )
   } catch ( error ) {
     console.error( 'Ошибка при удалении мероприятия:', error )

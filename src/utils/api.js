@@ -30,3 +30,25 @@ export const post = async ( url, data ) => {
     throw error
   }
 }
+
+export const put = async ( url, data ) => {
+  try {
+    const response = await api.put( url, data )
+    return response.data
+  } catch ( error ) {
+    console.error( 'Ошибка при выполнении PUT-запроса:', error.response || error )
+    throw error
+  }
+}
+
+export const patch = async ( url, data ) => {
+  try {
+    const response = await api.patch( url, data )
+    console.log( 'response:', response.data )
+    return response.data
+  } catch ( error ) {
+    console.error( 'Ошибка при выполнении PATCH-запроса:', error.response || error )
+    throw error;
+  }
+}
+

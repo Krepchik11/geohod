@@ -3,6 +3,7 @@ import { ref, onMounted, computed, nextTick, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useEventStore } from '../stores/eventStore.js'
 import axios from 'axios'
+import { get, post } from '../utils/api'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -47,7 +48,7 @@ const maxParticipants = ref( null )
 
 const loadEvent = async () => {
   try {
-    const { data } = await axios.get( `/api/v1/events/${ eventId.value }` )
+    const { data } = await get( `/api/v1/events/${ eventId.value }` )
     name.value = data.description
     description.value = data.description
     date.value = new Date( data.date )
