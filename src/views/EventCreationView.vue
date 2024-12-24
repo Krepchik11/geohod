@@ -41,7 +41,7 @@ function createEvent() {
     currentParticipants: currentParticipants.value,
   }
 
-  post( '/events', newEvent ) 
+  post( '/events' ) 
   .then( response => {
     console.log( 'Event created:', response )
     eventStore.fetchEvents() 
