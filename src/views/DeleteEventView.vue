@@ -1,7 +1,8 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { MainButton } from 'vue-tg'
+import axios from 'axios'
 
 import Header from '../components/Header.vue'
 import { useEventStore } from '../stores/eventStore'
@@ -10,6 +11,7 @@ import Message from '../components/Message.vue'
 const route = useRoute()
 const router = useRouter()
 const eventStore = useEventStore()
+const isLoading = ref( false )
 
 const eventId = computed( () => route.params.id )
 
@@ -26,14 +28,38 @@ function formattedDate( date ) {
   }).format( new Date( date ) )
 }
 
-function deleteEvent() {
-  if ( eventId.value ) {  
-    eventStore.deleteEvent( eventId.value )
-    router.push( '/' )
-  } else {
-    alert( 'Ошибка: ID события не найден.' )
+async function loadEvent() {
+  try {
+    if ( !eventId.value ) throw new Error( 'ID мероприятия отсутствует.' )
+
+    const { data } = await axios.get( `/api/v1/events/${ eventId.value }` )
+    selectedEvent.value = data
+  } catch ( error ) {
+    console.error( 'Ошибка загрузки данных мероприятия:', error )
+    errorMessage.value = 'Мероприятие не найдено.'
   }
 }
+
+function deleteEvent() {
+  // if ( eventId.value ) {  
+  //   eventStore.deleteEvent( eventId.value )
+  //   router.push( '/' )
+  // } else {
+  //   alert( 'Ошибка: ID события не найден.' )
+  // }
+
+  try {
+    await axios.patch( `/api/v1/events/${ eventId.value }/cancel` )
+    router.push( '/' )
+  } catch ( error ) {
+    console.error( 'Ошибка при удалении мероприятия:', error )
+    alert( 'Произошла ошибка при отмене мероприятия.' )
+  } finally {
+    isLoading.value = false
+  }
+}
+
+loadEvent()
 
 </script>
 
