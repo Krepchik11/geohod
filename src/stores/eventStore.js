@@ -10,11 +10,12 @@ export const useEventStore = defineStore( 'eventStore', {
     async fetchEvents() {
       try {
         const data = await get('/api/v1/events')
-        this.events = data.content; // Присваивание данных в состояние
+        this.events = Array.isArray(data.content) ? data.content : [];
         console.log('data:', data)
         
       } catch (error) {
         console.error( 'Failed to fetch events:', error );
+        this.events = [];
         throw error; 
       }
     },    
