@@ -35,13 +35,13 @@ function createEvent() {
   if ( !description.value || !date.value || !maxParticipants.value ) return 
 
   const newEvent = {
+    name: description.value,
     description: description.value,
     date: date.value.toISOString(),
     maxParticipants: maxParticipants.value,
-    currentParticipants: currentParticipants.value,
   }
 
-  post( '/events' ) 
+  post( '/events', newEvent ) 
   .then( response => {
     console.log( 'Event created:', response )
     eventStore.fetchEvents() 
