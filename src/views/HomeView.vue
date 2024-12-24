@@ -16,6 +16,7 @@ const isLoading = ref( true )
 onMounted( async () => {
   try {
     await eventStore.fetchEvents()
+    console.log( 'Events:', eventStore.events )
     isLoading.value = false
   } catch ( error ) {
     console.error( 'Error fetching events on mount:', error )
@@ -95,6 +96,11 @@ function cancelTouch( event ) {
 }
 
 function showContextMenu( event, eventId ) {
+    if (!eventId) {
+      console.error('Invalid eventId:', eventId);
+      return;
+    }
+
     event.preventDefault()
 
     const menuWidth = 200
