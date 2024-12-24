@@ -57,7 +57,7 @@ const loadEvent = async () => {
   }
 }
 
-function saveEvent() {
+async function saveEvent() {
   if ( !description.value || !date.value || !maxParticipants.value ) return
 
   const updatedEvent = {
