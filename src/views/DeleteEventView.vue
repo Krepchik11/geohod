@@ -11,7 +11,7 @@ const route = useRoute()
 const router = useRouter()
 const eventStore = useEventStore()
 
-const eventId = computed( () => Number( route.params.id ))
+const eventId = computed( () => route.params.id )
 
 const selectedEvent = computed(() =>
   eventStore.events.find( event => event.id === eventId.value ) 

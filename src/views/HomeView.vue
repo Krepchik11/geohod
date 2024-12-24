@@ -16,7 +16,6 @@ const isLoading = ref( true )
 onMounted( async () => {
   try {
     await eventStore.fetchEvents()
-    console.log( 'Events:', eventStore.events )
     isLoading.value = false
   } catch ( error ) {
     console.error( 'Error fetching events on mount:', error )

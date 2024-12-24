@@ -22,7 +22,7 @@ const mockParticipants = [
   { id: 4, name: "Мария Федорова", avatar: "/src/assets/geohod_640-360.jpg" }
 ]
 
-const eventId = computed( () => Number( route.params.id ))
+const eventId = computed( () =>  route.params.id )
 
 const selectedEvent = computed(() => {
   // Если событие есть в store, используем его, иначе возвращаем моковые данные

@@ -46,7 +46,6 @@ const childInput = ref( null )
 const maxParticipants = ref( null )
 
 const loadEvent = async () => {
-  console.log( 'eventId.value:', eventId.value )
   try {
     const { data } = await axios.get( `/api/v1/events/${ eventId.value }` )
     name.value = data.description
