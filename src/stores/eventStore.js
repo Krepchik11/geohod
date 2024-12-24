@@ -10,7 +10,7 @@ export const useEventStore = defineStore( 'eventStore', {
     async fetchEvents() {
       try {
         const data = await get('/api/v1/events')
-        this.events = data; // Присваивание данных в состояние
+        this.events = data.content; // Присваивание данных в состояние
         console.log('data:', data)
         
       } catch (error) {

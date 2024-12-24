@@ -42,15 +42,15 @@ function createEvent() {
   }
 
   post( '/events', newEvent ) 
-    .then( response => {
-      console.log( 'Event created:', response )
-      eventStore.fetchEvents() 
-      router.push( '/' ) 
-    })
-    .catch( error => {
-      console.error( 'Failed to create event:', error )
-      alert( 'Произошла ошибка при создании события. Пожалуйста, попробуйте снова.' )
-    })
+  .then( response => {
+    console.log( 'Event created:', response )
+    eventStore.fetchEvents() 
+    router.push( '/' ) 
+  })
+  .catch( error => {
+    console.error( 'Failed to create event:', error )
+    alert( 'Произошла ошибка при создании события. Пожалуйста, попробуйте снова.' )
+  })
 }
 
 function cancel() {
