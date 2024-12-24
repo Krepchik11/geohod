@@ -30,7 +30,7 @@ onMounted(() => {
   loadEvent()
 })
 
-const eventId = computed( () => Number( route.params.id )) 
+const eventId = computed( () => route.params.id ) 
 // const eventData = computed( () => eventStore.events.find( event => event.id === eventId.value ) )
 
 const theme = useWebAppTheme()
@@ -46,6 +46,7 @@ const childInput = ref( null )
 const maxParticipants = ref( null )
 
 const loadEvent = async () => {
+  console.log( 'eventId.value:', eventId.value )
   try {
     const { data } = await axios.get( `/api/v1/events/${ eventId.value }` )
     name.value = data.description
