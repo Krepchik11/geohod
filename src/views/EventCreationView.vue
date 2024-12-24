@@ -41,7 +41,7 @@ function createEvent() {
     maxParticipants: maxParticipants.value,
   }
 
-  post( '/events', newEvent ) 
+  post( '/api/v1/events', newEvent ) 
   .then( response => {
     console.log( 'Event created:', response )
     eventStore.fetchEvents() 
