@@ -28,6 +28,8 @@ const eventStore = useEventStore()
 // })
 
 onMounted(() => {
+  console.log('onMounted');
+  
   loadEvent()
 })
 
@@ -46,9 +48,11 @@ const childInput = ref( null )
 // const maxParticipants = ref( eventData.value.maxParticipants || 30 )
 const maxParticipants = ref( null )
 
-const loadEvent = async () => {
+async function loadEvent() {
   try {
     const { data } = await get( `/api/v1/events/${ eventId.value }` )
+    console.log( 'loadEvent', data )
+    
     name.value = data.description
     description.value = data.description
     date.value = new Date( data.date )
