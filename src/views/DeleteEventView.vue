@@ -2,7 +2,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
 import { MainButton } from 'vue-tg'
-import { get, deleteRequest } from '../utils/api'
+import { get, patch } from '../utils/api'
 
 import Header from '../components/Header.vue'
 import { useEventStore } from '../stores/eventStore'
@@ -58,9 +58,9 @@ async function loadEvent() {
   }
 }
 
-async function deleteEvent() {
+async function cancelEvent() {
   try {
-    await deleteRequest( `/api/v1/events/${ eventId.value }` )
+    await patch( `/api/v1/events/${ eventId.value }/cancel` )
     await eventStore.fetchEvents()
     router.push( '/' )
   } catch ( error ) {
@@ -75,21 +75,21 @@ loadEvent()
 </script>
 
 <template>
-  <div class="delete-section">
-    <Header>Удаление мероприятия</Header>
-    <div class="delete-section__content" v-if="name">
-      <h3 class="delete-section__title">{{ name }}</h3>
-      <div class="delete-section__details">
-        <p class="delete-section__date">{{ formattedDate( date ) }}</p>
+  <div class="cancel-section">
+    <Header>Отмена мероприятия</Header>
+    <div class="cancel-section__content" v-if="name">
+      <h3 class="cancel-section__title">{{ name }}</h3>
+      <div class="cancel-section__details">
+        <p class="cancel-section__date">{{ formattedDate( date ) }}</p>
       </div>
-      <div class="delete-section__members-list"></div>
-      <div class="delete-section__members-quantity">
-        <p class="delete-section__members-registered">{{ currentParticipants }}</p>
+      <div class="cancel-section__members-list"></div>
+      <div class="cancel-section__members-quantity">
+        <p class="cancel-section__members-registered">{{ currentParticipants }}</p>
         из
-        <p class="delete-section__members-all">{{ maxParticipants }}</p>
+        <p class="cancel-section__members-all">{{ maxParticipants }}</p>
       </div>
       <Message v-if="currentParticipants > 0">На мероприятие записаны люди!</Message>
-      <MainButton text="Удалить" @click="deleteEvent" />
+      <MainButton text="Отменить" @click="cancelEvent" />
     </div>
 
     <div v-else>
@@ -100,7 +100,7 @@ loadEvent()
 </template>
 
 <style lang="scss" scoped>
-.delete-section{
+.cancel-section{
   padding: 0 12px;
   &__content{
     display: flex;
