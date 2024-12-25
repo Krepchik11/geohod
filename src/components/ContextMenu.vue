@@ -58,7 +58,7 @@ onBeforeUnmount(() => {
       >
         <img
           v-if="item.icon"
-          :src="`/assets/${ item.icon }`"
+          :src="`/assets/${ item.icon }.svg`"
           alt="icon"
           class="context-menu__icon"
         />

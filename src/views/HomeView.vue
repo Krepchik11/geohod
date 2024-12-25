@@ -25,11 +25,11 @@ const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
 
 const menuItems = ref([
-  { label: 'Копировать ссылку', action: 'copy-link', icon: 'copyLinkIcon' },
-  { label: 'Копировать', action: 'copy', icon: 'copyIcon' },
-  { label: 'Редактировать', action: 'edit', icon: 'editIcon' },
-  { label: 'Участники', action: 'participants', icon: 'peopleIcon' },
-  { label: 'Отменить', action: 'delete', icon: 'deleteIcon' },
+  { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link' },
+  { label: 'Копировать', action: 'copy', icon: 'copy' },
+  { label: 'Редактировать', action: 'edit', icon: 'edit' },
+  { label: 'Участники', action: 'participants', icon: 'people' },
+  { label: 'Отменить', action: 'delete', icon: 'delete' },
 ])
 
 
