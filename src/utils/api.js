@@ -52,3 +52,14 @@ export const patch = async ( url, data ) => {
   }
 }
 
+export const deleteRequest = async ( url ) => {
+  try {
+    const response = await api.delete( url )
+    console.log( 'Удаление выполнено успешно:', response.data )
+    return response.data
+  } catch ( error ) {
+    console.error( 'Ошибка при выполнении DELETE-запроса:', error.response || error )
+    throw error
+  }
+}
+

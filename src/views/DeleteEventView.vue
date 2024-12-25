@@ -2,8 +2,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
 import { MainButton } from 'vue-tg'
-import { get, post, patch } from '../utils/api'
-import axios from 'axios'
+import { deleteRequest } from '../utils/api'
 
 import Header from '../components/Header.vue'
 import { useEventStore } from '../stores/eventStore'
@@ -29,38 +28,47 @@ function formattedDate( date ) {
   }).format( new Date( date ) )
 }
 
-async function loadEvent() {
-  try {
-    if ( !eventId.value ) throw new Error( 'ID мероприятия отсутствует.' )
+// async function loadEvent() {
+//   try {
+//     if ( !eventId.value ) throw new Error( 'ID мероприятия отсутствует.' )
 
-    const { data } = await axios.get( `/api/v1/events/${ eventId.value }` )
-    selectedEvent.value = data
-  } catch ( error ) {
-    console.error( 'Ошибка загрузки данных мероприятия:', error )
-    errorMessage.value = 'Мероприятие не найдено.'
-  }
-}
+//     const localEvent = eventStore.events.find( event => event.id === eventId.value )
+
+//     if ( localEvent ) {
+//       name.value = localEvent.description
+//       description.value = localEvent.description
+//       date.value = new Date( localEvent.date )
+//       maxParticipants.value = localEvent.maxParticipants
+//       currentParticipants.value = localEvent.currentParticipants || 0
+//     } else {
+//       const data = await get( `/api/v1/events/${ eventId.value }` )
+//       if ( !data ) throw new Error( 'Событие не найдено.' )
+
+//       name.value = data.description
+//       description.value = data.description
+//       date.value = new Date( data.date) 
+//       maxParticipants.value = data.maxParticipants
+//       currentParticipants.value = data.currentParticipants || 0
+//     }
+//   } catch ( error ) {
+//     console.error( 'Ошибка загрузки данных мероприятия:', error )
+//     router.push( '/' )
+//   }
+// }
 
 async function deleteEvent() {
-  // if ( eventId.value ) {  
-  //   eventStore.deleteEvent( eventId.value )
-  //   router.push( '/' )
-  // } else {
-  //   alert( 'Ошибка: ID события не найден.' )
-  // }
-
   try {
-    await patch( `/api/v1/events/${ eventId.value }/cancel` )
+    await deleteRequest( `/api/v1/events/${ eventId.value }/cancel` )
+    await eventStore.fetchEvents()
     router.push( '/' )
   } catch ( error ) {
     console.error( 'Ошибка при удалении мероприятия:', error )
-    alert( 'Произошла ошибка при отмене мероприятия.' )
   } finally {
     isLoading.value = false
   }
 }
 
-loadEvent()
+// loadEvent()
 
 </script>
 

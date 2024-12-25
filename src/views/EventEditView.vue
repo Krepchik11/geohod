@@ -2,12 +2,10 @@
 import { ref, onMounted, computed, nextTick, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useEventStore } from '../stores/eventStore.js'
-import axios from 'axios'
-import { get, post, put } from '../utils/api'
+import { get, put } from '../utils/api'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { ru } from 'date-fns/locale'
 
 import { useWebAppTheme } from 'vue-tg'
 
@@ -33,7 +31,6 @@ const date = ref( new Date() )
 const currentParticipants = ref( 0 )
 const isEditing = ref( false )
 const childInput = ref( null )
-// const maxParticipants = ref( eventData.value.maxParticipants || 30 )
 const maxParticipants = ref( null )
 
 async function loadEvent() {
@@ -56,12 +53,11 @@ async function loadEvent() {
       maxParticipants.value = data.maxParticipants
       currentParticipants.value = data.currentParticipants || 0
     }
-  } catch (error) {
-    console.error('Ошибка загрузки данных мероприятия:', error);
-    router.push('/'); // Перенаправление на главную страницу в случае ошибки
+  } catch ( error ) {
+    console.error( 'Ошибка загрузки данных мероприятия:', error )
+    router.push( '/' )
   }
 }
-
 
 function saveEvent() {
   if ( !description.value || !date.value || !maxParticipants.value ) return
@@ -75,12 +71,11 @@ function saveEvent() {
 
   put( `/api/v1/events/${ eventId.value }`, updatedEvent )
   .then( response => {
-    console.log( 'Мероприятие обновлено:', response )
     eventStore.fetchEvents()
     router.push( '/' )
   })  
   .catch( error => {
-    console.error( 'Ошибка при обновлении мероприятия:', error.response || error );
+    console.error( 'Ошибка при обновлении мероприятия:', error.response || error )
   })
 }
 
