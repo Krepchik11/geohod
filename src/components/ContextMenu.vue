@@ -57,12 +57,6 @@ onBeforeUnmount(() => {
         :key="item.action"
         @click.stop="handleAction( item )"
       >
-        <!-- <img
-          v-if="item.icon"
-          :src="`/assets/${ item.icon }.svg`"
-          alt="icon"
-          class="context-menu__icon"
-        /> -->
         <IconCopyLink v-if="item.icon === 'copy-link'" />
         <IconCopy v-if="item.icon === 'copy'" />
         <IconEdit v-if="item.icon === 'edit'" />
@@ -94,6 +88,7 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     padding: 10px 15px;
+    gap: 10px;
     cursor: pointer;
 
     &:first-child {
