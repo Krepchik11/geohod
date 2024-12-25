@@ -1,6 +1,12 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
+import copyLinkIcon from '@/assets/copy-link.svg'
+import copyIcon from '@/assets/copy.svg'
+import editIcon from '@/assets/edit.svg'
+import deleteIcon from '@/assets/delete.svg'
+import peopleIcon from '@/assets/people.svg'
+
 defineProps({
   visible: Boolean,
   position: {

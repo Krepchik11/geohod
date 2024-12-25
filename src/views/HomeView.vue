@@ -3,8 +3,6 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 
-
-
 import Header from '../components/Header.vue'
 import ContextMenu from '../components/ContextMenu.vue'
 
@@ -27,11 +25,11 @@ const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
 
 const menuItems = ref([
-  { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link.svg' },
-  { label: 'Копировать', action: 'copy', icon: 'copy.svg' },
-  { label: 'Редактировать', action: 'edit', icon: 'edit.svg' },
-  { label: 'Участники', action: 'participants', icon: 'people.svg' },
-  { label: 'Отменить', action: 'delete', icon: 'delete.svg' },
+  { label: 'Копировать ссылку', action: 'copy-link', icon: 'copyLinkIcon' },
+  { label: 'Копировать', action: 'copy', icon: 'copyIcon' },
+  { label: 'Редактировать', action: 'edit', icon: 'editIcon' },
+  { label: 'Участники', action: 'participants', icon: 'peopleIcon' },
+  { label: 'Отменить', action: 'delete', icon: 'deleteIcon' },
 ])
 
 
