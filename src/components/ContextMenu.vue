@@ -3,7 +3,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { defineProps, defineEmits } from 'vue'
 
 import IconCopyLink from './icons/IconCopyLink.vue'
-import IconCopy from './icons/IconCopyLink.vue'
+import IconCopy from './icons/IconCopy.vue'
 import IconEdit from './icons/IconEdit.vue'
 import IconPeople from './icons/IconPeople.vue'
 import IconDelete from './icons/IconDelete.vue'
