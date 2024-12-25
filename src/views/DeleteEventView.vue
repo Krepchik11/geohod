@@ -58,7 +58,7 @@ function formattedDate( date ) {
 
 async function deleteEvent() {
   try {
-    await deleteRequest( `/api/v1/events/${ eventId.value }/cancel` )
+    await deleteRequest( `/api/v1/events/${ eventId.value }` )
     await eventStore.fetchEvents()
     router.push( '/' )
   } catch ( error ) {
