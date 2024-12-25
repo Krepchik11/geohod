@@ -48,21 +48,51 @@ const childInput = ref( null )
 // const maxParticipants = ref( eventData.value.maxParticipants || 30 )
 const maxParticipants = ref( null )
 
+// async function loadEvent() {
+//   try {
+//     const { data } = await get( `/api/v1/events/${ eventId.value }` )
+//     console.log( 'loadEvent', data )
+    
+//     name.value = data.description
+//     description.value = data.description
+//     date.value = new Date( data.date )
+//     maxParticipants.value = data.maxParticipants
+//     currentParticipants.value = data.currentParticipants || 0
+//   } catch ( error ) {
+//     console.error( 'Ошибка загрузки данных мероприятия:', error )
+//     router.push( '/' )
+//   }
+// }
+
 async function loadEvent() {
   try {
-    const { data } = await get( `/api/v1/events/${ eventId.value }` )
-    console.log( 'loadEvent', data )
-    
-    name.value = data.description
-    description.value = data.description
-    date.value = new Date( data.date )
-    maxParticipants.value = data.maxParticipants
-    currentParticipants.value = data.currentParticipants || 0
-  } catch ( error ) {
-    console.error( 'Ошибка загрузки данных мероприятия:', error )
-    router.push( '/' )
+    const localEvent = eventStore.events.find( event => event.id === eventId.value )
+
+    if ( localEvent ) {
+      console.log( 'Событие найдено в хранилище:', localEvent )
+      name.value = localEvent.description
+      description.value = localEvent.description
+      date.value = new Date( localEvent.date )
+      maxParticipants.value = localEvent.maxParticipants
+      currentParticipants.value = localEvent.currentParticipants || 0
+    } else {
+      const data = await get( `/api/v1/events/${ eventId.value }` )
+      if ( !data ) throw new Error( 'Событие не найдено.' )
+
+      console.log( 'Событие загружено с сервера:', data )
+      
+      name.value = data.description
+      description.value = data.description
+      date.value = new Date( data.date) 
+      maxParticipants.value = data.maxParticipants
+      currentParticipants.value = data.currentParticipants || 0
+    }
+  } catch (error) {
+    console.error('Ошибка загрузки данных мероприятия:', error);
+    router.push('/'); // Перенаправление на главную страницу в случае ошибки
   }
 }
+
 
 async function saveEvent() {
   if ( !description.value || !date.value || !maxParticipants.value ) return
