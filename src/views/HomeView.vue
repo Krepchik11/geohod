@@ -31,7 +31,7 @@ const menuItems = ref([
   { label: 'Копировать', action: 'copy', icon: 'copy.svg' },
   { label: 'Редактировать', action: 'edit', icon: 'edit.svg' },
   { label: 'Участники', action: 'participants', icon: 'people.svg' },
-  { label: 'Удалить', action: 'delete', icon: 'delete.svg' },
+  { label: 'Отменить', action: 'delete', icon: 'delete.svg' },
 ])
 
 
