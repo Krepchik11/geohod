@@ -63,7 +63,7 @@ async function loadEvent() {
 }
 
 
-async function saveEvent() {
+function saveEvent() {
   if ( !description.value || !date.value || !maxParticipants.value ) return
 
   const updatedEvent = {
@@ -73,13 +73,15 @@ async function saveEvent() {
     maxParticipants: maxParticipants.value,
   }
 
-  try {
-    const response = await put( `/api/v1/events/${ eventId.value }`, updatedEvent )
-    console.log( 'Мероприятие обновлено:', response.data )
+  put( `/api/v1/events/${ eventId.value }`, updatedEvent )
+  .then( response => {
+    console.log( 'Мероприятие обновлено:', response )
+    eventStore.fetchEvents()
     router.push( '/' )
-  } catch ( error ) {
-    console.error( 'Ошибка при обновлении мероприятия:', error.response || error )
-  }
+  })  
+  .catch( error => {
+    console.error( 'Ошибка при обновлении мероприятия:', error.response || error );
+  })
 }
 
 function cancel() {
