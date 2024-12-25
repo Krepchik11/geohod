@@ -1,5 +1,12 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { defineProps, defineEmits } from 'vue'
+
+import IconCopyLink from './icons/IconCopyLink.vue'
+import IconCopy from './icons/IconCopyLink.vue'
+import IconEdit from './icons/IconEdit.vue'
+import IconPeople from './icons/IconPeople.vue'
+import IconDelete from './icons/IconDelete.vue'
 
 defineProps({
   visible: Boolean,
@@ -50,12 +57,18 @@ onBeforeUnmount(() => {
         :key="item.action"
         @click.stop="handleAction( item )"
       >
-        <img
+        <!-- <img
           v-if="item.icon"
           :src="`/assets/${ item.icon }.svg`"
           alt="icon"
           class="context-menu__icon"
-        />
+        /> -->
+        <IconCopyLink v-if="item.icon === 'copy-link'" />
+        <IconCopy v-if="item.icon === 'copy'" />
+        <IconEdit v-if="item.icon === 'edit'" />
+        <IconPeople v-if="item.icon === 'people'" />
+        <IconDelete v-if="item.icon === 'delete'" />
+
         <span class="context-menu__label">{{ item.label }}</span>
       </li>
     </ul>
