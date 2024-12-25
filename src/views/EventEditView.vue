@@ -3,7 +3,7 @@ import { ref, onMounted, computed, nextTick, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useEventStore } from '../stores/eventStore.js'
 import axios from 'axios'
-import { get, post } from '../utils/api'
+import { get, post, put } from '../utils/api'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -18,23 +18,11 @@ const router = useRouter()
 const route = useRoute()
 const eventStore = useEventStore()
 
-// onMounted(() => {
-//   if ( eventData.value ) {
-//     description.value = eventData.value.description
-//     date.value = new Date( eventData.value.date )
-//     maxParticipants.value = eventData.value.maxParticipants
-//     currentParticipants.value = eventData.value.currentParticipants
-//   }
-// })
-
 onMounted(() => {
-  console.log('onMounted');
-  
   loadEvent()
 })
 
 const eventId = computed( () => route.params.id ) 
-// const eventData = computed( () => eventStore.events.find( event => event.id === eventId.value ) )
 
 const theme = useWebAppTheme()
 const dataPickerTheme = ref( theme.colorScheme.value === 'dark' ? true : false )
@@ -48,28 +36,11 @@ const childInput = ref( null )
 // const maxParticipants = ref( eventData.value.maxParticipants || 30 )
 const maxParticipants = ref( null )
 
-// async function loadEvent() {
-//   try {
-//     const { data } = await get( `/api/v1/events/${ eventId.value }` )
-//     console.log( 'loadEvent', data )
-    
-//     name.value = data.description
-//     description.value = data.description
-//     date.value = new Date( data.date )
-//     maxParticipants.value = data.maxParticipants
-//     currentParticipants.value = data.currentParticipants || 0
-//   } catch ( error ) {
-//     console.error( 'Ошибка загрузки данных мероприятия:', error )
-//     router.push( '/' )
-//   }
-// }
-
 async function loadEvent() {
   try {
     const localEvent = eventStore.events.find( event => event.id === eventId.value )
 
     if ( localEvent ) {
-      console.log( 'Событие найдено в хранилище:', localEvent )
       name.value = localEvent.description
       description.value = localEvent.description
       date.value = new Date( localEvent.date )
@@ -79,8 +50,6 @@ async function loadEvent() {
       const data = await get( `/api/v1/events/${ eventId.value }` )
       if ( !data ) throw new Error( 'Событие не найдено.' )
 
-      console.log( 'Событие загружено с сервера:', data )
-      
       name.value = data.description
       description.value = data.description
       date.value = new Date( data.date) 
@@ -105,7 +74,7 @@ async function saveEvent() {
   }
 
   try {
-    const response = await axios.put( `/events/${ eventId.value }`, updatedEvent )
+    const response = await put( `/api/v1/events/${ eventId.value }`, updatedEvent )
     console.log( 'Мероприятие обновлено:', response.data )
     router.push( '/' )
   } catch ( error ) {
