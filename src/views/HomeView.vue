@@ -143,28 +143,36 @@ function formattedDate( date ) {
 } 
 
 async function copyLink() {
-    const eventId = contextMenuPosition.value.eventId
-    
-try {
-    const data = await get( `/api/v1/events/${ eventId }` )
+  const eventId = contextMenuPosition.value.eventId;
+  console.log('copyLink called with eventId:', eventId);
+
+  if (!eventId) {
+    console.error('Event ID отсутствует');
+    return;
+  }
+
+  try {
+    const data = await get(`/api/v1/events/${eventId}`);
+    console.log('Fetched event data:', data);
 
     const baseURL = window.location.origin;
-    const eventLink = `${ baseURL }/api/v1/event/${ eventId }`
+    const eventLink = `${baseURL}/api/v1/event/${eventId}`;
+    console.log('Event link:', eventLink);
 
-    console.log( 'Event link:', eventLink );
-    
-    if ( window.Telegram?.WebApp ) {
-      Telegram.WebApp.showAlert( 'Ссылка скопирована в буфер обмена.' )
-    } else if ( navigator.clipboard ) {
-      await navigator.clipboard.writeText( eventLink )
-      alert( 'Ссылка скопирована в буфер обмена.' ) // Для iPhone и старых устройств
+    if (window.Telegram?.WebApp) {
+      console.log('Telegram WebApp detected.');
+      Telegram.WebApp.showAlert('Ссылка скопирована в буфер обмена.');
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(eventLink);
+      alert('Ссылка скопирована в буфер обмена.');
     } else {
-      console.warn( 'Clipboard API is not supported.' )
+      console.warn('Clipboard API is not supported.');
     }
-  } catch ( error ) {
-    console.error( 'Ошибка копирования ссылки:', error )
+  } catch (error) {
+    console.error('Ошибка копирования ссылки:', error);
   }
 }
+
 
 function isEventFinished( eventDate ) {
   if ( !eventDate ) return false
