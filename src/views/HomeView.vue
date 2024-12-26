@@ -159,11 +159,11 @@ async function copyLink() {
     const eventLink = `${baseURL}/api/v1/event/${eventId}`;
     console.log('Event link:', eventLink);
 
-    if (window.Telegram?.WebApp) {
-      console.log('Telegram WebApp detected.');
-      Telegram.WebApp.copyToClipboard(eventLink); 
-      Telegram.WebApp.showAlert('Ссылка скопирована в буфер обмена.');
-    } else if (navigator.clipboard) {
+    // if (window.Telegram?.WebApp) {
+    //   console.log('Telegram WebApp detected.');
+    //   Telegram.WebApp.showAlert('Ссылка скопирована в буфер обмена.');
+    // } else 
+    if (navigator.clipboard) {
       await navigator.clipboard.writeText(eventLink);
       alert('Ссылка скопирована в буфер обмена.');
     } else {
