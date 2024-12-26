@@ -151,7 +151,13 @@ async function copyLink() {
     const baseURL = window.location.origin
     const eventLink = `${ baseURL }/api/v1/event/${ eventId }`
 
-    copyTextToClipboard( eventLink )
+    if ( navigator.clipboard ) {
+      await navigator.clipboard.writeText( eventLink )
+      console.log( 'Ссылка скопирована в буфер обмена.' )
+    } else {
+      console.warn( 'Clipboard API не поддерживается в этом браузере.' )
+      copyTextToClipboard( eventLink )
+    }
 
     if ( window.Telegram?.WebApp ) {
       Telegram.WebApp.showAlert( 'Ссылка скопирована в буфер обмена.' )
