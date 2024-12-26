@@ -144,20 +144,15 @@ function formattedDate( date ) {
 
 async function copyLink() {
     const eventId = contextMenuPosition.value.eventId
-    console.log( 'Copying link for event:', eventId );
     
 try {
     const data = await get( `/api/v1/events/${ eventId }` )
-    console.log( 'Event data:', data );
-    
-    
-    if ( !data || !data.link ) {
-      console.error( 'Ссылка не найдена в ответе сервера.' )
-      return
-    }
 
-    const eventLink = data.link
+    const baseURL = window.location.origin;
+    const eventLink = `${ baseURL }/api/v1/event/${ eventId }`
 
+    console.log( 'Event link:', eventLink );
+    
     if ( window.Telegram?.WebApp ) {
       Telegram.WebApp.showAlert( 'Ссылка скопирована в буфер обмена.' )
     } else if ( navigator.clipboard ) {
