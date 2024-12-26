@@ -140,32 +140,37 @@ function formattedDate( date ) {
 async function copyLink() {
   const eventId = contextMenuPosition.value.eventId
 
+//   const eventToCopy = eventStore.events.find( event => event.id === eventId )
+
+//   if ( eventToCopy ) {
+//     const eventLink = `${ window.location.origin}/event/${ eventId }`
+//   }
+
   if ( !eventId ) {
     console.error( 'Event ID отсутствует' )
     return;
   }
 
   try {
-    const data = await get( `/api/v1/events/${ eventId }` )
+      const data = await get( `/api/v1/events/${ eventId }` )
 
-    const baseURL = window.location.origin
-    const eventLink = `${ baseURL }/api/v1/event/${ eventId }`
-
-    if ( navigator.clipboard ) {
-      await navigator.clipboard.writeText( eventLink )
-      console.log( 'Ссылка скопирована в буфер обмена.' )
-    } else {
-      console.warn( 'Clipboard API не поддерживается в этом браузере.' )
-      copyTextToClipboard( eventLink )
+      const baseURL = window.location.origin
+      const eventLink = `${ baseURL }/api/v1/event/${ eventId }`
+  
+      if ( window.Telegram?.WebApp ) {
+        Telegram.WebApp.showAlert( 'Ссылка скопирована в буфер обмена.' )
+      } else if ( navigator.clipboard ) {
+          navigator.clipboard.writeText( eventLink )
+          .then(() => {
+            alert( 'Ссылка скопирована в буфер обмена.' ) // Для iPhone и старых устройств
+          })
+          .catch(() => {
+            console.error( 'Ошибка копирования' )
+          })
+      }
+    } catch ( error ) {
+      console.error( 'Ошибка копирования ссылки:', error )
     }
-
-    if ( window.Telegram?.WebApp ) {
-      Telegram.WebApp.showAlert( 'Ссылка скопирована в буфер обмена.' )
-    }
-
-  } catch ( error ) {
-    console.error( 'Ошибка копирования ссылки:', error )
-  }
 }
 
 
