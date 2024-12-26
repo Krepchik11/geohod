@@ -140,12 +140,6 @@ function formattedDate( date ) {
 async function copyLink() {
   const eventId = contextMenuPosition.value.eventId
 
-//   const eventToCopy = eventStore.events.find( event => event.id === eventId )
-
-//   if ( eventToCopy ) {
-//     const eventLink = `${ window.location.origin}/event/${ eventId }`
-//   }
-
   if ( !eventId ) {
     console.error( 'Event ID отсутствует' )
     return;
@@ -158,7 +152,13 @@ async function copyLink() {
       const eventLink = `${ baseURL }/api/v1/event/${ eventId }`
   
       if ( window.Telegram?.WebApp ) {
-        Telegram.WebApp.showAlert( 'Ссылка скопирована в буфер обмена.' )
+        Telegram.WebApp.copyToClipboard( eventLink )
+        .then(() => {
+          Telegram.WebApp.showAlert( 'Ссылка скопирована в буфер обмена.' )
+        })
+        .catch(( error ) => {
+           console.error( 'Ошибка копирования через Telegram WebApp:', error )
+        })
         copyTextToClipboard( eventLink )
       } else if ( navigator.clipboard ) {
           navigator.clipboard.writeText( eventLink )
