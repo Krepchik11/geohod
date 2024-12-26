@@ -1,6 +1,6 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRoute, useRouter, RouterLink } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter, RouterLink } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 import { get } from '../utils/api'
 
@@ -9,9 +9,6 @@ import ContextMenu from '../components/ContextMenu.vue'
 
 const eventStore = useEventStore()
 const router = useRouter()
-// const route = useRoute()
-
-// const eventId = computed( () => route.params.id )
 
 const isLoading = ref( true )
 
@@ -24,7 +21,6 @@ onMounted( async () => {
   }
 })
 
-
 const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
 
@@ -35,7 +31,6 @@ const menuItems = ref([
   { label: 'Участники', action: 'participants', icon: 'people' },
   { label: 'Отменить', action: 'delete', icon: 'delete' },
 ])
-
 
 function handleMenuSelect( item ) {
     switch ( item.action ) {
@@ -143,46 +138,39 @@ function formattedDate( date ) {
 } 
 
 async function copyLink() {
-  const eventId = contextMenuPosition.value.eventId;
-  console.log('copyLink called with eventId:', eventId);
+  const eventId = contextMenuPosition.value.eventId
 
-  if (!eventId) {
-    console.error('Event ID отсутствует');
+  if ( !eventId ) {
+    console.error( 'Event ID отсутствует' )
     return;
   }
 
   try {
-    const data = await get(`/api/v1/events/${eventId}`);
-    console.log('Fetched event data:', data);
+    const data = await get( `/api/v1/events/${ eventId }` )
 
-    const baseURL = window.location.origin;
-    const eventLink = `${baseURL}/api/v1/event/${eventId}`;
-    console.log('Event link:', eventLink);
-    
-    copyTextToClipboard(eventLink);
+    const baseURL = window.location.origin
+    const eventLink = `${ baseURL }/api/v1/event/${ eventId }`
 
-    if (window.Telegram?.WebApp) {
-      console.log('Telegram WebApp detected.');
-      Telegram.WebApp.showAlert('Ссылка скопирована в буфер обмена.');
+    copyTextToClipboard( eventLink )
+
+    if ( window.Telegram?.WebApp ) {
+      Telegram.WebApp.showAlert( 'Ссылка скопирована в буфер обмена.' )
     }
 
-  } catch (error) {
-    console.error('Ошибка копирования ссылки:', error);
+  } catch ( error ) {
+    console.error( 'Ошибка копирования ссылки:', error )
   }
 }
 
 
-function copyTextToClipboard(text) {
-  const textArea = document.createElement('textarea');
-  textArea.value = text;
-  document.body.appendChild(textArea);
-  textArea.select();
-  document.execCommand('copy');
-  document.body.removeChild(textArea);
-  alert('Ссылка скопирована в буфер обмена.');
+function copyTextToClipboard( text ) {
+  const textArea = document.createElement( 'textarea' )
+  textArea.value = text
+  document.body.appendChild( textArea )
+  textArea.select()
+  document.execCommand( 'copy' )
+  document.body.removeChild( textArea )
 }
-
-
 
 function isEventFinished( eventDate ) {
   if ( !eventDate ) return false
