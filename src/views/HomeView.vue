@@ -9,9 +9,9 @@ import ContextMenu from '../components/ContextMenu.vue'
 
 const eventStore = useEventStore()
 const router = useRouter()
-const route = useRoute()
+// const route = useRoute()
 
-const eventId = computed( () => route.params.id )
+// const eventId = computed( () => route.params.id )
 
 const isLoading = ref( true )
 
@@ -143,8 +143,13 @@ function formattedDate( date ) {
 } 
 
 async function copyLink() {
+    const eventId = contextMenuPosition.value.eventId
+    console.log( 'Copying link for event:', eventId );
+    
 try {
     const data = await get( `/api/v1/events/${ eventId }` )
+    console.log( 'Event data:', data );
+    
     
     if ( !data || !data.link ) {
       console.error( 'Ссылка не найдена в ответе сервера.' )
