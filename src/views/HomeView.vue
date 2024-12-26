@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
+import { get } from '../utils/api'
 
 import Header from '../components/Header.vue'
 import ContextMenu from '../components/ContextMenu.vue'
@@ -138,24 +139,29 @@ function formattedDate( date ) {
     } ).format( new Date( date ) )
 } 
 
-function copyLink() {
+async function copyLink() {
   const eventId = contextMenuPosition.value.eventId
-  const eventToCopy = eventStore.events.find( event => event.id === eventId )
 
-  if ( eventToCopy ) {
-    const eventLink = `${ window.location.origin}/event/${ eventId }`
+try {
+    const data = await get( `/api/v1/events/${ eventId }` )
+    
+    if ( !data || !data.link ) {
+      console.error( 'Ссылка не найдена в ответе сервера.' )
+      return
+    }
+
+    const eventLink = data.link
 
     if ( window.Telegram?.WebApp ) {
       Telegram.WebApp.showAlert( 'Ссылка скопирована в буфер обмена.' )
     } else if ( navigator.clipboard ) {
-      navigator.clipboard.writeText( eventLink )
-        .then(() => {
-          alert( 'Ссылка скопирована в буфер обмена.' ) // Для iPhone и старых устройств
-        })
-        .catch(() => {
-          console.error( 'Ошибка копирования' )
-        })
-    } 
+      await navigator.clipboard.writeText( eventLink )
+      alert( 'Ссылка скопирована в буфер обмена.' ) // Для iPhone и старых устройств
+    } else {
+      console.warn( 'Clipboard API is not supported.' )
+    }
+  } catch ( error ) {
+    console.error( 'Ошибка копирования ссылки:', error )
   }
 }
 
