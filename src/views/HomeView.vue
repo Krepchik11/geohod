@@ -161,6 +161,7 @@ async function copyLink() {
 
     if (window.Telegram?.WebApp) {
       console.log('Telegram WebApp detected.');
+      Telegram.WebApp.copyToClipboard(eventLink); 
       Telegram.WebApp.showAlert('Ссылка скопирована в буфер обмена.');
     } else if (navigator.clipboard) {
       await navigator.clipboard.writeText(eventLink);
