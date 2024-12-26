@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter, RouterLink } from 'vue-router'
+import { useRoute, useRouter, RouterLink } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 import { get } from '../utils/api'
 
@@ -9,6 +9,9 @@ import ContextMenu from '../components/ContextMenu.vue'
 
 const eventStore = useEventStore()
 const router = useRouter()
+const route = useRoute()
+
+const eventId = computed( () => route.params.id )
 
 const isLoading = ref( true )
 
@@ -140,8 +143,6 @@ function formattedDate( date ) {
 } 
 
 async function copyLink() {
-  const eventId = contextMenuPosition.value.eventId
-
 try {
     const data = await get( `/api/v1/events/${ eventId }` )
     
