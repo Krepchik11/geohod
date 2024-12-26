@@ -158,21 +158,30 @@ async function copyLink() {
     const baseURL = window.location.origin;
     const eventLink = `${baseURL}/api/v1/event/${eventId}`;
     console.log('Event link:', eventLink);
+    
+    copyTextToClipboard(eventLink);
 
-    // if (window.Telegram?.WebApp) {
-    //   console.log('Telegram WebApp detected.');
-    //   Telegram.WebApp.showAlert('Ссылка скопирована в буфер обмена.');
-    // } else 
-    if (navigator.clipboard) {
-      await navigator.clipboard.writeText(eventLink);
-      alert('Ссылка скопирована в буфер обмена.');
-    } else {
-      console.warn('Clipboard API is not supported.');
+    if (window.Telegram?.WebApp) {
+      console.log('Telegram WebApp detected.');
+      Telegram.WebApp.showAlert('Ссылка скопирована в буфер обмена.');
     }
+
   } catch (error) {
     console.error('Ошибка копирования ссылки:', error);
   }
 }
+
+
+function copyTextToClipboard(text) {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textArea);
+  alert('Ссылка скопирована в буфер обмена.');
+}
+
 
 
 function isEventFinished( eventDate ) {
