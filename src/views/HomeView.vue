@@ -159,6 +159,7 @@ async function copyLink() {
   
       if ( window.Telegram?.WebApp ) {
         Telegram.WebApp.showAlert( 'Ссылка скопирована в буфер обмена.' )
+        copyTextToClipboard( eventLink )
       } else if ( navigator.clipboard ) {
           navigator.clipboard.writeText( eventLink )
           .then(() => {
