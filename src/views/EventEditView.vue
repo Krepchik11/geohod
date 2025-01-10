@@ -32,6 +32,7 @@ const currentParticipants = ref( 0 )
 const isEditing = ref( false )
 const childInput = ref( null )
 const maxParticipants = ref( null )
+const author = ref( '' )
 
 async function loadEvent() {
   try {
@@ -43,6 +44,7 @@ async function loadEvent() {
       date.value = new Date( localEvent.date )
       maxParticipants.value = localEvent.maxParticipants
       currentParticipants.value = localEvent.currentParticipants || 0
+      author.value = localEvent.author
     } else {
       const data = await get( `/api/v1/events/${ eventId.value }` )
       if ( !data ) throw new Error( 'Событие не найдено.' )
@@ -52,6 +54,7 @@ async function loadEvent() {
       date.value = new Date( data.date) 
       maxParticipants.value = data.maxParticipants
       currentParticipants.value = data.currentParticipants || 0
+      author.value = data.author
     }
   } catch ( error ) {
     console.error( 'Ошибка загрузки данных мероприятия:', error )
