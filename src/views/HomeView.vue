@@ -230,13 +230,15 @@ function isEventFinished( eventDate ) {
                                <p class="event__date">{{ formattedDate( event.date ) }}</p>
                                <p class="event__participants">{{ event.currentParticipants }}</p>
                             </div>
-                            <RouterLink
-                              v-if="isEventFinished( event.date )"
-                              :to="{ name: 'finish', params: { id: event.id } }"
-                              class="event__finish-link"
-                            >
-                              Завершить
-                            </RouterLink>
+                            <div class="event__finish">
+                                <RouterLink
+                                v-if="isEventFinished( event.date )"
+                                :to="{ name: 'finish', params: { id: event.id } }"
+                                class="event__finish-link"
+                              >
+                                Завершить
+                              </RouterLink>
+                            </div>
                         </div>
                     </div>
                 </div>    
@@ -347,14 +349,18 @@ function isEventFinished( eventDate ) {
     &__date {
         color: var(--primary-gray);
     }
-    &__finish-link {
+    &__finish {
         display: flex;
         justify-content: flex-end;
+    }
+    &__finish-link {
+        display: flex;
         color: var(--primary-blue);
         text-decoration: none;
         font-weight: 500;
         padding-top: 10px;
         padding-right: 12px;
+        max-width: 100px;
     }
 }
 

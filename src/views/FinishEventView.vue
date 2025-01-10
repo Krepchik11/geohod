@@ -81,7 +81,7 @@ function finishEvent() {
           :style="{ backgroundImage: `url(${participant.avatar})` }"
           ></div>
         </div>
-        <div class="finish-section__members-all">{{ selectedEvent.maxParticipants }} человек</div>
+        <div class="finish-section__members-all">{{ selectedEvent.currentParticipants }} человек</div>
       </div>
       <div class="finish-section__members-send">
         <div class="finish-section__members-send-title">Направить участникам</div>
