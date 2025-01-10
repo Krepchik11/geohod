@@ -1,7 +1,8 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
+import { get } from '../utils/api'
 import { useEventStore } from '../stores/eventStore'
 
 import Header from '../components/Header.vue'
@@ -11,11 +12,44 @@ const route = useRoute()
 const router = useRouter()
 const eventStore = useEventStore()
 
+onMounted(() => {
+  loadEvent()
+})
+
+
 const eventId = computed( () => Number( route.params.id ))
 
-const selectedEvent = computed(() =>
-  eventStore.events.find( event => event.id === eventId.value ) 
-)
+const description = ref( '' )
+const name = ref( '' )
+const date = ref( new Date() )
+const currentParticipants = ref( 0 )
+const maxParticipants = ref( null )
+
+async function loadEvent() {
+  try {
+    const localEvent = eventStore.events.find( event => event.id === eventId.value )
+
+    if ( localEvent ) {
+      name.value = localEvent.description
+      description.value = localEvent.description
+      date.value = new Date( localEvent.date )
+      maxParticipants.value = localEvent.maxParticipants
+      currentParticipants.value = localEvent.currentParticipants || 0
+    } else {
+      const data = await get( `/api/v1/events/${ eventId.value }` )
+      if ( !data ) throw new Error( 'Событие не найдено.' )
+
+      name.value = data.description
+      description.value = data.description
+      date.value = new Date( data.date) 
+      maxParticipants.value = data.maxParticipants
+      currentParticipants.value = data.currentParticipants || 0
+    }
+  } catch ( error ) {
+    console.error( 'Ошибка загрузки данных мероприятия:', error )
+    router.push( '/' )
+  }
+}
 
 const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
@@ -109,13 +143,13 @@ function formattedDate( date ) {
 <template>
   <div class="participants-section">
     <Header>Список участников</Header>
-    <div class="participants-section__content" v-if="selectedEvent">
-      <h3 class="participants-section__title">{{ selectedEvent.description }}</h3>
+    <div class="participants-section__content" v-if="description">
+      <h3 class="participants-section__title">{{ description }}</h3>
       <div class="participants-section__details">
-        <p class="participants-section__date">{{ formattedDate( selectedEvent.date ) }}</p>
+        <p class="participants-section__date">{{ formattedDate( date ) }}</p>
       </div>
       <div  
-        v-for="( member, index ) in selectedEvent.currentParticipants" 
+        v-for="( member, index ) in currentParticipants" 
         :key="index" 
         class="participants-section__members-list"
         @click.stop="( e ) => showContextMenu( e, member.id )"
@@ -141,9 +175,9 @@ function formattedDate( date ) {
         />
       </div>
       <div class="participants-section__members-quantity">
-        <p class="participants-section__members-registered">{{ selectedEvent.currentParticipants }}</p>
+        <p class="participants-section__members-registered">{{ currentParticipants }}</p>
         из
-        <p class="participants-section__members-all">{{ selectedEvent.maxParticipants }}</p>
+        <p class="participants-section__members-all">{{ maxParticipants }}</p>
       </div>
     </div>
 
