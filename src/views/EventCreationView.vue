@@ -110,7 +110,7 @@ onMounted(() => {
       >
         <div class="event-creation__image-wrapper">
           <img 
-            src="/src/assets/geohod_640-360.jpg" 
+            :src="author?.imageUrl || '/src/assets/geohod_640-360.jpg'" 
             alt="img avatar" 
             class="event-creation__image"
           >
