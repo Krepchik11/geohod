@@ -24,7 +24,6 @@ const description = ref( route.query.description || '' )
 const date = ref( new Date( Date.now() ) )
 const maxParticipants = ref( Number( route.query.maxParticipants ) || 30 )
 const currentParticipants = ref( 0 )
-const author = ref( '' )
 
 const childInput = ref( null )
 const isInputBlurred = ref( false )
@@ -40,7 +39,6 @@ function createEvent() {
     description: description.value,
     date: date.value.toISOString(),
     maxParticipants: maxParticipants.value,
-    author: author.value,
   }
 
   post( '/api/v1/events', newEvent ) 
@@ -112,7 +110,7 @@ onMounted(() => {
       >
         <div class="event-creation__image-wrapper">
           <img 
-            :src="author?.imageUrl ?? '/src/assets/geohod_640-360.jpg'" 
+            src="/src/assets/geohod_640-360.jpg" 
             alt="img avatar" 
             class="event-creation__image"
           >
