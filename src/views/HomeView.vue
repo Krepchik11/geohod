@@ -219,7 +219,7 @@ function isEventFinished( eventDate ) {
                     <div class="event__inner">
                         <div class="event__image-wrapper">
                             <img 
-                                src="/src/assets/geohod_640-360.jpg" 
+                                :src="event.author?.imageUrl || '/src/assets/geohod_640-360.jpg'"
                                 alt="img avatar" 
                                 class="event__image"
                             >
