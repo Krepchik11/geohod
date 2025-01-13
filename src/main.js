@@ -26,8 +26,8 @@ console.log('initData:', initData)
 console.log('startapp:', startAppParam)
 
 router.isReady().then(() => {
-  if (startAppParam?.startsWith('registration_')) {
-    const eventId = startAppParam.replace('registration_', '');
+  if (startAppParam?.startsWith('registration/')) {
+    const eventId = startAppParam.replace('registration/', '');
     console.log('Navigating to registration:', { name: 'registration', params: { id: eventId } })
     router.push({ name: 'registration', params: { id: eventId } }).catch(console.error)
   } else {
