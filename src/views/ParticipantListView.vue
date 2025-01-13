@@ -16,7 +16,6 @@ onMounted(() => {
   loadEvent()
 })
 
-
 const eventId = computed( () => route.params.id ) 
 
 const description = ref( '' )

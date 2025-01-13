@@ -230,6 +230,13 @@ function isEventFinished( eventDate ) {
                                <p class="event__date">{{ formattedDate( event.date ) }}</p>
                                <p class="event__participants">{{ event.currentParticipants }}</p>
                             </div>
+                            <div>
+                                <RouterLink
+                                :to="{ name: 'registration', params: { id: event.id } }"
+                              >
+                                link to event
+                              </RouterLink>
+                            </div>
                             <div class="event__finish">
                                 <RouterLink
                                 v-if="isEventFinished( event.date )"
