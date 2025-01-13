@@ -19,19 +19,23 @@ app.use( router )
 app.use( VueTelegramPlugin )
 
 const initData = window.Telegram?.WebApp?.initData || window.location.search
-// const params = new URLSearchParams(initData)
+
+const params = new URLSearchParams(initData)
 // const startAppParam = params.get('startapp')
+const startAppParam = params.get('start_param')
 
-if (initData) {
-  const decodedData = JSON.parse(decodeURIComponent(initData));
-  console.log('Decoded initData:', decodedData);
-  const startAppParam = decodedData.start_param; 
-  console.log('startapp:', startAppParam);
-}
+console.log('initData main:', initData);
+console.log('startapp:', startAppParam);
 
-console.log('initData main:', initData)
-
-
+router.isReady().then(() => {
+  if (startAppParam?.startsWith('registration_')) {
+    const eventId = startAppParam.replace('registration_', '');
+    console.log('Navigating to registration:', { name: 'registration', params: { id: eventId } });
+    router.push({ name: 'registration', params: { id: eventId } }).catch(console.error);
+  } else {
+    console.log('No valid startapp found:', startAppParam);
+  }
+});
 
 
 router.isReady().then(() => {
