@@ -2,6 +2,9 @@ import axios from 'axios';
 
 const initData = window.Telegram.WebApp.initData;
 
+console.log( 'initData:', initData );
+
+
 const api = axios.create({
   baseURL: '', 
   headers: {
