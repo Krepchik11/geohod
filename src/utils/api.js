@@ -15,7 +15,7 @@ if (startAppParam?.startsWith('registration_')) {
 console.log( 'window.Telegram:', window.Telegram );
 console.log( 'window.Telegram.WebApp:', window.Telegram.WebApp );
 console.log( 'initData:', initData );
-
+console.log('Parsed Params:', params);
 
 const api = axios.create({
   baseURL: '', 
