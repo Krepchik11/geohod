@@ -22,12 +22,14 @@ const params = new URLSearchParams( window.Telegram?.WebApp?.initData || window.
 const startAppParam = params.get('startapp')
 
 router.isReady().then(() => {
-    if ( startAppParam?.startsWith( 'registration_' ) ) {
-      const eventId = startAppParam.replace( 'registration_', '' )
-      router.push({ name: 'registration', params: { id: eventId } }).catch( console.error )
-    }
-  })
-
+  if ( startAppParam?.startsWith( 'registration_' ) ) {
+    const eventId = startAppParam.replace( 'registration_', '' )
+    router.push({ name: 'registration', params: { id: eventId } }).catch( console.error )
+  }
+})
+console.log('Startapp Param:', startAppParam);
+console.log('Navigating to registration:', { name: 'registration', params: { id: eventId } });
+  
 
 
 app.mount( '#app' )
