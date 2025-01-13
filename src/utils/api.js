@@ -1,6 +1,16 @@
 import axios from 'axios';
 
-const initData = window.Telegram.WebApp.initData;
+// const initData = window.Telegram.WebApp.initData;
+
+const initData = window.Telegram?.WebApp?.initData || window.location.search;
+const params = new URLSearchParams(initData);
+const startAppParam = params.get('startapp');
+
+if (startAppParam?.startsWith('registration_')) {
+  const eventId = startAppParam.replace('registration_', '');
+  router.push({ name: 'registration', params: { id: eventId } });
+}
+
 
 console.log( 'window.Telegram:', window.Telegram );
 console.log( 'window.Telegram.WebApp:', window.Telegram.WebApp );

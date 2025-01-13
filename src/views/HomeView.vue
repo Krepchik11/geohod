@@ -146,10 +146,15 @@ async function copyLink() {
     }
  
    try {
-       const data = await get( `/api/v1/events/${ eventId }` )
- 
-       const baseURL = window.location.origin
-       const eventLink = `${ baseURL }/api/v1/event/${ eventId }`
+       const botName = 'weorganize_bot'; 
+       const eventLink = `https://t.me/${botName}/act?startapp=registration_${eventId}`;
+
+       console.log('Event link:', eventLink);
+
+     //    const data = await get( `/api/v1/events/${ eventId }` )
+  
+     //    const baseURL = window.location.origin
+     //    const eventLink = `${ baseURL }/api/v1/event/${ eventId }`
    
        if ( window.Telegram?.WebApp ) {
            Telegram.WebApp.showAlert(' Ссылка скопирована в буфер обмена.' )
