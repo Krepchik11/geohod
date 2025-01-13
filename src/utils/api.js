@@ -2,6 +2,8 @@ import axios from 'axios';
 
 const initData = window.Telegram.WebApp.initData;
 
+console.log( 'window.Telegram:', window.Telegram );
+console.log( 'window.Telegram.WebApp:', window.Telegram.WebApp );
 console.log( 'initData:', initData );
 
 
