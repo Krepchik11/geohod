@@ -22,7 +22,7 @@ const initData = window.Telegram?.WebApp?.initData || window.location.search
 const params = new URLSearchParams(initData)
 const startAppParam = params.get('startapp')
 
-console.log('initData:', initData)
+console.log('initData main:', initData)
 console.log('startapp:', startAppParam)
 
 router.isReady().then(() => {
