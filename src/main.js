@@ -18,21 +18,21 @@ app.use( createPinia() )
 app.use( router )
 app.use( VueTelegramPlugin )
 
-const params = new URLSearchParams( window.Telegram?.WebApp?.initData || window.location.search )
-const startAppParam = params.get('startapp')
+const initData = window.Telegram?.WebApp?.initData || window.location.search
+const params = new URLSearchParams(initData)
+const startParam = params.get('start_param')
+
+console.log('initData:', initData);
+console.log('start_param:', startParam);
 
 router.isReady().then(() => {
-  if ( startAppParam?.startsWith( 'registration_' ) ) {
-    const eventId = startAppParam.replace( 'registration_', '' )
-
-    console.log('Startapp Param:', startAppParam);
-    console.log('Navigating to registration:', { name: 'registration', params: { id: eventId } });
-
-    router.push({ name: 'registration', params: { id: eventId } }).catch( console.error )
+  if (startParam?.startsWith('registration_')) {
+    const eventId = startParam.replace('registration_', '')
+    console.log('Navigating to registration:', { name: 'registration', params: { id: eventId } })
+    router.push({ name: 'registration', params: { id: eventId } }).catch(console.error)
+  } else {
+    console.log('No valid start_param found:', startParam)
   }
 })
-
-  
-
 
 app.mount( '#app' )
