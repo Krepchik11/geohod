@@ -37,15 +37,4 @@ router.isReady().then(() => {
   }
 });
 
-
-router.isReady().then(() => {
-  if (startAppParam?.startsWith('registration_')) {
-    const eventId = startAppParam.replace('registration_', '');
-    console.log('Navigating to registration:', { name: 'registration', params: { id: eventId } })
-    router.push({ name: 'registration', params: { id: eventId } }).catch(console.error)
-  } else {
-    console.log('No valid startapp found:', startAppParam)
-  }
-})
-
 app.mount( '#app' )
