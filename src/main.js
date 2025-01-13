@@ -24,11 +24,14 @@ const startAppParam = params.get('startapp')
 router.isReady().then(() => {
   if ( startAppParam?.startsWith( 'registration_' ) ) {
     const eventId = startAppParam.replace( 'registration_', '' )
+
+    console.log('Startapp Param:', startAppParam);
+    console.log('Navigating to registration:', { name: 'registration', params: { id: eventId } });
+
     router.push({ name: 'registration', params: { id: eventId } }).catch( console.error )
   }
 })
-console.log('Startapp Param:', startAppParam);
-console.log('Navigating to registration:', { name: 'registration', params: { id: eventId } });
+
   
 
 
