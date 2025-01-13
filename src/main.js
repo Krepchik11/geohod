@@ -14,6 +14,14 @@ if (window.Telegram?.WebApp) {
     app.provide('themeParams', themeParams)
 }
 
+const params = new URLSearchParams( window.Telegram?.WebApp?.initData || window.location.search )
+const startAppParam = params.get('startapp')
+
+if (startAppParam?.startsWith( 'registration_' )) {
+  const eventId = startAppParam.replace( 'registration_', '' )
+  router.push({ name: 'registration', params: { id: eventId } })
+}
+
 app.use(createPinia())
 app.use(router)
 app.use(VueTelegramPlugin)
