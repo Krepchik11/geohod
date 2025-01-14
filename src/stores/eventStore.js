@@ -4,6 +4,7 @@ import { get } from '../utils/api'
 export const useEventStore = defineStore( 'eventStore', {
   state: () => ({
     events: [],
+    disabledEventId: null,
   }),
   actions: {
     async fetchEvents() {
@@ -23,6 +24,16 @@ export const useEventStore = defineStore( 'eventStore', {
         this.events = []
         throw error 
       }
-    },    
+    },
+    
+    setDisabledEventId(id) {
+      this.disabledEventId = id;
+    },
+
+    incrementParticipants(id) {
+      const event = this.events.find(event => event.id === id);
+      if (event) event.currentParticipants += 1;
+    },
+
   },
 })

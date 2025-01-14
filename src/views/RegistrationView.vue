@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
-import { get } from '../utils/api'
+import { get, post } from '../utils/api'
 import { useEventStore } from '../stores/eventStore'
 import { MainButton } from 'vue-tg'
 
@@ -54,22 +54,26 @@ async function loadEvent() {
   }
 }
 
-// Находим событие по ID
-// const event = computed(() => {
-//   return eventStore.getEventById( eventId ) 
-// })
-
 const isDisabled = computed( () => eventStore.disabledEventId === eventId )
 
-// function handleRegistration() {  
-//     if ( event.value ) {
-//       eventStore.incrementParticipants( eventId )
-//       eventStore.setDisabledEventId( eventId ) // Блокируем кнопку, сохраняя в хранилище     
-//     }
-//     setTimeout(() => {
-//       router.push( '/' )
-//     }, 1000)
-// }
+async function handleRegistration() {
+  try {
+    const response = await post( `/api/v1/events/${eventId.value}/register` )
+
+    if ( response?.success ) {
+      
+      currentParticipants.value += 1;
+
+      eventStore.setDisabledEventId(eventId.value);
+
+      console.log('Вы успешно зарегистрировались!');
+    } else {
+      throw new Error(response?.message || 'Ошибка регистрации');
+    }
+  } catch (error) {
+    console.error('Ошибка регистрации:', error);
+  }
+}
 
 function formattedDate( date ) {
   if ( !date ) return ''
