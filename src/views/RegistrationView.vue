@@ -56,14 +56,20 @@ async function loadEvent() {
 
 const isDisabled = computed( () => eventStore.disabledEventId === eventId )
 
+console.log('isDisabled', isDisabled);
+
+
 async function handleRegistration() {
   try {
     await post( `/api/v1/events/${ eventId.value }/register` )
     .then( () => {
       currentParticipants.value += 1
       eventStore.setDisabledEventId( eventId.value )
+      eventStore.registerForEvent( eventId.value )
+
       console.log('Вы успешно зарегистрировались!')
-  
+      
+      eventStore.fetchEvents() 
       router.push( '/' ) 
     })
     .catch( error => {

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 import { get } from '../utils/api'
@@ -11,6 +11,8 @@ const eventStore = useEventStore()
 const router = useRouter()
 
 const isLoading = ref( true )
+
+const registeredEvents = computed( () => eventStore.registeredEvents )
 
 onMounted( async () => {
   try {
@@ -212,6 +214,14 @@ function isEventFinished( eventDate ) {
         <Header>Мои мероприятия</Header>
         <div v-if="isLoading">Загрузка...</div>
         <div class="home__section">
+            <div>
+                <h2>мероприятия на которыя я зарегистрирован</h2>
+                <ul>
+                  <li v-for="event in registeredEvents" :key="event.id">
+                    {{ event.name }} - {{ formattedDate( event.date ) }}
+                  </li>
+                </ul>
+              </div>
             <div 
                 v-for="( event, index ) in eventStore.events" 
                 :key="index" 

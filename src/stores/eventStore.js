@@ -4,8 +4,14 @@ import { get } from '../utils/api'
 export const useEventStore = defineStore( 'eventStore', {
   state: () => ({
     events: [],
+    registeredEventIds: [], // Список ID зарегистрированных мероприятий
     disabledEventId: null,
   }),
+  getters: {
+    registeredEvents( state ) {
+      return state.events.filter( event => state.registeredEventIds.includes( event.id ) )
+    },
+  },
   actions: {
     async fetchEvents() {
       try {
@@ -26,14 +32,21 @@ export const useEventStore = defineStore( 'eventStore', {
       }
     },
     
-    setDisabledEventId(id) {
-      this.disabledEventId = id;
+    setDisabledEventId( id ) {
+      this.disabledEventId = id
     },
 
-    incrementParticipants(id) {
-      const event = this.events.find(event => event.id === id);
-      if (event) event.currentParticipants += 1;
+    incrementParticipants( id ) {
+      const event = this.events.find( event => event.id === id )
+      if ( event ) event.currentParticipants += 1
     },
+
+    registerForEvent( id ) {
+      if ( !this.registeredEventIds.includes( id ) ) {
+        this.registeredEventIds.push( id )
+      }
+    },
+    
 
   },
 })
