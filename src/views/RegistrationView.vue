@@ -36,7 +36,7 @@ async function loadEvent() {
       date.value = new Date( localEvent.date )
       maxParticipants.value = localEvent.maxParticipants
       currentParticipants.value = localEvent.currentParticipants || 0
-      author.value = localEvent.author.name
+      author.value = localEvent.author
     } else {
       const data = await get( `/api/v1/events/${ eventId.value }` )
       if ( !data ) throw new Error( 'Событие не найдено.' )
@@ -46,7 +46,7 @@ async function loadEvent() {
       date.value = new Date( data.date) 
       maxParticipants.value = data.maxParticipants
       currentParticipants.value = data.currentParticipants || 0
-      author.value = data.author.name;
+      author.value = data.author
     }
   } catch ( error ) {
     console.error( 'Ошибка загрузки данных мероприятия:', error )
@@ -90,13 +90,13 @@ function formattedDate( date ) {
             <p class="registration__date">{{ formattedDate( date ) }}</p>
             <div class="registration__organizer-details">
                 <img 
-                    :src="author?.imageUrl || '/src/assets/geohod_640-360.jpg'"
+                    :src="author?.imageUrl"
                     alt="img avatar" 
                     class="registration__organizer-image"
                 >
                 <div class="registration__organizer-wrapper">
                     <div class="registration__organizer">Организатор:</div>
-                    <p class="registration__organizer-name">{{ author }}</p>
+                    <p class="registration__organizer-name">{{ author.name }}</p>
                 </div>
             </div>
             <div class="registration__details">

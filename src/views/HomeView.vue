@@ -146,8 +146,8 @@ async function copyLink() {
     }
  
    try {
-       const botName = 'weorganize_bot'; 
-       const eventLink = `https://t.me/${botName}/act?startapp=registration_${eventId}`;
+       const botName = 'weorganize_bot'
+       const eventLink = `https://t.me/${ botName }/act?startapp=registration_${ eventId }`
 
        console.log('Event link:', eventLink);
 
