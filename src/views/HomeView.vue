@@ -14,6 +14,9 @@ const isLoading = ref( true )
 
 const registeredEvents = computed( () => eventStore.registeredEvents )
 
+console.log('registeredEvents', registeredEvents)
+
+
 onMounted( async () => {
   try {
     await eventStore.fetchEvents()
@@ -218,7 +221,7 @@ function isEventFinished( eventDate ) {
                 <h2>мероприятия на которыя я зарегистрирован</h2>
                 <ul>
                   <li v-for="event in registeredEvents" :key="event.id">
-                    {{ event.name }} - {{ formattedDate( event.date ) }}
+                    {{ event.description  }} - {{ formattedDate( event.date ) }}
                   </li>
                 </ul>
               </div>
