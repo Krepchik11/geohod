@@ -156,29 +156,72 @@ async function copyLink() {
 
        console.log('Event link:', eventLink);
    
-       if ( window.Telegram?.WebApp ) {
-           Telegram.WebApp.showAlert(' Ссылка скопирована в буфер обмена.' )
+    //    if ( window.Telegram?.WebApp ) {
+    //        Telegram.WebApp.showAlert(' Ссылка скопирована в буфер обмена.' )
 
-           if ( navigator.clipboard ) {
-               navigator.clipboard.writeText( eventLink )
-            } else {
-               copyTextToClipboard( eventLink )
-            }
-        } 
+    //        if ( navigator.clipboard ) {
+    //            navigator.clipboard.writeText( eventLink )
+    //         } else {
+    //            copyTextToClipboard( eventLink )
+    //         }
+    //     } 
 
-    } catch ( error ) {
-       console.error( 'Ошибка копирования ссылки:', error )
-    }     
+    // } catch ( error ) {
+    //    console.error( 'Ошибка копирования ссылки:', error )
+    // }
+    if ( navigator.clipboard && window.isSecureContext ) {
+      await navigator.clipboard.writeText( eventLink )
+      showSuccessToast( 'Ссылка скопирована в буфер обмена.' )
+    } else {
+      copyTextToClipboard( eventLink )
+      showSuccessToast( 'Ссылка скопирована в буфер обмена.' )
+    }
+  } catch (error) {
+    console.error('Ошибка копирования ссылки:', error);
+    showErrorToast('Не удалось скопировать ссылку.');
+  }
+
 } 
 
+
+// function copyTextToClipboard( text ) {
+//   const textArea = document.createElement( 'textarea' )
+//   textArea.value = text
+//   document.body.appendChild( textArea )
+//   textArea.select()
+//   document.execCommand( 'copy' )
+//   document.body.removeChild( textArea )
+// }
 
 function copyTextToClipboard( text ) {
   const textArea = document.createElement( 'textarea' )
   textArea.value = text
+  textArea.style.position = 'fixed'
   document.body.appendChild( textArea )
+  textArea.focus()
   textArea.select()
-  document.execCommand( 'copy' )
+  try {
+    document.execCommand( 'copy' )
+  } catch ( error ) {
+    console.error( 'Ошибка при использовании execCommand:', error )
+  }
   document.body.removeChild( textArea )
+}
+
+function showSuccessToast( message ) {
+  if ( window.Telegram?.WebApp ) {
+    Telegram.WebApp.showAlert( message )
+  } else {
+    alert( message ) 
+  }
+}
+
+function showErrorToast( message ) {
+  if ( window.Telegram?.WebApp ) {
+    Telegram.WebApp.showAlert ( message )
+  } else {
+    alert( message )
+  }
 }
 
 function isEventFinished( eventDate ) {
