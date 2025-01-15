@@ -155,40 +155,16 @@ async function copyLink() {
        const eventLink = `https://t.me/${ botName }/act?startapp=registration_${ eventId }`
 
        console.log('Event link:', eventLink);
-
-     //    const data = await get( `/api/v1/events/${ eventId }` )
-  
-     //    const baseURL = window.location.origin
-     //    const eventLink = `${ baseURL }/api/v1/event/${ eventId }`
    
        if ( window.Telegram?.WebApp ) {
            Telegram.WebApp.showAlert(' Ссылка скопирована в буфер обмена.' )
 
            if ( navigator.clipboard ) {
                navigator.clipboard.writeText( eventLink )
-               .then(() => {
-                 alert( 'Ссылка скопирована в буфер обмена.' )
-               })
-               .catch(() => {
-                 console.error( 'Ошибка копирования' )
-               })
             } else {
                copyTextToClipboard( eventLink )
             }
-        } else {
-            if (navigator.clipboard) {
-              navigator.clipboard.writeText(eventLink)
-              .then(() => {
-                alert('Ссылка скопирована в буфер обмена.');
-              })
-              .catch(() => {
-                console.error('Ошибка копирования через Clipboard API');
-                copyTextToClipboard(eventLink);  
-              });
-            } else {
-              copyTextToClipboard(eventLink);  
-            }
-        }   
+        } 
 
     } catch ( error ) {
        console.error( 'Ошибка копирования ссылки:', error )
