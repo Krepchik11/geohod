@@ -153,10 +153,6 @@ onMounted(() => {
   &__date{
     color: var(--primary-blue);
   }
-  &__members-list{
-    display: flex;
-    gap: 10px;
-  }
   &__members-quantity{
     display: flex;
     justify-content: flex-end;
@@ -164,6 +160,31 @@ onMounted(() => {
   }
   &__members-registered{
     color: var(--primary-blue);
+  }
+  &__members-list{
+    display: flex;
+    gap: 10px;
+  }
+  &__member{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+  }
+  &__image-wrapper {
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+  &__image{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  
+  }
+  &__member-name{
+    font-weight: 500;
+    font-size: 18px;
   }
 
 }
