@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { MainButton } from 'vue-tg'
 import { get, patch } from '../utils/api'
 
@@ -20,6 +20,22 @@ const description = ref( '' )
 const date = ref( new Date() )
 const currentParticipants = ref( 0 )
 const maxParticipants = ref( null )
+
+const participants = ref( [] )
+
+async function loadParticipants() {
+  try {
+    const data = await get( `/api/v1/events/${ eventId.value }/participants` )
+    if ( !data || !data.participants ) throw new Error( 'Участники не найдены.' )
+    participants.value = data.participants
+
+    console.log('participants.value', participants.value)
+    
+  } catch ( error ) {
+    console.error( 'Ошибка загрузки участников:', error )
+    participants.value = []
+  }
+}
 
 function formattedDate( date ) {
   if ( !date ) return ''
@@ -70,7 +86,10 @@ async function cancelEvent() {
   }
 }
 
-loadEvent()
+onMounted(() => {
+  loadEvent()
+  loadParticipants()
+})
 
 </script>
 
@@ -82,7 +101,22 @@ loadEvent()
       <div class="cancel-section__details">
         <p class="cancel-section__date">{{ formattedDate( date ) }}</p>
       </div>
-      <div class="cancel-section__members-list"></div>
+      <div  
+        v-for="( participant, index ) in participants" 
+        :key="index"
+        class="cancel-section__members-list"
+      >
+        <div class="cancel-section__member">
+          <div class="cancel-section__image-wrapper">
+            <img 
+              :src="participant.imageUrl || '/src/assets/geohod_640-360.jpg'" 
+              alt="participant avatar" 
+              class="cancel-section__image"
+            >
+          </div>
+          <p class="cancel-section__member-name">{{ participant.name || participant.username }}</p>
+        </div>
+      </div>
       <div class="cancel-section__members-quantity">
         <p class="cancel-section__members-registered">{{ currentParticipants }}</p>
         из
