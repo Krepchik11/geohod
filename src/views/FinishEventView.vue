@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { MainButton } from 'vue-tg'
 
 import { useEventStore } from '../stores/eventStore'
-import { get } from '../utils/api'
+import { get, patch } from '../utils/api'
 
 import Header from '../components/Header.vue'
 
@@ -49,10 +49,27 @@ function formattedDate( date ) {
   }).format( new Date( date ) )
 }
 
-function finishEvent() {
-  // Логика завершения мероприятия
-  console.log("Завершение мероприятия...")
+async function finishEvent() {
+  try {
+    const payload = {
+      notifyParticipants: notificationsEnabled.value,
+      sendPollLink: votingLinkEnabled.value,
+      sendDonationRequest: donationRequestEnabled.value,
+    };
+
+    const response = await patch( `/api/v1/events/${ eventId.value }/finish`, payload )
+
+    if (response.status === 200) {
+      console.log('Мероприятие успешно завершено.')
+      router.push( '/' )
+    } else {
+      console.error( 'Ошибка при завершении мероприятия:', response )
+    }
+  } catch (error) {
+    console.error( 'Ошибка завершения мероприятия:', error )
+  }
 }
+
 
 onMounted(() => {
   loadParticipants()
