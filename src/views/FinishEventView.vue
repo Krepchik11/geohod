@@ -1,9 +1,10 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { MainButton } from 'vue-tg'
 
 import { useEventStore } from '../stores/eventStore'
+import { get } from '../utils/api'
 
 import Header from '../components/Header.vue'
 
@@ -14,33 +15,30 @@ const eventStore = useEventStore()
 const notificationsEnabled = ref( false )
 const votingLinkEnabled = ref( false )
 const donationRequestEnabled = ref( false )
-
-const mockParticipants = [
-  { id: 1, name: "Иван Иванов", avatar: "/src/assets/geohod_640-360.jpg" },
-  { id: 2, name: "Анна Петрова", avatar: "/src/assets/geohod_640-360.jpg" },
-  { id: 3, name: "Сергей Смирнов", avatar: "/src/assets/geohod_640-360.jpg" },
-  { id: 4, name: "Мария Федорова", avatar: "/src/assets/geohod_640-360.jpg" }
-]
+const participants = ref( [] )
 
 const eventId = computed( () =>  route.params.id )
 
 const selectedEvent = computed(() => {
-  // Если событие есть в store, используем его, иначе возвращаем моковые данные
   const event = eventStore.events.find(event => event.id === eventId.value)
   if (event) {
     return {
       ...event,
-      participants: event.participants || mockParticipants // Если участников нет, используем моковые
+      participants: event.participants
     }
   }
-  // Возвращаем тестовые данные, если событие не найдено
-  return {
-    description: "Пример мероприятия",
-    date: "2024-12-25",
-    participants: mockParticipants,
-    maxParticipants: 10
-  }
 })
+
+async function loadParticipants() {
+  try {
+    const data = await get( `/events/${ eventId.value }/participants` )
+    if ( !data || !data.participants ) throw new Error( 'Участники не найдены.' )
+    participants.value = data.participants
+  } catch ( error ) {
+    console.error( 'Ошибка загрузки участников:', error )
+    participants.value = [];
+  }
+}
 
 function formattedDate( date ) {
   if ( !date ) return ''
@@ -51,14 +49,14 @@ function formattedDate( date ) {
   }).format( new Date( date ) )
 }
 
-const visibleParticipants = computed(() => {
-  return selectedEvent.value?.participants?.slice( 0, 3 ) || []
-})
-
 function finishEvent() {
   // Логика завершения мероприятия
   console.log("Завершение мероприятия...")
 }
+
+onMounted(() => {
+  loadParticipants()
+})
 
 
 </script>
@@ -75,13 +73,13 @@ function finishEvent() {
       <div class="finish-section__members-list">
         <div class="finish-section__members-avatars">
           <div
-          v-for="(participant, index) in visibleParticipants"
+          v-for="( participant, index ) in participants.slice( 0, 3 )"
           :key="index"
           class="finish-section__avatar"
-          :style="{ backgroundImage: `url(${participant.avatar})` }"
+          :style="{ backgroundImage: `url(${ participant.imageUrl || '/src/assets/geohod_640-360.jpg' })` }"
           ></div>
         </div>
-        <div class="finish-section__members-all">{{ selectedEvent.currentParticipants }} человек</div>
+        <div class="finish-section__members-all">{{ participants.length }} человек</div>
       </div>
       <div class="finish-section__members-send">
         <div class="finish-section__members-send-title">Направить участникам</div>

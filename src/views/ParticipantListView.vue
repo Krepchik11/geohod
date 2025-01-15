@@ -153,8 +153,6 @@ async function loadParticipants() {
   }
 }
 
-
-
 </script>
 
 <template>
