@@ -59,8 +59,8 @@ async function finishEvent() {
 
     const response = await patch( `/api/v1/events/${ eventId.value }/finish`, payload )
 
-    if (response.status === 200) {
-      console.log('Мероприятие успешно завершено.')
+    if ( response.message === 'success' ) {
+      console.log( 'Мероприятие успешно завершено.' )
       router.push( '/' )
     } else {
       console.error( 'Ошибка при завершении мероприятия:', response )
