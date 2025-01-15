@@ -141,7 +141,7 @@ const participants = ref( [] ) // Хранение списка участник
 
 async function loadParticipants() {
   try {
-    const data = await get( `/events/${eventId.value}/participants` )
+    const data = await get( `/api/v1/events/${ eventId.value }/participants` )
     if ( !data || !data.participants ) throw new Error( 'Участники не найдены.' )
     participants.value = data.participants
 
