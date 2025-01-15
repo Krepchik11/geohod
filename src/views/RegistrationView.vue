@@ -182,10 +182,22 @@ function formattedDate( date ) {
   &__message {
     margin-top: 20px;
   }
+  &__agreement {
+    padding-top: 20px;
+  }
+  &__agreement-lable {
+    padding: 12px;
+    display: flex;
+    gap: 20px;
+  }
   &__agreement-content {
     display: flex;
     flex-direction: column;
     gap: 5px;
+  }
+  &__agreement-link{
+    text-decoration: none;
+    color: var(--primary-blue);
   }
 }
 

@@ -213,16 +213,6 @@ function isEventFinished( eventDate ) {
         <Header>Мои мероприятия</Header>
         <div v-if="isLoading">Загрузка...</div>
         <div class="home__section">
-
-            <div>
-                <h2>мероприятия на которыя я зарегистрирован</h2>
-                <ul>
-                  <li v-for="event in registeredEvents" :key="event.id">
-                    {{ event.description  }} - {{ formattedDate( event.date ) }}
-                  </li>
-                </ul>
-            </div>
-
             <div 
                 v-for="( event, index ) in eventStore.events" 
                 :key="index" 
@@ -355,7 +345,8 @@ function isEventFinished( eventDate ) {
         align-items: center;
         width: 30px;
         height: 20px;
-        background-color: var(--primary-gray);
+        background-color: #aaaaaa;
+        color: #ffffff;
         border-radius: 10px;
     }
     &__details {
