@@ -123,13 +123,15 @@ function formattedDate( date ) {
         <Message class="registration__message" v-if="isDisabled">Вы зарегистрированы</Message>
         <Message class="registration__message" v-if="currentParticipants === maxParticipants">Регистрация на мероприятие окончена. Группа набрана.</Message>
         <div class="registration__agreement">
-          <label>
+          <label class="registration__agreement-lable">
             <input
               type="checkbox"
               v-model="isAgreementEnabled"
             />
-            Я прочитал(а) и принимаю
-            <a class="registration__agreement-link" href="#">Пользовательское соглашение</a>
+            <div class="registration__agreement-content">
+              <p class="registration__agreement-text">Я прочитал(а) и принимаю</p>
+              <a class="registration__agreement-link" href="#">Пользовательское соглашение</a>
+            </div>
           </label>
         </div>
         <MainButton 
@@ -144,42 +146,47 @@ function formattedDate( date ) {
 
 <style lang="scss" scoped>
 .registration {
-    &__section {
-        white-space: normal; 
-        overflow-wrap: anywhere; 
-        word-break: break-word; 
-        padding: 0 12px;
-    }
-    &__title {
-        font-weight: 500;
-        margin-bottom: 10px;
-    }
-    &__date {
-        margin-bottom: 20px;
-        color: var(--primary-blue);
-    }
-    &__organizer-details {
-        display: flex;
-        align-items: center;
-        margin-bottom: 30px;
-    }
-    &__organizer-image {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin-right: 20px;
-        object-fit: cover;
-    }
-    &__organizer {
-        font-weight: 500;
-        margin-bottom: 5px;
-    }
-    &__participants-now {
-        color: var(--primary-blue);
-    }
-    &__message {
-        margin-top: 20px;
-    }
+  &__section {
+    white-space: normal; 
+    overflow-wrap: anywhere; 
+    word-break: break-word; 
+    padding: 0 12px;
+  }
+  &__title {
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  &__date {
+    margin-bottom: 20px;
+    color: var(--primary-blue);
+  }
+  &__organizer-details {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  &__organizer-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 20px;
+    object-fit: cover;
+  }
+  &__organizer {
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  &__participants-now {
+    color: var(--primary-blue);
+  }
+  &__message {
+    margin-top: 20px;
+  }
+  &__agreement-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
 }
 
 </style>
