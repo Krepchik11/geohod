@@ -14,6 +14,7 @@ const eventStore = useEventStore()
 
 onMounted(() => {
   loadEvent()
+  loadParticipants()
 })
 
 const eventId = computed( () => route.params.id ) 
@@ -136,6 +137,23 @@ function formattedDate( date ) {
   }).format( new Date( date ) )
 }
 
+const participants = ref( [] ) // Хранение списка участников
+
+async function loadParticipants() {
+  try {
+    const data = await get( `/events/${eventId.value}/participants` )
+    if ( !data || !data.participants ) throw new Error( 'Участники не найдены.' )
+    participants.value = data.participants
+
+    console.log('participants.value', participants.value)
+    
+  } catch ( error ) {
+    console.error( 'Ошибка загрузки участников:', error )
+    participants.value = []
+  }
+}
+
+
 
 </script>
 
@@ -148,8 +166,8 @@ function formattedDate( date ) {
         <p class="participants-section__date">{{ formattedDate( date ) }}</p>
       </div>
       <div  
-        v-for="( member, index ) in currentParticipants" 
-        :key="index" 
+        v-for="( participant, index ) in participants" 
+        :key="index"
         class="participants-section__members-list"
         @click.stop="( e ) => showContextMenu( e, member.id )"
         @touchstart="( e ) => startTouch( e, member.id )"
@@ -158,12 +176,12 @@ function formattedDate( date ) {
         <div class="participants-section__member">
           <div class="participants-section__image-wrapper">
             <img 
-              src="/src/assets/geohod_640-360.jpg" 
-              alt="img avatar" 
+              :src="participant.imageUrl || '/src/assets/geohod_640-360.jpg'" 
+              alt="participant avatar" 
               class="participants-section__image"
             >
           </div>
-          <p class="participants-section__member-name">Иванов Иван {{member}}</p>
+          <p class="participants-section__member-name">{{ participant.name || participant.username }}</p>
         </div>
         <ContextMenu 
           :visible="contextMenuVisible && contextMenuPosition.eventId === member.id"

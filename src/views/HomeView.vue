@@ -154,44 +154,21 @@ async function copyLink() {
        const botName = 'weorganize_bot'
        const eventLink = `https://t.me/${ botName }/act?startapp=registration_${ eventId }`
 
-       console.log('Event link:', eventLink);
-   
-    //    if ( window.Telegram?.WebApp ) {
-    //        Telegram.WebApp.showAlert(' Ссылка скопирована в буфер обмена.' )
+       console.log('Event link:', eventLink)
 
-    //        if ( navigator.clipboard ) {
-    //            navigator.clipboard.writeText( eventLink )
-    //         } else {
-    //            copyTextToClipboard( eventLink )
-    //         }
-    //     } 
-
-    // } catch ( error ) {
-    //    console.error( 'Ошибка копирования ссылки:', error )
-    // }
-    if ( navigator.clipboard && window.isSecureContext ) {
-      await navigator.clipboard.writeText( eventLink )
-      showSuccessToast( 'Ссылка скопирована в буфер обмена.' )
-    } else {
-      copyTextToClipboard( eventLink )
-      showSuccessToast( 'Ссылка скопирована в буфер обмена.' )
+      if ( navigator.clipboard && window.isSecureContext ) {
+        await navigator.clipboard.writeText( eventLink )
+        showSuccessToast( 'Ссылка скопирована в буфер обмена.' )
+      } else {
+        copyTextToClipboard( eventLink )
+        showSuccessToast( 'Ссылка скопирована в буфер обмена.' )
+      }
+    } catch ( error ) {
+      console.error( 'Ошибка копирования ссылки:', error )
+      showErrorToast( 'Не удалось скопировать ссылку.' )
     }
-  } catch (error) {
-    console.error('Ошибка копирования ссылки:', error);
-    showErrorToast('Не удалось скопировать ссылку.');
-  }
 
 } 
-
-
-// function copyTextToClipboard( text ) {
-//   const textArea = document.createElement( 'textarea' )
-//   textArea.value = text
-//   document.body.appendChild( textArea )
-//   textArea.select()
-//   document.execCommand( 'copy' )
-//   document.body.removeChild( textArea )
-// }
 
 function copyTextToClipboard( text ) {
   const textArea = document.createElement( 'textarea' )
@@ -236,6 +213,7 @@ function isEventFinished( eventDate ) {
         <Header>Мои мероприятия</Header>
         <div v-if="isLoading">Загрузка...</div>
         <div class="home__section">
+
             <div>
                 <h2>мероприятия на которыя я зарегистрирован</h2>
                 <ul>
@@ -243,7 +221,8 @@ function isEventFinished( eventDate ) {
                     {{ event.description  }} - {{ formattedDate( event.date ) }}
                   </li>
                 </ul>
-              </div>
+            </div>
+
             <div 
                 v-for="( event, index ) in eventStore.events" 
                 :key="index" 
@@ -266,13 +245,6 @@ function isEventFinished( eventDate ) {
                             <div class="event__details">
                                <p class="event__date">{{ formattedDate( event.date ) }}</p>
                                <p class="event__participants">{{ event.currentParticipants }}</p>
-                            </div>
-                            <div>
-                                <RouterLink
-                                :to="{ name: 'registration', params: { id: event.id } }"
-                              >
-                                link to event
-                              </RouterLink>
                             </div>
                             <div class="event__finish">
                                 <RouterLink
