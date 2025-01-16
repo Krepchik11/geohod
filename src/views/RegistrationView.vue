@@ -13,7 +13,7 @@ const eventStore = useEventStore()
 const router = useRouter()
 const route = useRoute()
 
-const isAgreementEnabled = ref( true )
+// const isAgreementEnabled = ref( true )
 
 onMounted(() => {
   loadEvent()
@@ -122,7 +122,7 @@ function formattedDate( date ) {
         </div>
         <Message class="registration__message" v-if="isDisabled">Вы зарегистрированы</Message>
         <Message class="registration__message" v-if="currentParticipants === maxParticipants">Регистрация на мероприятие окончена. Группа набрана.</Message>
-        <div class="registration__agreement" v-if="currentParticipants !== maxParticipants">
+        <!-- <div class="registration__agreement" v-if="currentParticipants !== maxParticipants">
           <label class="registration__agreement-lable">
             <input
               type="checkbox"
@@ -133,13 +133,14 @@ function formattedDate( date ) {
               <a class="registration__agreement-link" href="#">Пользовательское соглашение</a>
             </div>
           </label>
-        </div>
+        </div> -->
         <MainButton 
           text="Зарегистрироваться"  
           @click="handleRegistration" 
-          :disabled="!isAgreementEnabled || isDisabled || currentParticipants === maxParticipants"
+          :disabled="isDisabled || currentParticipants === maxParticipants"
           :visible="currentParticipants !== maxParticipants"
         />
+        <!-- :disabled="!isAgreementEnabled || isDisabled || currentParticipants === maxParticipants" -->
     </div>
 </template>
 

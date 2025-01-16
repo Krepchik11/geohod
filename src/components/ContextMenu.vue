@@ -15,12 +15,15 @@ defineProps({
     required: true,
     default: () => ({ x: 0, y: 0 })
   },
-  items: {
-    type: Array,
-    required: true,
-    default: () => []
-  }
 })
+
+const menuItems = ref([
+  { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link' },
+  { label: 'Копировать', action: 'copy', icon: 'copy' },
+  { label: 'Редактировать', action: 'edit', icon: 'edit' },
+  { label: 'Участники', action: 'participants', icon: 'people' },
+  { label: 'Отменить', action: 'delete', icon: 'delete' },
+])
 
 const emit = defineEmits( [ 'close', 'select' ] )
 
@@ -42,6 +45,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.removeEventListener( 'click', handleClickOutside )
 })
+
 </script>
 
 <template>
@@ -53,7 +57,7 @@ onBeforeUnmount(() => {
     <ul class="context-menu__list">
       <li
         class="context-menu__item"
-        v-for="item in items"
+        v-for="item in menuItems"
         :key="item.action"
         @click.stop="handleAction( item )"
       >
