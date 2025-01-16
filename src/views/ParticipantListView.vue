@@ -2,7 +2,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { ref, computed, onMounted } from 'vue'
 
-import { get } from '../utils/api'
+import { get, del } from '../utils/api'
 import { useEventStore } from '../stores/eventStore'
 
 import Header from '../components/Header.vue'
@@ -66,13 +66,29 @@ function handleMenuSelect( item ) {
       //отправка сообщения
       break
     case 'delete':
-      //удаление участника
+      removeParticipant( contextMenuPosition.eventId )
       break
       default:
         console.log( 'Неизвестное действие' )
   }
   closeContextMenu()
 }
+
+async function removeParticipant( participantId ) {
+  try {
+    const response = await del( `/api/v1/events/${ eventId.value }/participants/${ participantId }` )
+    if ( response.message === 'success' ) {
+      participants.value = participants.value.filter( participant => participant.id !== participantId )
+      currentParticipants.value -= 1
+      console.log( 'Участник успешно удален' )
+    } else {
+      console.error( 'Не удалось удалить участника' )
+    }
+  } catch ( error ) {
+    console.error( 'Ошибка при удалении участника:', error )
+  }
+}
+
 
 let touchTimer = null
 let isLongPress = false
