@@ -63,7 +63,7 @@ onBeforeUnmount(() => {
         <IconCopy v-if="item.icon === 'copy'" />
         <IconEdit v-if="item.icon === 'edit'" />
         <IconPeople v-if="item.icon === 'people'" />
-        <IconMessages v-if="item.icon === 'messages'"
+        <IconMessages v-if="item.icon === 'messages'" />
         <IconDelete v-if="item.icon === 'delete'" />
 
         <span class="context-menu__label">{{ item.label }}</span>
