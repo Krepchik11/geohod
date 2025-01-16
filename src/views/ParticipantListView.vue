@@ -167,8 +167,8 @@ async function loadParticipants() {
         v-for="( participant, index ) in participants" 
         :key="index"
         class="participants-section__members-list"
-        @click.stop="( e ) => showContextMenu( e, member.id )"
-        @touchstart="( e ) => startTouch( e, member.id )"
+        @click.stop="( e ) => showContextMenu( e, participant.id )"
+        @touchstart="( e ) => startTouch( e, participant.id )"
         @touchend="cancelTouch"
       >
         <div class="participants-section__member">
@@ -182,7 +182,7 @@ async function loadParticipants() {
           <p class="participants-section__member-name">{{ participant.name || participant.username }}</p>
         </div>
         <ContextMenu 
-          :visible="contextMenuVisible && contextMenuPosition.eventId === member.id"
+          :visible="contextMenuVisible && contextMenuPosition.eventId === participant.id"
           :position="contextMenuPosition"
           :items="menuItems"
           @select="handleMenuSelect"
