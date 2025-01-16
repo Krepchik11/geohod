@@ -29,13 +29,13 @@ onMounted( async () => {
 const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
 
-// const menuItems = ref([
-//   { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link' },
-//   { label: 'Копировать', action: 'copy', icon: 'copy' },
-//   { label: 'Редактировать', action: 'edit', icon: 'edit' },
-//   { label: 'Участники', action: 'participants', icon: 'people' },
-//   { label: 'Отменить', action: 'delete', icon: 'delete' },
-// ])
+const menuItems = ref([
+  { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link' },
+  { label: 'Копировать', action: 'copy', icon: 'copy' },
+  { label: 'Редактировать', action: 'edit', icon: 'edit' },
+  { label: 'Участники', action: 'participants', icon: 'people' },
+  { label: 'Отменить', action: 'delete', icon: 'delete' },
+])
 
 function handleMenuSelect( item ) {
     switch ( item.action ) {
@@ -251,6 +251,7 @@ function isEventFinished( eventDate ) {
                 <ContextMenu 
                     :visible="contextMenuVisible && contextMenuPosition.eventId === event.id"
                     :position="contextMenuPosition"
+                    :items="menuItems"
                     @select="handleMenuSelect"
                     @close="closeContextMenu"
                />

@@ -55,8 +55,8 @@ const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
 
 const menuItems = ref([
-  { label: 'Сообщение', action: 'messages', icon: 'copy-link.svg' },
-  { label: 'Удалить', action: 'delete', icon: 'delete.svg' },
+  { label: 'Сообщение', action: 'messages', icon: 'messages' },
+  { label: 'Удалить', action: 'delete', icon: 'delete' },
 ])
 
 

@@ -7,6 +7,7 @@ import IconCopy from './icons/IconCopy.vue'
 import IconEdit from './icons/IconEdit.vue'
 import IconPeople from './icons/IconPeople.vue'
 import IconDelete from './icons/IconDelete.vue'
+import IconMessages from './icons/IconMessages.vue'
 
 defineProps({
   visible: Boolean,
@@ -15,15 +16,12 @@ defineProps({
     required: true,
     default: () => ({ x: 0, y: 0 })
   },
+  items: {
+    type: Array,
+    required: true,
+    default: () => []
+  }
 })
-
-const menuItems = ref([
-  { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link' },
-  { label: 'Копировать', action: 'copy', icon: 'copy' },
-  { label: 'Редактировать', action: 'edit', icon: 'edit' },
-  { label: 'Участники', action: 'participants', icon: 'people' },
-  { label: 'Отменить', action: 'delete', icon: 'delete' },
-])
 
 const emit = defineEmits( [ 'close', 'select' ] )
 
@@ -57,7 +55,7 @@ onBeforeUnmount(() => {
     <ul class="context-menu__list">
       <li
         class="context-menu__item"
-        v-for="item in menuItems"
+        v-for="item in items"
         :key="item.action"
         @click.stop="handleAction( item )"
       >
@@ -65,11 +63,8 @@ onBeforeUnmount(() => {
         <IconCopy v-if="item.icon === 'copy'" />
         <IconEdit v-if="item.icon === 'edit'" />
         <IconPeople v-if="item.icon === 'people'" />
+        <IconMessages v-if="itom.icon === 'messages'"
         <IconDelete v-if="item.icon === 'delete'" />
-
-        <!-- <svg v-if="item.icon === 'delete'" height="16" width="16" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-          <path d="M194.357 9.337c-9.538 3.049-18.787 10.843-23.198 19.547-3.516 6.938-4.732 13.807-4.746 26.796l-.013 11.733H67.413V87.04h10.24c9.223 0 10.24.15 10.24 1.509 0 3.535 19.588 374.015 20.026 378.772 1.635 17.742 13.78 31.565 31.379 35.714 4.568 1.077 21.547 1.259 117.129 1.258 122.842-.003 118.411.176 128.479-5.19 5.545-2.955 13.465-10.822 16.078-15.97 4.466-8.797 3.924-1.176 14.214-199.815 5.361-103.494 9.751-189.995 9.755-192.225l.007-4.053H444.587V67.413H345.6V55.509c0-6.548-.423-13.94-.94-16.427-1.446-6.957-5.57-14.574-10.57-19.522-5.634-5.577-9.605-8.025-16.527-10.186-5.186-1.62-7.886-1.692-61.866-1.648-52.321.042-56.801.16-61.34 1.611M313.6 28.916c4.435 2.043 7.533 5.015 9.741 9.342 1.57 3.077 1.779 4.997 1.779 16.321v12.834H186.88l.019-12.586c.015-10.378.294-13.194 1.59-16.048 1.817-3.999 7.813-9.468 11.584-10.564 1.426-.415 26.786-.781 56.354-.813 50.495-.054 53.967.038 57.173 1.514m91.361 65.164c-.289 3.872-4.757 89.408-9.929 190.08-5.171 100.672-9.77 184.426-10.218 186.121-.449 1.694-2.358 4.833-4.244 6.975-6.313 7.172 3.799 6.656-125.064 6.392l-114.414-.235-4.109-2.56c-2.758-1.718-4.907-3.979-6.537-6.878l-2.428-4.318-9.787-186.402c-5.382-102.521-9.958-188.61-10.168-191.308l-.381-4.907H405.487l-.526 7.04m-228.582 33.103c-4.603.346-8.614.874-8.915 1.175-.3.3 3.959 71.095 9.464 157.321 5.506 86.226 9.997 157.312 9.981 157.969-.024.989 1.621 1.095 9.525.615 5.255-.319 9.718-.744 9.919-.945.773-.773-19.92-316.46-20.753-316.61-.469-.084-4.619.129-9.221.475m70.234 158.257v159.203l9.6-.242 9.6-.241V126.72l-9.6-.241-9.6-.242V285.44m79.31-158.201c-.027.653-4.543 72.101-10.034 158.773l-9.985 157.585 8.678.592c4.773.325 9.192.42 9.821.211.901-.3 3.256-33.888 11.119-158.584 5.486-87.012 9.897-158.282 9.801-158.378-.096-.096-4.489-.447-9.762-.781-7.904-.5-9.596-.398-9.638.582" fill="currentColor" fill-rule="evenodd"/>
-        </svg> -->
 
         <span class="context-menu__label">{{ item.label }}</span>
       </li>
