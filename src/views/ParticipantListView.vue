@@ -24,6 +24,14 @@ const name = ref( '' )
 const date = ref( new Date() )
 const currentParticipants = ref( 0 )
 const maxParticipants = ref( null )
+const participants = ref( [] )
+const contextMenuVisible = ref( false )
+const contextMenuPosition = ref( { x: 0, y: 0 } )
+
+const menuItems = ref([
+  { label: 'Сообщение', action: 'messages', icon: 'messages' },
+  { label: 'Удалить', action: 'delete', icon: 'delete' },
+])
 
 async function loadEvent() {
   try {
@@ -51,22 +59,27 @@ async function loadEvent() {
   }
 }
 
-const contextMenuVisible = ref( false )
-const contextMenuPosition = ref( { x: 0, y: 0 } )
+async function loadParticipants() {
+  try {
+    const data = await get( `/api/v1/events/${ eventId.value }/participants` )
+    if ( !data || !data.participants ) throw new Error( 'Участники не найдены.' )
+    participants.value = data.participants
 
-const menuItems = ref([
-  { label: 'Сообщение', action: 'messages', icon: 'messages' },
-  { label: 'Удалить', action: 'delete', icon: 'delete' },
-])
-
+    console.log('participants.value', participants.value)
+    
+  } catch ( error ) {
+    console.error( 'Ошибка загрузки участников:', error )
+    participants.value = []
+  }
+}
 
 function handleMenuSelect( item ) {
   switch ( item.action ) {
     case 'messages':
-      //отправка сообщения
+      sendMessage( contextMenuPosition.value.eventId ) //eventId - здесь это id участника
       break
     case 'delete':
-      removeParticipant( contextMenuPosition.value.eventId ) //вот сюда нужно передать participantId
+      removeParticipant( contextMenuPosition.value.eventId ) //eventId - здесь это id участника
       break
       default:
         console.log( 'Неизвестное действие' )
@@ -74,8 +87,17 @@ function handleMenuSelect( item ) {
   closeContextMenu()
 }
 
+function sendMessage( participantId ) {
+  const participant = participants.value.find( p => p.id === participantId )
+  if ( participant && participant.username ) {
+    const telegramUrl = `https://t.me/${ participant.username }`
+    window.open( telegramUrl, '_blank' )
+  } else {
+    console.error( 'Участник не найден или у него отсутствует username для Telegram.' )
+  }
+}
+
 async function removeParticipant( participantId ) {
-  console.log('removeParticipant participantId', participantId);
   try {
     const response = await del( `/api/v1/events/${ eventId.value }/participants/${ participantId }` )
     if ( response.message === 'success' ) {
@@ -89,7 +111,6 @@ async function removeParticipant( participantId ) {
     console.error( 'Ошибка при удалении участника:', error )
   }
 }
-
 
 let touchTimer = null
 let isLongPress = false
@@ -113,10 +134,7 @@ function cancelTouch( event ) {
   event.target.removeEventListener( 'touchmove', cancelTouch )
 }
 
-function showContextMenu( event, eventId  ) {
-  console.log('showContextMenu eventId', eventId);
-  
-
+function showContextMenu( event, eventId  ) { 
   event.preventDefault()
 
   const menuWidth = 200
@@ -141,8 +159,6 @@ function showContextMenu( event, eventId  ) {
   contextMenuVisible.value = true
 
   document.addEventListener( 'click', closeContextMenu )
-
-  console.log('click contextMenuPosition.value',  contextMenuPosition.value);
 }
 
 function closeContextMenu() {
@@ -158,23 +174,6 @@ function formattedDate( date ) {
     year: 'numeric',
   }).format( new Date( date ) )
 }
-
-const participants = ref( [] ) // Хранение списка участников
-
-async function loadParticipants() {
-  try {
-    const data = await get( `/api/v1/events/${ eventId.value }/participants` )
-    if ( !data || !data.participants ) throw new Error( 'Участники не найдены.' )
-    participants.value = data.participants
-
-    console.log('participants.value', participants.value)
-    
-  } catch ( error ) {
-    console.error( 'Ошибка загрузки участников:', error )
-    participants.value = []
-  }
-}
-
 </script>
 
 <template>
