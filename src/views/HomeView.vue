@@ -35,16 +35,10 @@ let extractedUsername = null
 if ( userParam ) {
   const user = JSON.parse( userParam )
   const username = user.username; 
-  console.log('Username:', username)
-
   extractedUsername = username
 } else {
   console.log('User parameter not found in initData.')
 }
-
-
-console.log( 'initData HOME', initData );
-console.log( 'extractedUsername', extractedUsername );
 
 const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
@@ -84,9 +78,14 @@ function handleMenuSelect( item ) {
         case 'delete':
             router.push( { name: 'delete', params: { id: contextMenuPosition.value.eventId } } )
             break
-
-            default:
-              console.log( 'Неизвестное действие' )
+        case 'cancel':
+            cancelRegistration()
+            break 
+        case 'messages':
+            sendMessageToAuthor()
+            break       
+        default:
+            console.log( 'Неизвестное действие' )
     }
 
     closeContextMenu()
@@ -118,9 +117,6 @@ function cancelTouch( event ) {
 
 function showContextMenu( event, eventId ) {
     const selectedEvent = eventStore.events.find( e => e.id === eventId )
-
-    console.log('selectedEvent', selectedEvent);  
-    console.log('selectedEvent.author.username',selectedEvent.author.username)
     
     if ( !selectedEvent ) {
       console.error( 'Event not found:', eventId )
@@ -128,10 +124,7 @@ function showContextMenu( event, eventId ) {
     }
 
     // Проверяем, является ли пользователь автором
-    const isAuthor = Boolean( selectedEvent.author.username === extractedUsername )
-
-    console.log('isAuthor', isAuthor)
-    
+    const isAuthor = Boolean( selectedEvent.author.username === extractedUsername )   
   
     menuItems.value = isAuthor
       ? [
@@ -143,13 +136,8 @@ function showContextMenu( event, eventId ) {
         ]
       : [
           { label: 'Сообщение', action: 'messages', icon: 'messages' },
-          { label: 'Отменить', action: 'delete', icon: 'delete' },
+          { label: 'Отменить', action: 'cancel', icon: 'delete' },
         ]
-
-    // if (!eventId) {
-    //   console.error('Invalid eventId:', eventId);
-    //   return;
-    // }
 
     event.preventDefault()
 
@@ -203,8 +191,6 @@ async function copyLink() {
        const botName = 'weorganize_bot'
        const eventLink = `https://t.me/${ botName }/act?startapp=registration_${ eventId }`
 
-       console.log('Event link:', eventLink)
-
       if ( navigator.clipboard && window.isSecureContext ) {
         await navigator.clipboard.writeText( eventLink )
         showSuccessToast( 'Ссылка скопирована в буфер обмена.' )
@@ -253,6 +239,37 @@ function showErrorToast( message ) {
 function isEventFinished( eventDate ) {
   if ( !eventDate ) return false
   return new Date( eventDate ) < new Date()
+}
+
+function cancelRegistration() {
+    console.log('cancelRegistration')
+    
+}
+
+function sendMessageToAuthor( ) {
+    const eventId = contextMenuPosition.value.eventId
+
+    if ( !eventId ) {
+      console.error( 'Event ID отсутствует' )
+      return
+    }
+    
+    const event = eventStore.events.find( e => e.id === eventId )
+    
+    if ( !event ) {
+      console.error( 'Мероприятие не найдено' )
+      return
+    }
+    
+    const authorUsername = event.author?.username
+    
+    if ( !authorUsername ) {
+      console.error( 'Автор мероприятия отсутствует или у него нет username' )
+      return
+    }
+    
+    const telegramUrl = `https://t.me/${ authorUsername }`
+    window.open( telegramUrl, '_blank' )
 }
 
 </script>
