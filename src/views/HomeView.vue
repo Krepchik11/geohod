@@ -23,6 +23,29 @@ onMounted( async () => {
   }
 })
 
+const initData = window.Telegram.WebApp.initData
+
+const decodedInitData = decodeURIComponent( initData )
+
+const params = new URLSearchParams( decodedInitData )
+const userParam = params.get( 'user' )
+
+let extractedUsername = null
+
+if ( userParam ) {
+  const user = JSON.parse( userParam )
+  const username = user.username; 
+  console.log('Username:', username)
+
+  extractedUsername = username
+} else {
+  console.log('User parameter not found in initData.')
+}
+
+
+console.log( 'initData HOME', initData );
+console.log( 'extractedUsername', extractedUsername );
+
 const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
 
