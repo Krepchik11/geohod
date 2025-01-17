@@ -94,8 +94,11 @@ function cancelTouch( event ) {
 }
 
 function showContextMenu( event, eventId ) {
-    const selectedEvent = eventStore.events.find( e => e.id === eventId )
-    console.log('selectedEvent', selectedEvent);
+    const selectedEvent = eventStore.events.find( 
+        (e) => {
+            e.id === eventId 
+        })
+    console.log('selectedEvent', selectedEvent.author.username);
     
     if ( !selectedEvent ) {
       console.error( 'Event not found:', eventId )
@@ -105,12 +108,16 @@ function showContextMenu( event, eventId ) {
     // Проверяем, является ли пользователь автором
     const currentUserName = eventStore.events.find(
       (e) => {
-        console.log('currentUserName', e);
+        
         
         e.author.username === selectedEvent.author?.username
       }
     )
+    console.log('currentUserName', currentUserName.author.username);
+
     const isAuthor = Boolean( currentUserName )
+
+    // const isAuthor = selectedEvent.author?.username === eventStore.username;
 
     console.log('isAuthor', isAuthor)
     
