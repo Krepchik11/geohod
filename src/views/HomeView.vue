@@ -94,11 +94,12 @@ function cancelTouch( event ) {
 }
 
 function showContextMenu( event, eventId ) {
-    const selectedEvent = eventStore.events.find( 
-        (e) => {
-            e.id === eventId 
-        })
+    const selectedEvent = eventStore.events.find( e => e.id === eventId )
+
     console.log('selectedEvent', selectedEvent);
+
+    console.log('event',event);
+    
     
     if ( !selectedEvent ) {
       console.error( 'Event not found:', eventId )
