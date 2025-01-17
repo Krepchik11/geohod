@@ -14,9 +14,6 @@ const isLoading = ref( true )
 
 const registeredEvents = computed( () => eventStore.registeredEvents )
 
-console.log('registeredEvents', registeredEvents)
-
-
 onMounted( async () => {
   try {
     await eventStore.fetchEvents()
@@ -97,10 +94,38 @@ function cancelTouch( event ) {
 }
 
 function showContextMenu( event, eventId ) {
-    if (!eventId) {
-      console.error('Invalid eventId:', eventId);
+    const selectedEvent = eventStore.events.find( e => e.id === eventId )
+    if ( !selectedEvent ) {
+      console.error( 'Event not found:', eventId )
       return;
     }
+
+    // Проверяем, является ли пользователь автором
+    const currentUserName = eventStore.events.find(
+      e => e.author.username === selectedEvent.author?.username
+    )
+    const isAuthor = Boolean( currentUserName )
+
+    console.log('isAuthor', isAuthor)
+    
+  
+    menuItems.value = isAuthor
+      ? [
+          { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link' },
+          { label: 'Копировать', action: 'copy', icon: 'copy' },
+          { label: 'Редактировать', action: 'edit', icon: 'edit' },
+          { label: 'Участники', action: 'participants', icon: 'people' },
+          { label: 'Отменить', action: 'delete', icon: 'delete' },
+        ]
+      : [
+          { label: 'Сообщение', action: 'messages', icon: 'messages' },
+          { label: 'Отменить', action: 'delete', icon: 'delete' },
+        ]
+
+    // if (!eventId) {
+    //   console.error('Invalid eventId:', eventId);
+    //   return;
+    // }
 
     event.preventDefault()
 
