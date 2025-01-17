@@ -106,13 +106,10 @@ function showContextMenu( event, eventId ) {
 
     // Проверяем, является ли пользователь автором
     const currentUserName = eventStore.events.find(
-      (e) => {
-        
-        
-        e.author.username === selectedEvent.author?.username
-      }
+        e => e.author.username === selectedEvent.author?.username
     )
     console.log('currentUserName', currentUserName);
+    console.log('selectedEvent.author?.username', selectedEvent.author?.username);
 
     const isAuthor = Boolean( currentUserName )
 
