@@ -66,7 +66,7 @@ function handleMenuSelect( item ) {
       //отправка сообщения
       break
     case 'delete':
-      removeParticipant( contextMenuPosition.eventId )
+      removeParticipant( contextMenuPosition.value.participantId ) //вот сюда нужно передать participantId
       break
       default:
         console.log( 'Неизвестное действие' )
@@ -112,7 +112,7 @@ function cancelTouch( event ) {
   event.target.removeEventListener( 'touchmove', cancelTouch )
 }
 
-function showContextMenu( event, eventId ) {
+function showContextMenu( event, participantId  ) {
   event.preventDefault()
 
   const menuWidth = 200
@@ -133,7 +133,7 @@ function showContextMenu( event, eventId ) {
       }
   }
 
-  contextMenuPosition.value = { x, y, eventId }
+  contextMenuPosition.value = { x, y, participantId  }
   contextMenuVisible.value = true
 
   document.addEventListener( 'click', closeContextMenu )
