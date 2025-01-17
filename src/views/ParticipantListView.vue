@@ -113,8 +113,8 @@ function cancelTouch( event ) {
   event.target.removeEventListener( 'touchmove', cancelTouch )
 }
 
-function showContextMenu( event, participantId ) {
-  console.log('showContextMenu participantId', participantId);
+function showContextMenu( event, eventId  ) {
+  console.log('showContextMenu eventId', eventId);
   
 
   event.preventDefault()
@@ -137,10 +137,12 @@ function showContextMenu( event, participantId ) {
       }
   }
 
-  contextMenuPosition.value = { x, y, participantId  }
+  contextMenuPosition.value = { x, y, eventId   }
   contextMenuVisible.value = true
 
   document.addEventListener( 'click', closeContextMenu )
+
+  console.log('click contextMenuPosition.value',  contextMenuPosition.value);
 }
 
 function closeContextMenu() {
