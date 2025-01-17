@@ -75,6 +75,7 @@ function handleMenuSelect( item ) {
 }
 
 async function removeParticipant( participantId ) {
+  console.log('removeParticipant participantId', participantId);
   try {
     const response = await del( `/api/v1/events/${ eventId.value }/participants/${ participantId }` )
     if ( response.message === 'success' ) {
@@ -112,7 +113,10 @@ function cancelTouch( event ) {
   event.target.removeEventListener( 'touchmove', cancelTouch )
 }
 
-function showContextMenu( event, participantId  ) {
+function showContextMenu( event, participantId ) {
+  console.log('showContextMenu participantId', participantId);
+  
+
   event.preventDefault()
 
   const menuWidth = 200
