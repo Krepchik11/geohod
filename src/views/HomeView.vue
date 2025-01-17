@@ -96,10 +96,8 @@ function cancelTouch( event ) {
 function showContextMenu( event, eventId ) {
     const selectedEvent = eventStore.events.find( e => e.id === eventId )
 
-    console.log('selectedEvent', selectedEvent);
-
-    console.log('event',event);
-    
+    console.log('selectedEvent', selectedEvent);  
+    console.log('selectedEvent.author.username',selectedEvent.author.username)
     
     if ( !selectedEvent ) {
       console.error( 'Event not found:', eventId )
