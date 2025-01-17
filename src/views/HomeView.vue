@@ -98,7 +98,7 @@ function showContextMenu( event, eventId ) {
         (e) => {
             e.id === eventId 
         })
-    console.log('selectedEvent', selectedEvent.author.username);
+    console.log('selectedEvent', selectedEvent);
     
     if ( !selectedEvent ) {
       console.error( 'Event not found:', eventId )
@@ -113,7 +113,7 @@ function showContextMenu( event, eventId ) {
         e.author.username === selectedEvent.author?.username
       }
     )
-    console.log('currentUserName', currentUserName.author.username);
+    console.log('currentUserName', currentUserName);
 
     const isAuthor = Boolean( currentUserName )
 
