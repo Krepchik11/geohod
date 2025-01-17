@@ -66,7 +66,7 @@ function handleMenuSelect( item ) {
       //отправка сообщения
       break
     case 'delete':
-      removeParticipant( contextMenuPosition.value.participantId ) //вот сюда нужно передать participantId
+      removeParticipant( contextMenuPosition.value.eventId ) //вот сюда нужно передать participantId
       break
       default:
         console.log( 'Неизвестное действие' )
