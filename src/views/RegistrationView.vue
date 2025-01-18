@@ -57,6 +57,8 @@ async function loadEvent() {
 }
 
 const isDisabled = computed( () => {
+  console.log('isDisabled   eventStore.registeredEventIds.includes( eventId.value )', eventStore.registeredEventIds.includes( eventId.value ));
+
   return eventStore.registeredEventIds.includes( eventId.value )
 })
 

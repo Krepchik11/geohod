@@ -45,6 +45,8 @@ export const useEventStore = defineStore( 'eventStore', {
       if ( !this.registeredEventIds.includes( id ) ) {
         this.registeredEventIds.push( id )
       }
+      console.log('this.registeredEventIds', this.registeredEventIds);
+      
     },
     
 
