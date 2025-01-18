@@ -17,6 +17,8 @@ const route = useRoute()
 
 onMounted(() => {
   loadEvent()
+  loadParticipants() 
+
 })
 
 const eventId = computed( () => route.params.id ) 
@@ -27,6 +29,26 @@ const date = ref( new Date() )
 const currentParticipants = ref( 0 )
 const maxParticipants = ref( null )
 const author = ref( '' )
+
+const participants = ref( [] )
+const isRegistred = ref( false )  
+
+const initData = window.Telegram.WebApp.initData
+
+const decodedInitData = decodeURIComponent( initData )
+
+const params = new URLSearchParams( decodedInitData )
+const userParam = params.get( 'user' )
+
+let extractedUsername = null
+
+if ( userParam ) {
+  const user = JSON.parse( userParam )
+  const username = user.username; 
+  extractedUsername = username
+} else {
+  console.log('User parameter not found in initData.')
+}
 
 async function loadEvent() {
   try {
@@ -57,8 +79,6 @@ async function loadEvent() {
 }
 
 const isDisabled = computed( () => {
-  console.log('isDisabled   eventStore.registeredEventIds.includes( eventId.value )', eventStore.registeredEventIds.includes( eventId.value ));
-
   return eventStore.registeredEventIds.includes( eventId.value )
 })
 
@@ -83,6 +103,18 @@ async function handleRegistration() {
     })
   } catch (error) {
     console.error( 'Ошибка регистрации:', error )
+  }
+}
+
+async function loadParticipants() {
+  try {
+    const data = await get( `/api/v1/events/${ eventId.value }/participants` )
+    if ( !data || !data.participants ) throw new Error( 'Участники не найдены.' )
+    participants.value = data.participants
+    isRegistred.value = participants.value.some( participant => participant.username === extractedUsername )    
+  } catch ( error ) {
+    console.error( 'Ошибка загрузки участников:', error )
+    participants.value = []
   }
 }
 
@@ -122,7 +154,7 @@ function formattedDate( date ) {
                
             </div>
         </div>
-        <Message class="registration__message" v-if="!isDisabled">Вы зарегистрированы</Message>
+        <Message class="registration__message" v-if="isRegistred">Вы зарегистрированы</Message>
         <Message class="registration__message" v-if="currentParticipants === maxParticipants">Регистрация на мероприятие окончена. Группа набрана.</Message>
         <!-- <div class="registration__agreement" v-if="currentParticipants !== maxParticipants">
           <label class="registration__agreement-lable">
