@@ -122,7 +122,7 @@ function formattedDate( date ) {
                
             </div>
         </div>
-        <Message class="registration__message" v-if="isDisabled">Вы зарегистрированы</Message>
+        <Message class="registration__message" v-if="!isDisabled">Вы зарегистрированы</Message>
         <Message class="registration__message" v-if="currentParticipants === maxParticipants">Регистрация на мероприятие окончена. Группа набрана.</Message>
         <!-- <div class="registration__agreement" v-if="currentParticipants !== maxParticipants">
           <label class="registration__agreement-lable">
