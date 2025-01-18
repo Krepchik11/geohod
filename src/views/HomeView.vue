@@ -272,6 +272,11 @@ function sendMessageToAuthor( ) {
     window.open( telegramUrl, '_blank' )
 }
 
+function isEventAuthor( event ) {
+  return event.author?.username === extractedUsername
+}
+
+
 </script>
 
 <template>
@@ -304,7 +309,7 @@ function sendMessageToAuthor( ) {
                             </div>
                             <div class="event__finish">
                                 <RouterLink
-                                v-if="isEventFinished( event.date )"
+                                v-if="isEventFinished( event.date ) && isEventAuthor( event )"
                                 :to="{ name: 'finish', params: { id: event.id } }"
                                 class="event__finish-link"
                               >
