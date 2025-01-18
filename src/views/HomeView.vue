@@ -250,10 +250,9 @@ async function cancelRegistration() {
   }
 
   try {
-    const response = await del( `/api/v1/events/${ eventId }/unregister` )
-    showSuccessToast( response.message || 'Вы успешно отменили участие' )
+    await del( `/api/v1/events/${ eventId }/unregister` )
 
-    eventStore.registeredEvents = eventStore.registeredEvents.filter(
+    eventStore.events = eventStore.events.filter(
       ( event ) => event.id !== eventId
     )
 
