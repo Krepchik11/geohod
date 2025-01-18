@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
-import { get } from '../utils/api'
+import { get, del } from '../utils/api'
 
 import Header from '../components/Header.vue'
 import ContextMenu from '../components/ContextMenu.vue'
@@ -241,10 +241,29 @@ function isEventFinished( eventDate ) {
   return new Date( eventDate ) < new Date()
 }
 
-function cancelRegistration() {
-    console.log('cancelRegistration')
-    
+async function cancelRegistration() {
+  const eventId = contextMenuPosition.value.eventId
+
+  if (!eventId) {
+    console.error('Event ID отсутствует')
+    return
+  }
+
+  try {
+    const response = await del( `/api/v1/events/${ eventId }/unregister` )
+    showSuccessToast( response.message || 'Вы успешно отменили участие' )
+
+    eventStore.registeredEvents = eventStore.registeredEvents.filter(
+      ( event ) => event.id !== eventId
+    )
+
+    await eventStore.fetchEvents()
+  } catch ( error ) {
+    console.error( 'Ошибка при отмене регистрации:', error )
+    showErrorToast( 'Не удалось отменить участие. Пожалуйста, попробуйте еще раз.' )
+  }
 }
+
 
 function sendMessageToAuthor( ) {
     const eventId = contextMenuPosition.value.eventId

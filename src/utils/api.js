@@ -65,9 +65,9 @@ export const del = async ( url ) => {
     return response.data
   } catch ( error ) {
     console.error( 'Ошибка при выполнении DELETE-запроса:', error.response || error )
-    throw error;
+    throw error
   }
-};
+}
 
 
 // export const deleteRequest = async ( url ) => {
