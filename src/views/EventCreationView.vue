@@ -94,6 +94,9 @@ function focusMaxParticipants() {
 }
 
 function blurMaxParticipantst() {
+  if (!maxParticipants.value) {
+    maxParticipants.value = '30'
+  }
   isButtonsVisible.value = true
 }
 
@@ -103,9 +106,9 @@ function validateMaxParticipants( event ) {
     maxParticipants.value = input.slice( 0, 2 )
   }
 
-  if (Number( input ) > 99) {
-    maxParticipants.value = '99'
-  }
+  // if (Number( input ) > 99) {
+  //   maxParticipants.value = '99'
+  // }
 }
 
 function formattedDate( date ) {
