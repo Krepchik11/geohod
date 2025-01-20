@@ -80,6 +80,7 @@ onBeforeUnmount(() => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   z-index: 1000;
+  width: 210px;
 
   &__list {
     list-style: none;
@@ -116,7 +117,6 @@ onBeforeUnmount(() => {
   }
 
   &__label {
-    font-size: 14px;
     color: var(--text_color);
   }
 }
