@@ -175,6 +175,7 @@ onMounted(() => {
         <div class="event-creation__label">Максимум участников</div>
         <div class="event-creation__input-max-participants">
           <CustomInput
+            ref="maxParticipantsInput"
             v-model="maxParticipants"
             :maxLength="99"
             :acceptNumbersOnly="true"
