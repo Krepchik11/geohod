@@ -231,9 +231,7 @@ onMounted(() => {
   &__buttons-block {
     display: flex;
     gap: 20px;
-    position: fixed;
-    bottom: 50px;
-    right: 30px;
+    justify-content: flex-end;
   }
   &__button {
     padding: 8px 16px;
