@@ -24,6 +24,7 @@ const description = ref( route.query.description || '' )
 const date = ref( new Date( Date.now() ) )
 const maxParticipants = ref( route.query.maxParticipants || '30' )
 const currentParticipants = ref( 0 )
+const maxParticipantsPlaceholder = ref( '30' )
 
 const childInput = ref( null )
 const isInputBlurred = ref( false )
@@ -84,6 +85,7 @@ function focusInput() {
 
 function focusMaxParticipants() {
   maxParticipants.value = ''
+  maxParticipantsPlaceholder.value = ''
   nextTick(() => {
     const inputElement = document.querySelector('.event-creation__input-max-participants input')
     if ( inputElement ) {
@@ -96,6 +98,7 @@ function focusMaxParticipants() {
 function blurMaxParticipantst() {
   if (!maxParticipants.value) {
     maxParticipants.value = '30'
+    maxParticipantsPlaceholder.value = '30'
   }
   isButtonsVisible.value = true
 }
@@ -190,7 +193,7 @@ onMounted(() => {
             :acceptNumbersOnly="true"
             :showLabel="false"
             label="Максимум участников"
-            placeholder="30"
+            :placeholder="maxParticipantsPlaceholder"
             @blur="blurMaxParticipantst"
             @focus="focusMaxParticipants"  
             @input="validateMaxParticipants"
