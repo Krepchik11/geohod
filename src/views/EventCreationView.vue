@@ -82,6 +82,14 @@ function focusInput() {
   isButtonsVisible.value = false
 }
 
+function focusMaxParticipants() {
+  isButtonsVisible.value = false
+}
+
+function blurMaxParticipantst() {
+  isButtonsVisible.value = true
+}
+
 function formattedDate( date ) {
   if ( !date ) return '' 
   return new Intl.DateTimeFormat( 'ru-RU', {
@@ -161,6 +169,8 @@ onMounted(() => {
             :showLabel="false"
             label="Максимум участников"
             placeholder="30"
+            @blur="blurMaxParticipantst"
+            @focus="focusMaxParticipants"  
           />
         </div>
       </div>
