@@ -84,6 +84,12 @@ function focusInput() {
 
 function focusMaxParticipants() {
   maxParticipants.value = ''
+  nextTick(() => {
+    const inputElement = document.querySelector('.event-creation__input-max-participants input')
+    if ( inputElement ) {
+      inputElement.value = ''
+    }
+  })
   isButtonsVisible.value = false
 }
 
