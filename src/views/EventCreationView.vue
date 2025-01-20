@@ -22,7 +22,7 @@ const dataPickerTheme = ref( theme.colorScheme.value === 'dark' ? true : false )
 
 const description = ref( route.query.description || '' )
 const date = ref( new Date( Date.now() ) )
-const maxParticipants = ref( Number( route.query.maxParticipants ) || 30 )
+const maxParticipants = ref( route.query.maxParticipants || '30' )
 const currentParticipants = ref( 0 )
 
 const childInput = ref( null )
@@ -83,11 +83,23 @@ function focusInput() {
 }
 
 function focusMaxParticipants() {
+  maxParticipants.value = ''
   isButtonsVisible.value = false
 }
 
 function blurMaxParticipantst() {
   isButtonsVisible.value = true
+}
+
+function validateMaxParticipants( event ) {
+  const input = event.target.value
+  if  (input.length > 2 ) {
+    maxParticipants.value = input.slice( 0, 2 )
+  }
+
+  if (Number( input ) > 99) {
+    maxParticipants.value = '99'
+  }
 }
 
 function formattedDate( date ) {
@@ -171,6 +183,7 @@ onMounted(() => {
             placeholder="30"
             @blur="blurMaxParticipantst"
             @focus="focusMaxParticipants"  
+            @input="validateMaxParticipants"
           />
         </div>
       </div>
