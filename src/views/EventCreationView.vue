@@ -31,13 +31,7 @@ const isEditing = ref( false )
 
 const isNewEvent = computed( () => !route.query.description )
 
-const isMobileDevice = computed(() => {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )
-})
-
-const shouldHideButtons = computed(() => {
-  return isMobileDevice.value && isInputBlurred.value
-})
+const isButtonsVisible = ref( true )
 
 function createEvent() {
   if ( !description.value || !date.value || !maxParticipants.value ) return 
@@ -72,18 +66,22 @@ function showPreview() {
 function editPreview() {
   isEditing.value = true
   nextTick(() => {
-    focusInput();
+    focusInput()
   });
 }
 
 function blurInput() {
   isInputBlurred.value = true
   isEditing.value = false
+  isButtonsVisible.value = true
 }
 
 function focusInput() {
   isInputBlurred.value = false
   childInput.value.focusInput()
+  if ( isMobileDevice.value ) {
+    isButtonsVisible.value = false
+  }
 }
 
 function formattedDate( date ) {
@@ -170,7 +168,7 @@ onMounted(() => {
       </div>
       <div 
         class="event-creation__buttons-block"
-        v-if="!shouldHideButtons"
+        v-if="isButtonsVisible"
         >
         <button 
           class="event-creation__button event-creation__button--cancel"
