@@ -111,10 +111,11 @@ function validateMaxParticipants( event ) {
 }
 
 function handleKeyDown( event ) {
-  if ( event.key === 'Enter' ) {
+  if ( event.key === 'Enter' || event.code === 'Enter') {
     blurMaxParticipantst()
     blurInput()
     event.target.blur()
+    event.preventDefault()
   }
 }
 
