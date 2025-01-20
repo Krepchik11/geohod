@@ -108,11 +108,16 @@ function validateMaxParticipants( event ) {
   if  (input.length > 2 ) {
     maxParticipants.value = input.slice( 0, 2 )
   }
-
-  // if (Number( input ) > 99) {
-  //   maxParticipants.value = '99'
-  // }
 }
+
+function handleKeyDown( event ) {
+  if ( event.key === 'Enter' ) {
+    blurMaxParticipantst()
+    blurInput()
+    event.target.blur()
+  }
+}
+
 
 function formattedDate( date ) {
   if ( !date ) return '' 
@@ -168,7 +173,7 @@ onMounted(() => {
         placeholder="Введите название"
         @blur="blurInput"
         @focus="focusInput"        
-        
+        @keydown="handleKeyDown"
       />
       <div class="event-creation__datepicker-wrapper">
         <div class="event-creation__label">Дата</div>
@@ -197,6 +202,7 @@ onMounted(() => {
             @blur="blurMaxParticipantst"
             @focus="focusMaxParticipants"  
             @input="validateMaxParticipants"
+            @keydown="handleKeyDown"
           />
         </div>
       </div>
