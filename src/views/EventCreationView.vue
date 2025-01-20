@@ -31,6 +31,14 @@ const isEditing = ref( false )
 
 const isNewEvent = computed( () => !route.query.description )
 
+const isMobileDevice = computed(() => {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )
+})
+
+const shouldHideButtons = computed(() => {
+  return isMobileDevice.value && isInputBlurred.value
+})
+
 function createEvent() {
   if ( !description.value || !date.value || !maxParticipants.value ) return 
 
@@ -160,7 +168,10 @@ onMounted(() => {
           />
         </div>
       </div>
-      <div class="event-creation__buttons-block">
+      <div 
+        class="event-creation__buttons-block"
+        v-if="!shouldHideButtons"
+        >
         <button 
           class="event-creation__button event-creation__button--cancel"
           @click="cancel"
