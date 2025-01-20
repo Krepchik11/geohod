@@ -79,9 +79,7 @@ function blurInput() {
 function focusInput() {
   isInputBlurred.value = false
   childInput.value.focusInput()
-  if ( isMobileDevice.value ) {
-    isButtonsVisible.value = false
-  }
+  isButtonsVisible.value = false
 }
 
 function formattedDate( date ) {
