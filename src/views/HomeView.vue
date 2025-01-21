@@ -443,7 +443,7 @@ function isEventAuthor( event ) {
     width: 30px;
     height: 20px;
     background-color: var(--primary-gray);
-    color: var(--button_color);
+    color: var(--button_text_color);
     border-radius: 10px;
   }
   &__details {
