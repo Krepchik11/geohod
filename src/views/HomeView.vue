@@ -406,11 +406,12 @@ function isEventAuthor( event ) {
   &__inner {
     display: flex;
     gap: 10px;
-    align-items: center;
+    align-items: flex-start;
     padding-bottom: 10px;
   } 
   &__title {
-    padding-bottom: 5px;
+    padding-top: 4px;
+    padding-bottom: 2px;
     font-size: 1em;
     line-height: 1.375rem;
     font-weight: 500;
