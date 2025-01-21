@@ -201,8 +201,8 @@ function formattedDate( date ) {
     margin-bottom: 30px;
   }
   &__organizer-image {
-    width: 50px;
-    height: 50px;
+    width: 54px;
+    height: 54px;
     border-radius: 50%;
     margin-right: 20px;
     object-fit: cover;

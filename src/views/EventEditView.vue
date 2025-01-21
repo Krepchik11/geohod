@@ -209,8 +209,8 @@ function formattedDate( date ) {
     cursor: pointer;
   }
   &__image-wrapper {
-    width: 40px;
-    height: 40px;
+    width: 54px;
+    height: 54px;
     overflow: hidden;
     border-radius: 50%;
   }
