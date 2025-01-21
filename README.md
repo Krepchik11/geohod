@@ -33,3 +33,7 @@ npm run build
 ```sh
 npm run test:unit
 ```
+
+### GitHub Actions deployment
+
+soon
