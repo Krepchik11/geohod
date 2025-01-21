@@ -442,8 +442,8 @@ function isEventAuthor( event ) {
     align-items: center;
     width: 30px;
     height: 20px;
-    background-color: #aaaaaa;
-    color: #ffffff;
+    background-color: var(--primary-gray);
+    color: var(--button_color);
     border-radius: 10px;
   }
   &__details {
