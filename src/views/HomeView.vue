@@ -414,6 +414,10 @@ function isEventAuthor( event ) {
     font-size: 1em;
     line-height: 1.375rem;
     font-weight: 500;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
   &__content {
     width: 80%;

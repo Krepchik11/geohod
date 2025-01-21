@@ -188,6 +188,8 @@ function formattedDate( date ) {
     padding: 0 12px;
   }
   &__title {
+    font-size: 1em;
+    line-height: 1.375rem; 
     font-weight: 500;
     margin-bottom: 10px;
   }
