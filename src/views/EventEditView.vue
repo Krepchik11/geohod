@@ -229,6 +229,7 @@ function formattedDate( date ) {
   &__title {
     font-size: 1em;
     line-height: 1.375rem;
+    font-weight: 500;
   }
   &__date {
     font-size: 1em;

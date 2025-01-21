@@ -143,7 +143,8 @@ onMounted(() => {
     margin-top: 20px;
   }
   &__title{
-    font-size: 24px;
+    font-size: 1em;
+    line-height: 1.375rem; 
     font-weight: 500;
   }
   &__details{

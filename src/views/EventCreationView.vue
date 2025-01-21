@@ -262,9 +262,10 @@ onMounted(() => {
     border-bottom: 1px solid var(--primary-gray);
     width: 80%;
   }
-  &_title {
+  &__title {
     font-size: 1em;
     line-height: 1.375rem;
+    font-weight: 500;
   }
   &__date {
     font-size: 1em;

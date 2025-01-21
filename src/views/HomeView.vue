@@ -413,6 +413,7 @@ function isEventAuthor( event ) {
     padding-bottom: 5px;
     font-size: 1em;
     line-height: 1.375rem;
+    font-weight: 500;
   }
   &__content {
     width: 80%;
