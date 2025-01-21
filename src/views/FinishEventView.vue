@@ -155,7 +155,7 @@ onMounted(() => {
 .finish-section {
   padding: 0 12px;
 
-  &__content{
+  &__content {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -167,7 +167,7 @@ onMounted(() => {
     line-height: 1.375rem;
   }
 
-  &__date{
+  &__date {
     font-size: 1em;
     line-height: 1.375rem;
     color: var(--primary-blue);

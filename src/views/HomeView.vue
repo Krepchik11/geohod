@@ -362,107 +362,106 @@ function isEventAuthor( event ) {
 
 <style lang="scss" scoped>
 .home {
-    position: relative;
-    &__section {
-        padding: 0 12px 100px 12px;
-    }
-    &__btn-wrapper {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        height: 100px;   
-    }
-    &__btn-create {
-        width: 50px;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-        background-color: var(--primary-blue);
-        border: none;
-        cursor: pointer;
-        margin-right: 20px;
-    }
-    &__btn-icon {
-        color: white;
-    }
+  position: relative;
+  &__section {
+    padding: 0 12px 100px 12px;
+  }
+  &__btn-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 100px;   
+  }
+  &__btn-create {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: var(--primary-blue);
+    border: none;
+    cursor: pointer;
+    margin-right: 20px;
+  }
+  &__btn-icon {
+    color: white;
+  }
 }
 
 .event {
+  display: flex;
+  white-space: normal; 
+  overflow-wrap: anywhere; 
+  word-break: break-word;
+  &__link {
+    width: 100%;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  &__inner {
     display: flex;
-    white-space: normal; 
-    overflow-wrap: anywhere; 
-    word-break: break-word;
-    &__link {
-        width: 100%;
-        text-decoration: none;
-        color: inherit;
-        cursor: pointer;
-    }
-    &__inner {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        padding-bottom: 10px;
-    } 
-    &__title {
-        padding-bottom: 5px;
-        font-size: 1em;
-        line-height: 1.375rem;
-    }
-    &__content {
-        width: 80%;
-        border-bottom: 0.5px solid var(--primary-gray);
-        padding-bottom: 10px;
-    }
-    &__image-wrapper {
-        width: 54px;
-        height: 54px;
-        overflow: hidden;
-        border-radius: 50%;
-    }
-    &__image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    &__participants {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 30px;
-        height: 20px;
-        background-color: #aaaaaa;
-        color: #ffffff;
-        border-radius: 10px;
-    }
-    &__details {
-        display: flex;
-        justify-content: space-between;
-    }
-    &__date {
-        color: var(--primary-gray);
-        font-size: 1em;
-        line-height: 1.375rem;
-    }
-    }
-    &__finish {
-        display: flex;
-        justify-content: flex-end;
-    }
-    &__finish-link {
-        display: flex;
-        color: var(--primary-blue);
-        text-decoration: none;
-        font-weight: 500;
-        padding-top: 10px;
-        padding-right: 12px;
-        max-width: 100px;
-    }
+    gap: 10px;
+    align-items: center;
+    padding-bottom: 10px;
+  } 
+  &__title {
+    padding-bottom: 5px;
+    font-size: 1em;
+    line-height: 1.375rem;
+  }
+  &__content {
+    width: 80%;
+    border-bottom: 0.5px solid var(--primary-gray);
+    padding-bottom: 10px;
+  }
+  &__image-wrapper {
+    width: 54px;
+    height: 54px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  &__participants {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 20px;
+    background-color: #aaaaaa;
+    color: #ffffff;
+    border-radius: 10px;
+  }
+  &__details {
+    display: flex;
+    justify-content: space-between;
+  }
+  &__date {
+    color: var(--primary-gray);
+    font-size: 1em;
+    line-height: 1.375rem;
+  }
+  &__finish {
+    display: flex;
+    justify-content: flex-end;
+  }
+  &__finish-link {
+    display: flex;
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 500;
+    padding-top: 10px;
+    padding-right: 12px;
+    max-width: 100px;
+  }
 }
 
 </style>

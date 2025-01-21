@@ -233,10 +233,10 @@ onMounted(() => {
 .event-creation {
   padding-top: 10px;
   &__section {
-      padding: 0 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    padding: 0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
   &__preview {
     display: flex;
@@ -274,12 +274,12 @@ onMounted(() => {
   }
   &__input-wrapper,
   &__datepicker-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
   &__label {
-      color: var(--primary-blue);
+    color: var(--primary-blue);
   }
   &__input-max-participants {
     width: 44px;
