@@ -36,4 +36,19 @@ npm run test:unit
 
 ### GitHub Actions deployment
 
-soon
+Project includes GitHub Actions workflow that automatically builds and deploys the application new release published.
+
+1. Builds the application
+2. Creates a Docker image
+3. Transfers the image to the production VPS
+4. Runs container with the specified environment variables
+
+Required GitHub Variables:
+- `VPS_HOST` - VPS hostname or IP address
+
+Required GitHub Secrets for deployment:
+- `VPS_USER` - VPS username
+- `VPS_SSH_KEY` - SSH private key for VPS access
+
+Optional GitHub Secrets for deployment:
+- `SECRET_VARS` - Comma-separated list of environment variables in format `KEY=VALUE`
