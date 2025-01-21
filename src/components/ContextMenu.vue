@@ -91,7 +91,7 @@ onBeforeUnmount(() => {
   &__item {
     display: flex;
     align-items: center;
-    padding: 10px 15px;
+    padding: 0.75rem;
     gap: 10px;
     cursor: pointer;
 
@@ -111,8 +111,8 @@ onBeforeUnmount(() => {
   }
 
   &__icon {
-    width: 16px;
-    height: 16px;
+    width: 1.25rem;
+    height: 1.25rem;
     margin-right: 8px;
   }
 

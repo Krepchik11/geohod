@@ -7,8 +7,8 @@
 <style>
 .svg-icon {
   fill: var(--text_color);
-  width: 16px;
-  height: 16px;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 </style>
