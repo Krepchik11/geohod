@@ -262,7 +262,13 @@ onMounted(() => {
     border-bottom: 1px solid var(--primary-gray);
     width: 80%;
   }
+  &_title {
+    font-size: 1em;
+    line-height: 1.375rem;
+  }
   &__date {
+    font-size: 1em;
+    line-height: 1.375rem;
     color: var(--primary-gray);
     padding-bottom: 10px;
   }

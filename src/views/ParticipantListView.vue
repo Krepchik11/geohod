@@ -234,14 +234,16 @@ function formattedDate( date ) {
     margin-top: 20px;
   }
   &__title{
-    font-size: 24px;
-    font-weight: 500;
+    font-size: 1em;
+    line-height: 1.375rem;
   }
   &__details{
     display: flex;
     gap: 10px;
   }
   &__date{
+    font-size: 1em;
+    line-height: 1.375rem;
     color: var(--primary-blue);
   }
   &__members-list{
@@ -265,9 +267,9 @@ function formattedDate( date ) {
     height: 100%;
     object-fit: cover;  
   }
-  &__member-name{
-    font-weight: 500;
-    font-size: 18px;
+  &__member-name{  
+    font-size: 1em;
+    line-height: 1.375rem;  
   }
   &__members-quantity{
     display: flex;

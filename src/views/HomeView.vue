@@ -411,6 +411,8 @@ function isEventAuthor( event ) {
     } 
     &__title {
         padding-bottom: 5px;
+        font-size: 1em;
+        line-height: 1.375rem;
     }
     &__content {
         width: 80%;
@@ -444,6 +446,9 @@ function isEventAuthor( event ) {
     }
     &__date {
         color: var(--primary-gray);
+        font-size: 1em;
+        line-height: 1.375rem;
+    }
     }
     &__finish {
         display: flex;
