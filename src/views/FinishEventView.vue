@@ -6,6 +6,7 @@ import { MainButton } from 'vue-tg'
 import { useEventStore } from '../stores/eventStore'
 import { get, patch } from '../utils/api'
 
+import CustomInput  from '../components/CustomInput.vue'
 import Header from '../components/Header.vue'
 
 const route = useRoute()
@@ -70,6 +71,13 @@ async function finishEvent() {
   }
 }
 
+function handleKeyDown( event ) {
+  if ( event.key === 'Enter' || event.code === 'Enter') {
+    event.target.blur()
+    event.preventDefault()
+  }
+}
+
 
 onMounted(() => {
   loadParticipants()
@@ -101,7 +109,7 @@ onMounted(() => {
       <div class="finish-section__members-send">
         <div class="finish-section__members-send-title">Направить участникам</div>
         <div class="finish-section__members-send-options">
-          <div class="finish-section__checkbox">
+          <!-- <div class="finish-section__checkbox">
             <label>
               <input
                 type="checkbox"
@@ -112,7 +120,7 @@ onMounted(() => {
             <span class="finish-section__checkbox-status">
               {{ notificationsEnabled ? 'Вкл.' : 'Выкл.' }}
             </span>
-          </div>
+          </div> -->
           <div class="finish-section__checkbox">
             <label>
               <input
@@ -131,12 +139,20 @@ onMounted(() => {
                 type="checkbox"
                 v-model="donationRequestEnabled"
               />
-              Запрос для доната
+              Инф. о размере доната
               
             </label>
             <span class="finish-section__checkbox-status">
               {{ donationRequestEnabled ? 'Вкл.' : 'Выкл.' }}
             </span>
+            <CustomInput
+              ref="childInput"
+              v-model="description" 
+              :showLabel="true"
+              label="число и валюта" 
+              placeholder="500 динар"   
+              @keydown="handleKeyDown"
+            />
           </div>
         </div>
       </div>
