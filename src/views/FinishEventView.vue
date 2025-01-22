@@ -255,7 +255,6 @@ onMounted(() => {
   &__checkbox {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
 
     label {
       display: flex;
@@ -270,7 +269,7 @@ onMounted(() => {
   }
 
   &__input {
-    
+    padding-top: 20px;
   }
 }
 
