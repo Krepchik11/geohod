@@ -273,7 +273,7 @@ onMounted(() => {
       gap: 30px;
       cursor: pointer;
       position: relative; 
-      padding-left: 35px;
+      padding-left: 60px;
 
       &::before {
         content: '';
