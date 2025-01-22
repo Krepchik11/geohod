@@ -155,7 +155,8 @@ onMounted(() => {
                 v-model="donationInfo" 
                 :showLabel="true"
                 label="число и валюта" 
-                placeholder="500 динар"   
+                placeholder="500 динар"
+                :disabled="!donationRequestEnabled"   
                 @keydown="handleKeyDown"
                />
             </div>
