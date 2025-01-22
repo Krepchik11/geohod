@@ -129,9 +129,9 @@ onMounted(() => {
               />
               Ссылку для голосования
             </label>
-            <span class="finish-section__checkbox-status">
+            <!-- <span class="finish-section__checkbox-status">
               {{ votingLinkEnabled ? 'Вкл.' : 'Выкл.' }}
-            </span>
+            </span> -->
           </div>
           <div class="finish-section__checkbox">
             <label>
@@ -142,17 +142,19 @@ onMounted(() => {
               Инф. о размере доната
               
             </label>
-            <span class="finish-section__checkbox-status">
+            <!-- <span class="finish-section__checkbox-status">
               {{ donationRequestEnabled ? 'Вкл.' : 'Выкл.' }}
-            </span>
-            <CustomInput
-              ref="childInput"
-              v-model="description" 
-              :showLabel="true"
-              label="число и валюта" 
-              placeholder="500 динар"   
-              @keydown="handleKeyDown"
-            />
+            </span> -->
+            <div class="finish-section__input">
+              <CustomInput
+                ref="childInput"
+                v-model="description" 
+                :showLabel="true"
+                label="число и валюта" 
+                placeholder="500 динар"   
+                @keydown="handleKeyDown"
+               />
+            </div>
           </div>
         </div>
       </div>
@@ -246,13 +248,14 @@ onMounted(() => {
       display: flex;
       flex-direction: column;
       padding: 0 12px;
-      gap: 10px;
+      gap: 30px;
     }
   }
 
   &__checkbox {
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
 
     label {
       display: flex;
@@ -264,6 +267,10 @@ onMounted(() => {
       margin-left: 43px;
       color: var(--primary-gray);
     }
+  }
+
+  &__input {
+    
   }
 }
 
