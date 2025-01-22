@@ -219,7 +219,7 @@ onMounted(() => {
     border-radius: 50%;
     background-size: cover;
     background-position: center;
-    border: 4px solid white;
+    border: 4px solid var(--tg-theme-text-color);
     position: relative;
     z-index: 1;
 
@@ -293,7 +293,7 @@ onMounted(() => {
       &::after {
         content: '';
         position: absolute;
-        top: 50%;
+        top: 40%;
         left: 7px;
         transform: translateY(-50%) rotate(45deg);
         width: 8px;
@@ -306,22 +306,19 @@ onMounted(() => {
 
     }
 
-
-
-    /* Цвет обводки и фона при активном состоянии */
     input[type='checkbox']:checked + label::before {
       border-color: var(--primary-blue);
       background-color: var(--primary-blue);
     }
 
-    /* Стиль галочки */
     input[type='checkbox']:checked + label::before {
       content: '';
-      position: relative;
+
     }
 
     input[type='checkbox']:checked + label::after {
       opacity: 1;
+      border-color: var(--tg-theme-text-color);
     }
 
     &-status {
