@@ -194,7 +194,7 @@ onMounted(() => {
   &__date {
     font-size: 1em;
     line-height: 1.375rem;
-    color: var(--primary-blue);
+    color: var(--primary-gray);
   }
 
   &__members-title {
@@ -262,9 +262,53 @@ onMounted(() => {
     flex-direction: column;
 
     label {
-      display: flex;
       width: 100%;
+      display: flex;
+      align-items: center;
       gap: 30px;
+      cursor: pointer;
+    }
+
+    input[type='checkbox'] {
+      display: none; 
+    }
+
+    label::before {
+      content: '';
+      display: inline-block;
+      width: 24px; 
+      height: 24px;
+      border: 2px solid var(--primary-gray);
+      border-radius: 4px; 
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      position: relative;
+      background-color: var(--bg_color);
+    }
+
+    /* Цвет обводки и фона при активном состоянии */
+    input[type='checkbox']:checked + label::before {
+      border-color: var(--primary-blue);
+      background-color: var(--primary-blue);
+    }
+
+    /* Стиль галочки */
+    input[type='checkbox']:checked + label::before {
+      content: '';
+      position: relative;
+    }
+
+    input[type='checkbox']:checked + label::after {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 8px;
+      width: 8px;
+      height: 16px;
+      border: solid var(--bg_color);
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      transition: all 0.3s ease;
     }
 
     &-status {
