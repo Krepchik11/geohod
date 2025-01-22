@@ -126,11 +126,12 @@ onMounted(() => {
             </span>
           </div> -->
           <div class="finish-section__checkbox">
-            <label>
-              <input
+            <input
                 type="checkbox"
+                id="votingLinkEnabled"
                 v-model="votingLinkEnabled"
               />
+            <label for="votingLinkEnabled">
               Ссылку для голосования
             </label>
             <!-- <span class="finish-section__checkbox-status">
@@ -138,13 +139,13 @@ onMounted(() => {
             </span> -->
           </div>
           <div class="finish-section__checkbox">
-            <label>
-              <input
-                type="checkbox"
-                v-model="donationRequestEnabled"
-              />
+            <input
+              type="checkbox"
+              id="donationRequestEnabled"
+              v-model="donationRequestEnabled"
+            />
+            <label for="donationRequestEnabled">
               Инф. о размере доната
-              
             </label>
             <!-- <span class="finish-section__checkbox-status">
               {{ donationRequestEnabled ? 'Вкл.' : 'Выкл.' }}
@@ -261,53 +262,66 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
 
+    input[type='checkbox'] {
+      display: none; 
+    }
+
     label {
       width: 100%;
       display: flex;
       align-items: center;
       gap: 30px;
       cursor: pointer;
+      position: relative; 
+      padding-left: 35px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 24px;
+        border: 2px solid var(--primary-gray);
+        border-radius: 4px;
+        background-color: var(--bg_color);
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+      }
+  
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 7px;
+        transform: translateY(-50%) rotate(45deg);
+        width: 8px;
+        height: 16px;
+        border: solid var(--bg_color);
+        border-width: 0 2px 2px 0;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
     }
 
-    input[type='checkbox'] {
-      display: none; 
-    }
 
-    &::before {
-      content: '';
-      width: 24px;
-      height: 24px;
-      border: 2px solid var(--primary-gray);
-      border-radius: 4px;
-      background-color: var(--bg_color);
-      display: inline-block;
-      transition: all 0.3s ease;
-      margin-right: 10px;
-    }
 
     /* Цвет обводки и фона при активном состоянии */
-    input[type='checkbox']:checked + &::before {
+    input[type='checkbox']:checked + label::before {
       border-color: var(--primary-blue);
       background-color: var(--primary-blue);
     }
 
     /* Стиль галочки */
-    input[type='checkbox']:checked + &::before {
+    input[type='checkbox']:checked + label::before {
       content: '';
       position: relative;
     }
 
-    input[type='checkbox']:checked +  &::after {
-      content: '';
-      position: absolute;
-      top: 6px;
-      left: 8px;
-      width: 8px;
-      height: 16px;
-      border: solid var(--bg_color);
-      border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
-      transition: all 0.3s ease;
+    input[type='checkbox']:checked + label::after {
+      opacity: 1;
     }
 
     &-status {
