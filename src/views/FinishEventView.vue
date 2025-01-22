@@ -149,7 +149,7 @@ onMounted(() => {
             <!-- <span class="finish-section__checkbox-status">
               {{ donationRequestEnabled ? 'Вкл.' : 'Выкл.' }}
             </span> -->
-            <div class="finish-section__input">
+            <div v-if="donationRequestEnabled" class="finish-section__input">
               <CustomInput
                 ref="childInput"
                 v-model="donationInfo" 
