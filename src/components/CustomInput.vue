@@ -25,7 +25,11 @@ const props = defineProps({
   acceptNumbersOnly: {
     type: Boolean,
     default: false,
-  }
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const inputValue = ref( props.modelValue )
@@ -68,6 +72,7 @@ defineExpose({
       class="custom-input__element"
       :maxLength="maxLength"
       :placeholder="placeholder"
+      :disabled="disabled"
       @input="() => {}"
       @blur="$emit('blur', $event)"
       @focus="$emit('focus')"
