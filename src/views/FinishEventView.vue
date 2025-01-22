@@ -13,9 +13,10 @@ const route = useRoute()
 const router = useRouter()
 const eventStore = useEventStore()
 
-const notificationsEnabled = ref( false )
+// const notificationsEnabled = ref( false )
 const votingLinkEnabled = ref( false )
 const donationRequestEnabled = ref( false )
+const donationInfo = ref( '' )
 const participants = ref( [] )
 
 const eventId = computed( () =>  route.params.id )
@@ -53,11 +54,14 @@ function formattedDate( date ) {
 async function finishEvent() {
   try {
     const payload = {
-      notifyParticipants: notificationsEnabled.value,
+      // notifyParticipants: notificationsEnabled.value,
       sendPollLink: votingLinkEnabled.value,
       sendDonationRequest: donationRequestEnabled.value,
-    };
+      donationInfo: donationInfo.value,
+    }
 
+    console.log('finish', payload)
+    
     const response = await patch( `/api/v1/events/${ eventId.value }/finish`, payload )
 
     if ( response.message === 'success' ) {
@@ -148,7 +152,7 @@ onMounted(() => {
             <div class="finish-section__input">
               <CustomInput
                 ref="childInput"
-                v-model="description" 
+                v-model="donationInfo" 
                 :showLabel="true"
                 label="число и валюта" 
                 placeholder="500 динар"   
