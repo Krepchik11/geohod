@@ -273,32 +273,31 @@ onMounted(() => {
       display: none; 
     }
 
-    label::before {
+    &::before {
       content: '';
-      display: inline-block;
-      width: 24px; 
+      width: 24px;
       height: 24px;
       border: 2px solid var(--primary-gray);
-      border-radius: 4px; 
-      transition: all 0.3s ease;
-      box-sizing: border-box;
-      position: relative;
+      border-radius: 4px;
       background-color: var(--bg_color);
+      display: inline-block;
+      transition: all 0.3s ease;
+      margin-right: 10px;
     }
 
     /* Цвет обводки и фона при активном состоянии */
-    input[type='checkbox']:checked + label::before {
+    input[type='checkbox']:checked + &::before {
       border-color: var(--primary-blue);
       background-color: var(--primary-blue);
     }
 
     /* Стиль галочки */
-    input[type='checkbox']:checked + label::before {
+    input[type='checkbox']:checked + &::before {
       content: '';
       position: relative;
     }
 
-    input[type='checkbox']:checked + label::after {
+    input[type='checkbox']:checked +  &::after {
       content: '';
       position: absolute;
       top: 6px;
