@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { inject } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 import { get, del } from '../utils/api'
@@ -9,6 +10,14 @@ import ContextMenu from '../components/ContextMenu.vue'
 
 const eventStore = useEventStore()
 const router = useRouter()
+const themeParams = inject( 'themeParams' )
+
+console.log('themeParams', themeParams)
+
+const isDarkTheme = themeParams?.bg_color && themeParams.bg_color.toLowerCase() === '#000000'
+
+console.log('isDarkTheme', isDarkTheme)
+
 
 const isLoading = ref( true )
 
@@ -323,7 +332,10 @@ function isEventAuthor( event ) {
                             <h3 class="event__title">{{ event.description }}</h3>
                             <div class="event__details">
                                <p class="event__date">{{ formattedDate( event.date ) }}</p>
-                               <p class="event__participants">{{ event.currentParticipants }}</p>
+                               <p 
+                                  class="event__participants"
+                                 :class="{ 'event__participants-darck': isDarkTheme }"
+                                >{{ event.currentParticipants }}</p>
                             </div>
                             <div class="event__finish">
                                 <RouterLink
@@ -442,9 +454,13 @@ function isEventAuthor( event ) {
     align-items: center;
     width: 30px;
     height: 20px;
-    background-color: var(--tg-theme-subtitle-text-color);
-    color: var(--tg-theme-text-color);
+    background-color: var(--chatlist-pinned-color);
+    color: var(--secondary-color);
     border-radius: 10px;
+  }
+  &__participants-darck {
+    background-color: var(--chatlist-pinned-color-darck);
+    color: var(--badge-text-color);
   }
   &__details {
     display: flex;

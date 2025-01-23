@@ -9,17 +9,24 @@
     --primary-red: red;
     --primary-gray: var(--tg-theme-subtitle-text-color);
 
-
+    /* для кол-ва участников */
+    /* светлая тема */
+    --chatlist-pinned-color: #a2abb2;
+    --secondary-color: #c4c9cc;
+    /* темная тема */
+    --chatlist-pinned-color-darck: #707579;
+    --badge-text-color: #fff;
+    
 
     --text_color: var(--tg-theme-text-color);
-    --hint_color: var(--tg-theme-hint-color);
+    --hint_color: var(--tg-theme-hint-color);   /*темный */
     --link_color: var(--tg-theme-link-color);
     --button_color: var(--tg-theme-button-color);
     --button_text_color: var(--tg-theme-button-text-color);
     --accent_text_color: var(--tg-theme-accent-text-color);
     --section_header_text_color: var(--tg-theme-section-header-text-color);
     --section_separator_color: var(--tg-theme-section-separator-color);
-    --subtitle_text_color: var(--tg-theme-subtitle-text-color);
+    --subtitle_text_color: var(--tg-theme-subtitle-text-color); /*темный */
     --destructive_text_color: var(--tg-theme-destructive-text-color); 
 
 }
