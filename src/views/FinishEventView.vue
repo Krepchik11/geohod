@@ -318,7 +318,7 @@ onMounted(() => {
 
     input[type='checkbox']:checked + label::after {
       opacity: 1;
-      border-color: var(--tg-theme-text-color);
+      border-color: var(--color-num);
     }
 
     &-status {
