@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { inject } from 'vue'
+import { useWebAppTheme } from 'vue-tg';
 import { useRouter, RouterLink } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 import { get, del } from '../utils/api'
@@ -11,6 +12,7 @@ import ContextMenu from '../components/ContextMenu.vue'
 const eventStore = useEventStore()
 const router = useRouter()
 const themeParams = inject( 'themeParams' )
+const { colorScheme } = useWebAppTheme()
 
 console.log('themeParams', themeParams)
 
@@ -331,7 +333,7 @@ function isEventAuthor( event ) {
                                <p class="event__date">{{ formattedDate( event.date ) }}</p>
                                <p 
                                   class="event__participants"
-                                 :class="{ 'event__participants-darck': isDarkTheme }"
+                                 :class="['event__participants', colorScheme === 'dark' ? 'event__participants-dark' : '']"
                                 >{{ event.currentParticipants }}</p>
                             </div>
                             <div class="event__finish">
