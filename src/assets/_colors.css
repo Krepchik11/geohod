@@ -11,8 +11,8 @@
 
     /* для кол-ва участников */
     /* светлая тема */
-    --chatlist-pinned-color: #a2abb2;
-    --secondary-color: #c4c9cc;
+    --bg-color-num: #c4c9cc;
+    --color-num: #fff;
     /* темная тема */
     --chatlist-pinned-color-darck: #707579;
     --badge-text-color: #fff;

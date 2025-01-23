@@ -14,10 +14,7 @@ const themeParams = inject( 'themeParams' )
 
 console.log('themeParams', themeParams)
 
-const isDarkTheme = themeParams?.bg_color && themeParams.bg_color.toLowerCase() === '#000000'
-
-console.log('isDarkTheme', isDarkTheme)
-
+const isDarkTheme = themeParams?.bg_color && themeParams.bg_color.toLowerCase() === '#212121'
 
 const isLoading = ref( true )
 
@@ -454,8 +451,8 @@ function isEventAuthor( event ) {
     align-items: center;
     width: 30px;
     height: 20px;
-    background-color: var(--chatlist-pinned-color);
-    color: var(--secondary-color);
+    background-color: var(--bg-color-num);
+    color: var(--color-num);
     border-radius: 10px;
   }
   &__participants-darck {
