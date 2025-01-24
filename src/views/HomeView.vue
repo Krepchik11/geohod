@@ -90,7 +90,19 @@ function handleMenuSelect( item ) {
             cancelRegistration()
             break 
         case 'messages':
-            sendMessageToAuthor()
+            if ( window.Telegram.WebApp.initDataUnsafe.write_access ) {
+              sendMessageToAuthor()
+            }  else {
+              // Запрашиваем разрешение на отправку сообщений
+              window.Telegram.WebApp.requestWriteAccess(( granted ) => {
+                if ( granted ) {
+                  sendMessageToAuthor()
+                } else {
+                  showErrorToast( 'Разрешение отклонено. Вы не сможете отправлять сообщения.' )
+                }
+              })
+            }
+            
             break       
         default:
             console.log( 'Неизвестное действие' )
