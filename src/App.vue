@@ -13,7 +13,7 @@
 .main-wrapper {
   display: flex;
   flex-direction: column;
-  padding-top: 55px;
+  padding-top: 50px;
 }
 
 </style>

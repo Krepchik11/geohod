@@ -185,13 +185,13 @@ function formattedDate( date ) {
     white-space: normal; 
     overflow-wrap: anywhere; 
     word-break: break-word; 
-    padding: 0 12px;
+    padding: 0 18px;
   }
   &__title {
     font-size: 1em;
     line-height: 1.375rem; 
     font-weight: 500;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
   &__date {
     margin-bottom: 20px;
@@ -200,7 +200,7 @@ function formattedDate( date ) {
   &__organizer-details {
     display: flex;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
   &__organizer-image {
     width: 54px;

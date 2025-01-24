@@ -100,7 +100,7 @@ onMounted(() => {
       </div>
       <div class="finish-section__members-title">Участники</div>
       <div class="finish-section__members-list">
-        <div class="finish-section__members-avatars">
+        <div v-if="participants.length != 0" class="finish-section__members-avatars">
           <div
           v-for="( participant, index ) in participants.slice( 0, 3 )"
           :key="index"
@@ -177,13 +177,12 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .finish-section {
-  padding: 0 12px;
+  padding: 0 18px;
 
   &__content {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 12px;
   }
 
   &__title {
@@ -243,7 +242,6 @@ onMounted(() => {
   }
 
   &__members-send {
-    margin-top: 20px;
 
     &-title {
       color: var(--primary-blue);
@@ -253,8 +251,7 @@ onMounted(() => {
     &-options {
       display: flex;
       flex-direction: column;
-      padding: 0 12px;
-      gap: 30px;
+      gap: 20px;
     }
   }
 

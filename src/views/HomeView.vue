@@ -375,7 +375,7 @@ function isEventAuthor( event ) {
 .home {
   position: relative;
   &__section {
-    padding: 0 12px 100px 12px;
+    padding: 0 18px 100px 18px;
   }
   &__btn-wrapper {
     display: flex;
