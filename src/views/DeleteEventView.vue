@@ -135,12 +135,11 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .cancel-section{
-  padding: 0 12px;
+  padding: 0 18px;
   &__content{
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin-top: 20px;
   }
   &__title{
     font-size: 1em;

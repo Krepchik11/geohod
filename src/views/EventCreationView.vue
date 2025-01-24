@@ -231,9 +231,8 @@ onMounted(() => {
 <style lang="scss">
 @import '../assets/_colors.css';
 .event-creation {
-  padding-top: 10px;
   &__section {
-    padding: 0 12px;
+    padding: 0 18px;
     display: flex;
     flex-direction: column;
     gap: 20px;
