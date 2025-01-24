@@ -24,6 +24,17 @@ const registeredEvents = computed( () => eventStore.registeredEvents )
 
 onMounted( async () => {
   try {
+    // Проверяем write_access и, если нужно, запрашиваем доступ
+    if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
+      const granted = await new Promise(( resolve ) => {
+        window.Telegram.WebApp.requestWriteAccess( ( granted ) => resolve( granted ))
+      })
+
+      if ( !granted ) {
+        showErrorToast( 'Разрешение отклонено. Вы не сможете отправлять сообщения.' )
+      }
+    }
+    
     await eventStore.fetchEvents()
     isLoading.value = false
   } catch ( error ) {
@@ -90,19 +101,7 @@ function handleMenuSelect( item ) {
             cancelRegistration()
             break 
         case 'messages':
-            if ( window.Telegram.WebApp.initDataUnsafe.write_access ) {
-              sendMessageToAuthor()
-            }  else {
-              // Запрашиваем разрешение на отправку сообщений
-              window.Telegram.WebApp.requestWriteAccess(( granted ) => {
-                if ( granted ) {
-                  sendMessageToAuthor()
-                } else {
-                  showErrorToast( 'Разрешение отклонено. Вы не сможете отправлять сообщения.' )
-                }
-              })
-            }
-            
+            sendMessageToAuthor()
             break       
         default:
             console.log( 'Неизвестное действие' )
