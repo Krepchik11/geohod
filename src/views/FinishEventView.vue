@@ -58,14 +58,10 @@ async function finishEvent() {
       sendPollLink: votingLinkEnabled.value,
       sendDonationRequest: donationRequestEnabled.value,
       donationInfo: donationInfo.value,
-    }
-
-    console.log('finish', payload)
-    
+    }   
     const response = await patch( `/api/v1/events/${ eventId.value }/finish`, payload )
 
     if ( response.message === 'success' ) {
-      console.log( 'Мероприятие успешно завершено.' )
       router.push( '/' )
     } else {
       console.error( 'Ошибка при завершении мероприятия:', response )
@@ -82,12 +78,9 @@ function handleKeyDown( event ) {
   }
 }
 
-
 onMounted(() => {
   loadParticipants()
 })
-
-
 </script>
 
 <template>

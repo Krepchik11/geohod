@@ -46,7 +46,6 @@ function createEvent() {
 
   post( '/api/v1/events', newEvent ) 
   .then( response => {
-    console.log( 'Event created:', response )
     eventStore.fetchEvents() 
     router.push( '/' ) 
   })

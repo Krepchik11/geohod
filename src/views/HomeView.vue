@@ -14,8 +14,6 @@ const router = useRouter()
 const themeParams = inject( 'themeParams' )
 const { colorScheme } = useWebAppTheme()
 
-console.log('themeParams', themeParams)
-
 const isDarkTheme = themeParams?.bg_color && themeParams.bg_color.toLowerCase() === '#212121'
 
 const isLoading = ref( true )
@@ -77,8 +75,6 @@ if ( userParam ) {
   const user = JSON.parse( userParam )
   const username = user.username; 
   extractedUsername = username
-} else {
-  console.log('User parameter not found in initData.')
 }
 
 const contextMenuVisible = ref( false )
@@ -93,43 +89,42 @@ const menuItems = ref([
 ])
 
 function handleMenuSelect( item ) {
-    switch ( item.action ) {
-        case 'copy-link':
-            copyLink()
-            break
-        case 'copy':
-            const eventToCopy = eventStore.events.find( event => event.id === contextMenuPosition.value.eventId )
-            if ( eventToCopy ) {
-                router.push({
-                    name: 'createEvent',
-                    query: {
-                        description: eventToCopy.description,
-                        date: eventToCopy.date,
-                        maxParticipants: eventToCopy.maxParticipants,
-                    }
-                });
+  switch ( item.action ) {
+    case 'copy-link':
+      copyLink()
+      break
+    case 'copy':
+      const eventToCopy = eventStore.events.find( event => event.id === contextMenuPosition.value.eventId )
+      if ( eventToCopy ) {
+        router.push({
+            name: 'createEvent',
+            query: {
+                description: eventToCopy.description,
+                date: eventToCopy.date,
+                maxParticipants: eventToCopy.maxParticipants,
             }
-            break
-        case 'edit':
-            router.push({ name: 'edit', params: { id: contextMenuPosition.value.eventId } })
-            break
-        case 'participants':
-            router.push({ name: 'participants', params: { id: contextMenuPosition.value.eventId } })
-            break
-        case 'delete':
-            router.push( { name: 'delete', params: { id: contextMenuPosition.value.eventId } } )
-            break
-        case 'cancel':
-            cancelRegistration()
-            break 
-        case 'messages':
-            sendMessageToAuthor()
-            break       
-        default:
-            console.log( 'Неизвестное действие' )
-    }
-
-    closeContextMenu()
+        })
+      }
+      break
+    case 'edit':
+      router.push({ name: 'edit', params: { id: contextMenuPosition.value.eventId } })
+      break
+    case 'participants':
+      router.push({ name: 'participants', params: { id: contextMenuPosition.value.eventId } })
+      break
+    case 'delete':
+      router.push( { name: 'delete', params: { id: contextMenuPosition.value.eventId } } )
+      break
+    case 'cancel':
+      cancelRegistration()
+      break 
+    case 'messages':
+      sendMessageToAuthor()
+      break       
+    default:
+      console.log( 'Неизвестное действие' )
+  }
+  closeContextMenu()
 }
 
 let touchTimer = null

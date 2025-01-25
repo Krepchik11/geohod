@@ -16,14 +16,11 @@ export const useEventStore = defineStore( 'eventStore', {
     async fetchEvents() {
       try {
         const data = await get( '/api/v1/events' )
-
         // Фильтрация только активных событий
         const activeEvents = Array.isArray( data.content )
           ? data.content.filter( event => event.status === 'ACTIVE' )
           : []
-
         this.events = activeEvents
-        console.log( 'data:', data )
         
       } catch ( error ) {
         console.error( 'Failed to fetch events:', error )
@@ -44,11 +41,7 @@ export const useEventStore = defineStore( 'eventStore', {
     registerForEvent( id ) {
       if ( !this.registeredEventIds.includes( id ) ) {
         this.registeredEventIds.push( id )
-      }
-      console.log('this.registeredEventIds', this.registeredEventIds);
-      
+      }     
     },
-    
-
   },
 })

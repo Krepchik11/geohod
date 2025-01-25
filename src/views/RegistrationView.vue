@@ -46,9 +46,7 @@ if ( userParam ) {
   const user = JSON.parse( userParam )
   const username = user.username; 
   extractedUsername = username
-} else {
-  console.log('User parameter not found in initData.')
-}
+} 
 
 async function loadEvent() {
   try {
@@ -82,19 +80,13 @@ const isDisabled = computed( () => {
   return eventStore.registeredEventIds.includes( eventId.value )
 })
 
-console.log('isDisabled', isDisabled);
-
-
 async function handleRegistration() {
   try {
     await post( `/api/v1/events/${ eventId.value }/register` )
     .then( () => {
       currentParticipants.value += 1
       eventStore.setDisabledEventId( eventId.value )
-      eventStore.registerForEvent( eventId.value )
-
-      console.log('Вы успешно зарегистрировались!')
-      
+      eventStore.registerForEvent( eventId.value )     
       eventStore.fetchEvents() 
       router.push( '/' ) 
     })

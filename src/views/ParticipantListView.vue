@@ -63,10 +63,7 @@ async function loadParticipants() {
   try {
     const data = await get( `/api/v1/events/${ eventId.value }/participants` )
     if ( !data || !data.participants ) throw new Error( 'Участники не найдены.' )
-    participants.value = data.participants
-
-    console.log('participants.value', participants.value)
-    
+    participants.value = data.participants    
   } catch ( error ) {
     console.error( 'Ошибка загрузки участников:', error )
     participants.value = []
@@ -103,7 +100,6 @@ async function removeParticipant( participantId ) {
     if ( response.message === 'success' ) {
       participants.value = participants.value.filter( participant => participant.id !== participantId )
       currentParticipants.value -= 1
-      console.log( 'Участник успешно удален' )
     } else {
       console.error( 'Не удалось удалить участника' )
     }
