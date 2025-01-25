@@ -25,28 +25,40 @@ const registeredEvents = computed( () => eventStore.registeredEvents )
 onMounted( async () => {
   try {
     // Извлекаем eventId из параметра ссылки
-    const initData = window.Telegram.WebApp.initData || ''
-    const decodedInitData = decodeURIComponent( initData )
-    const params = new URLSearchParams( decodedInitData )
-    const startParam = params.get( 'start_param' )
+    // const initData = window.Telegram.WebApp.initData || ''
+    // const decodedInitData = decodeURIComponent( initData )
+    // const params = new URLSearchParams( decodedInitData )
+    // const startParam = params.get( 'start_param' )
 
-    let eventId = null
-    if (startParam && startParam.startsWith( 'registration_' )) {
-      eventId = startParam.replace( 'registration_', '' )
-    }
+    // let eventId = null
+    // if (startParam && startParam.startsWith( 'registration_' )) {
+    //   eventId = startParam.replace( 'registration_', '' )
+    // }
 
     // Проверяем write_access и, если нужно, запрашиваем доступ
-    if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
-      const granted = await new Promise(( resolve ) => {
-        window.Telegram.WebApp.requestWriteAccess(( granted ) => resolve( granted ))
-      })
+    // if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
+    //   const granted = await new Promise(( resolve ) => {
+    //     window.Telegram.WebApp.requestWriteAccess(( granted ) => resolve( granted ))
+    //   })
 
-      if ( !granted ) {
-        // Перенаправляем на страницу регистрации
-        router.push( `/registration/${ eventId }` ) 
-        return
+      // if ( !granted ) {
+      //   // Перенаправляем на страницу регистрации
+      //   router.push( `/registration/${ eventId }` ) 
+      //   return
+      // }
+    // }
+
+    Telegram.WebApp.showConfirm( "Чтобы отправлять сообщения боту, требуется доступ. Хотите предоставить его?", ( isConfirmed ) => {
+      if ( isConfirmed ) {
+        Telegram.WebApp.requestWriteAccess({
+          write_access_purpose: 'access_purpose',
+          bot_id: 7966864729,
+        })
+      } else {
+        console.log( "Пользователь отказался предоставить доступ." )
       }
-    }
+    })
+
 
     // Если доступ получен или уже был, загружаем данные
     await eventStore.fetchEvents()
