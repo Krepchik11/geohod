@@ -24,20 +24,21 @@ const registeredEvents = computed( () => eventStore.registeredEvents )
 
 onMounted( async () => {
   try {
+    await eventStore.fetchEvents()
+    
     // Проверяем write_access и, если нужно, запрашиваем доступ
-    // if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
-    //   const granted = await new Promise(( resolve ) => {
-    //     window.Telegram.WebApp.requestWriteAccess(( granted ) => resolve( granted ))
-    //   })
+    if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
+      const granted = await new Promise(( resolve ) => {
+        window.Telegram.WebApp.requestWriteAccess(( granted ) => resolve( granted ))
+      })
 
-    //   if (!granted) {
-    //     isLoading.value = false
-    //     return
-    //   }
-    // }
+      if (!granted) {
+        isLoading.value = false
+        return
+      }
+    }
 
     // Если доступ получен или уже был, загружаем данные
-    await eventStore.fetchEvents()
     isLoading.value = false
   } catch (error) {
     console.error( 'Error fetching events on mount:', error )
