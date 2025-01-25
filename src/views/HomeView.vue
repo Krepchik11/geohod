@@ -29,10 +29,6 @@ onMounted( async () => {
       const granted = await new Promise(( resolve ) => {
         window.Telegram.WebApp.requestWriteAccess( ( granted ) => resolve( granted ))
       })
-
-      if ( !granted ) {
-        showErrorToast( 'Разрешение отклонено. Вы не сможете отправлять сообщения.' )
-      }
     }
     
     await eventStore.fetchEvents()
