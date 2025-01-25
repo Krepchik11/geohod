@@ -28,7 +28,7 @@ onMounted( async () => {
     const initData = window.Telegram.WebApp.initData || ''
     const decodedInitData = decodeURIComponent( initData )
     const params = new URLSearchParams( decodedInitData )
-    const startParam = params.get( 'startapp' )
+    const startParam = params.get( 'start_param' )
 
     let eventId = null
     if (startParam && startParam.startsWith( 'registration_' )) {
