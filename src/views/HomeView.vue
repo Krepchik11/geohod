@@ -37,16 +37,10 @@ onMounted( async () => {
 
     // Проверяем write_access и, если нужно, запрашиваем доступ
     if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
-      Telegram.WebApp.showConfirm( "Чтобы отправлять сообщения боту, требуется доступ. Хотите предоставить его?", ( isConfirmed ) => {
-      if ( isConfirmed ) {
-        Telegram.WebApp.requestWriteAccess({
-          write_access_purpose: 'access_purpose',
-          bot_id: 7966864729,
-        })
-      } else {
-        console.log( "Пользователь отказался предоставить доступ." )
-      }
-    })
+      Telegram.WebApp.requestWriteAccess({
+        write_access_purpose: 'access_purpose',
+        bot_id: 7966864729,
+      })
       // const granted = await new Promise(( resolve ) => {
       //   window.Telegram.WebApp.requestWriteAccess(( granted ) => resolve( granted ))
       // })
