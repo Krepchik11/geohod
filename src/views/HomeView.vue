@@ -24,21 +24,32 @@ const registeredEvents = computed( () => eventStore.registeredEvents )
 
 onMounted( async () => {
   try {
-    await eventStore.fetchEvents()
-    
+    // Извлекаем eventId из параметра ссылки
+    const initData = window.Telegram.WebApp.initData || ''
+    const decodedInitData = decodeURIComponent( initData )
+    const params = new URLSearchParams( decodedInitData )
+    const startParam = params.get( 'startapp' )
+
+    let eventId = null
+    if (startParam && startParam.startsWith( 'registration_' )) {
+      eventId = startParam.replace( 'registration_', '' )
+    }
+
     // Проверяем write_access и, если нужно, запрашиваем доступ
     if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
       const granted = await new Promise(( resolve ) => {
         window.Telegram.WebApp.requestWriteAccess(( granted ) => resolve( granted ))
       })
 
-      if (!granted) {
-        isLoading.value = false
+      if ( !granted ) {
+        // Перенаправляем на страницу регистрации
+        router.push( `/registration/${ eventId }` ) 
         return
       }
     }
 
     // Если доступ получен или уже был, загружаем данные
+    await eventStore.fetchEvents()
     isLoading.value = false
   } catch (error) {
     console.error( 'Error fetching events on mount:', error )
