@@ -36,19 +36,8 @@ onMounted( async () => {
     // }
 
     // Проверяем write_access и, если нужно, запрашиваем доступ
-    // if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
-    //   const granted = await new Promise(( resolve ) => {
-    //     window.Telegram.WebApp.requestWriteAccess(( granted ) => resolve( granted ))
-    //   })
-
-      // if ( !granted ) {
-      //   // Перенаправляем на страницу регистрации
-      //   router.push( `/registration/${ eventId }` ) 
-      //   return
-      // }
-    // }
-
-    Telegram.WebApp.showConfirm( "Чтобы отправлять сообщения боту, требуется доступ. Хотите предоставить его?", ( isConfirmed ) => {
+    if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
+      Telegram.WebApp.showConfirm( "Чтобы отправлять сообщения боту, требуется доступ. Хотите предоставить его?", ( isConfirmed ) => {
       if ( isConfirmed ) {
         Telegram.WebApp.requestWriteAccess({
           write_access_purpose: 'access_purpose',
@@ -58,6 +47,18 @@ onMounted( async () => {
         console.log( "Пользователь отказался предоставить доступ." )
       }
     })
+      // const granted = await new Promise(( resolve ) => {
+      //   window.Telegram.WebApp.requestWriteAccess(( granted ) => resolve( granted ))
+      // })
+
+      // if ( !granted ) {
+      //   // Перенаправляем на страницу регистрации
+      //   router.push( `/registration/${ eventId }` ) 
+      //   return
+      // }
+    }
+
+    
 
 
     // Если доступ получен или уже был, загружаем данные
