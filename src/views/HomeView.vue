@@ -22,31 +22,26 @@ const registeredEvents = computed( () => eventStore.registeredEvents )
 
 onMounted( async () => {
   try {
-    // Извлекаем eventId из параметра ссылки
-    // const initData = window.Telegram.WebApp.initData || ''
-    // const decodedInitData = decodeURIComponent( initData )
-    // const params = new URLSearchParams( decodedInitData )
-    // const startParam = params.get( 'start_param' )
-
-    // let eventId = null
-    // if (startParam && startParam.startsWith( 'registration_' )) {
-    //   eventId = startParam.replace( 'registration_', '' )
+    // Проверяем write_access и, если нужно, запрашиваем доступ
+    // if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
+    //   Telegram.WebApp.requestWriteAccess({
+    //     write_access_purpose: 'access_purpose',
+    //     bot_id: 7966864729,
+    //   })
     // }
 
-    // Проверяем write_access и, если нужно, запрашиваем доступ
-    if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
-      Telegram.WebApp.requestWriteAccess({
-        write_access_purpose: 'access_purpose',
-        bot_id: 7966864729,
-      })
-      // const granted = await new Promise(( resolve ) => {
-      //   window.Telegram.WebApp.requestWriteAccess(( granted ) => resolve( granted ))
-      // })
+    const { initDataUnsafe } = window.Telegram.WebApp
 
-      // if ( !granted ) {
-      //   // Перенаправляем на страницу регистрации
-      //   router.push( `/registration/${ eventId }` ) 
-      //   return
+    // Проверяем write_access
+    if ( !initDataUnsafe.write_access ) {
+      const confirmed = await Telegram.WebApp.requestWriteAccess({
+        write_access_purpose: 'send_notifications',
+        bot_id: 7966864729, 
+      })
+
+      // if ( !confirmed ) {
+      //   // Если write_access не предоставлен, отправляем сообщение через Bot API
+      //   await sendWriteAccessRequestMessage();
       // }
     }
 
