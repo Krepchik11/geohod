@@ -20,19 +20,30 @@ const isLoading = ref( true )
 
 const registeredEvents = computed( () => eventStore.registeredEvents )
 
+const isWriteAccessRequested = ref( false )
+
 onMounted( async () => {
   try {
     // Проверяем write_access и, если нужно, запрашиваем доступ
-    if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
+    // if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
+    //   Telegram.WebApp.requestWriteAccess({
+    //     write_access_purpose: 'access_purpose',
+    //     bot_id: 7966864729,
+    //   })
+    // }    
+
+    if ( !window.Telegram.WebApp.initDataUnsafe.write_access && !isWriteAccessRequested.value ) {
+      isWriteAccessRequested.value = true; // Устанавливаем флаг, чтобы не запрашивать повторно
       Telegram.WebApp.requestWriteAccess({
         write_access_purpose: 'access_purpose',
         bot_id: 7966864729,
       })
-    }    
+    }
+
 
 
     // Если доступ получен или уже был, загружаем данные
-    await eventStore.fetchEvents()
+    eventStore.fetchEvents()
     isLoading.value = false
   } catch (error) {
     console.error( 'Error fetching events on mount:', error )
