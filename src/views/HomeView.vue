@@ -32,12 +32,18 @@ onMounted( async () => {
 
     const { initDataUnsafe } = window.Telegram.WebApp
 
+    console.log('initDataUnsafe.write_access:   ', initDataUnsafe.write_access  );
+    
+
     // Проверяем write_access
     if ( !initDataUnsafe.write_access ) {
       const confirmed = await Telegram.WebApp.requestWriteAccess({
         write_access_purpose: 'send_notifications',
         bot_id: 7966864729, 
       })
+
+      console.log('confirmed    ', confirmed);
+      
 
       // if ( !confirmed ) {
       //   // Если write_access не предоставлен, отправляем сообщение через Bot API
