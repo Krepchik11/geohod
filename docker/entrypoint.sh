@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 while [ ! -f /etc/nginx/certs/fullchain.pem ]; do
   echo "Waiting for certificates..."
