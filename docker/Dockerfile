@@ -18,3 +18,5 @@ EXPOSE 80
 
 COPY ./docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+CMD ["/entrypoint.sh"]
