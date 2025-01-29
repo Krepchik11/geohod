@@ -77,6 +77,6 @@ jobs:
               --name geohod-frontend \
               -p 80:80 \
               -p 443:443 \
-              -v /etc/letsencrypt/live:/etc/nginx/certs \
+              -v /etc/letsencrypt:/etc/nginx/certs \
               $ENV_ARGS \
               ${{ github.repository }}:${{ github.ref_name }}
