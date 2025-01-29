@@ -12,7 +12,7 @@ RUN npm run build
 FROM nginx:alpine
 
 COPY ./docker/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/dist /app
+COPY --from=builder /app/dist /var/www/html/app
 
 RUN mkdir -p /etc/nginx/certs
 
