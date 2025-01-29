@@ -16,7 +16,7 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 80
 
-COPY ./docker/entrypoint.sh /entrypoint.sh
+COPY ./docker/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
 CMD ["/entrypoint.sh"]
