@@ -1,9 +1,6 @@
 name: Build and Deploy
 
-on:
-  release:
-    types:
-      - published
+on: workflow_dispatch
 
 jobs:
   build-and-publish:
@@ -37,7 +34,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./.github/Dockerfile
+          file: ./docker/Dockerfile
           tags: ${{ github.repository }}:${{ github.ref_name }}
           outputs: type=docker,dest=./image.tar
 
