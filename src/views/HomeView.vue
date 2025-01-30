@@ -58,12 +58,12 @@ const decodedInitData = decodeURIComponent( initData )
 const params = new URLSearchParams( decodedInitData )
 const userParam = params.get( 'user' )
 
-let extractedUsername = null
+let extractedId = null
 
 if ( userParam ) {
   const user = JSON.parse( userParam )
-  const username = user.username; 
-  extractedUsername = username
+  const userId = user.id; 
+  extractedId = userId
 }
 
 const contextMenuVisible = ref( false )
@@ -149,7 +149,7 @@ function showContextMenu( event, eventId ) {
     }
 
     // Проверяем, является ли пользователь автором
-    const isAuthor = Boolean( selectedEvent.author.username === extractedUsername )   
+    const isAuthor = Boolean( selectedEvent.author.id === extractedId )   
   
     menuItems.value = isAuthor
       ? [
@@ -316,7 +316,7 @@ function sendMessageToAuthor( ) {
 }
 
 function isEventAuthor( event ) {
-  return event.author?.username === extractedUsername
+  return event.author?.id === extractedId
 }
 
 

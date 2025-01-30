@@ -38,13 +38,13 @@ const router = createRouter({
         const params = new URLSearchParams( decodedInitData )
         const userParam = params.get( 'user' )
 
-        let extractedUsername = null
+        let extractedId = null
         if ( userParam ) {
           const user = JSON.parse( userParam )
-          extractedUsername = user.username
+          extractedId = user.id
         }
 
-        if ( !extractedUsername ) {
+        if ( !extractedId ) {
           console.error( 'Не удалось извлечь имя пользователя из initData.' )
           return next( '/' ) // Перенаправляем на главную страницу
         }
@@ -55,7 +55,7 @@ const router = createRouter({
           if (!data || !data.participants) throw new Error( 'Участники не найдены.' )
 
           const isRegistred = data.participants.some(
-            ( participant ) => participant.username === extractedUsername
+            ( participant ) => participant.id === extractedId
           )
 
           if ( isRegistred ) {
