@@ -40,12 +40,16 @@ const decodedInitData = decodeURIComponent( initData )
 const params = new URLSearchParams( decodedInitData )
 const userParam = params.get( 'user' )
 
-let extractedUsername = null
+let extractedId = null
 
 if ( userParam ) {
-  const user = JSON.parse( userParam )
-  const username = user.username; 
-  extractedUsername = username
+  try {
+    const user = JSON.parse( userParam )
+    console.log( 'user', user )
+    extractedId = user.id 
+  } catch (error) {
+    console.error( 'Ошибка парсинга userParam:', error )
+  }
 } 
 
 async function loadEvent() {
@@ -102,8 +106,16 @@ async function loadParticipants() {
   try {
     const data = await get( `/api/v1/events/${ eventId.value }/participants` )
     if ( !data || !data.participants ) throw new Error( 'Участники не найдены.' )
+
     participants.value = data.participants
-    isRegistred.value = participants.value.some( participant => participant.username === extractedUsername )    
+
+    isRegistred.value = extractedId 
+    ? participants.value.some( participant => participant.id === extractedId )
+    : false
+
+    console.log('extractedId:', extractedId)
+    console.log('Загруженные участники:', participants.value)
+
   } catch ( error ) {
     console.error( 'Ошибка загрузки участников:', error )
     participants.value = []
