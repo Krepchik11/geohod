@@ -45,7 +45,6 @@ let extractedId = null
 if ( userParam ) {
   try {
     const user = JSON.parse( userParam )
-    console.log( 'user', user )
     extractedId = user.id 
   } catch (error) {
     console.error( 'Ошибка парсинга userParam:', error )
@@ -112,10 +111,6 @@ async function loadParticipants() {
     isRegistred.value = extractedId 
     ? participants.value.some( participant => participant.id === extractedId )
     : false
-
-    console.log('extractedId:', extractedId)
-    console.log('Загруженные участники:', participants.value)
-
   } catch ( error ) {
     console.error( 'Ошибка загрузки участников:', error )
     participants.value = []
