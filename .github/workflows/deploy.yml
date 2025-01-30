@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./.github/Dockerfile
+          file: ./docker/Dockerfile
           tags: ${{ github.repository }}:${{ github.ref_name }}
           outputs: type=docker,dest=./image.tar
 
@@ -79,5 +79,7 @@ jobs:
               --network=geohod \
               --name geohod-frontend \
               -p 80:80 \
+              -p 443:443 \
+              -v /etc/letsencrypt:/etc/nginx/certs \
               $ENV_ARGS \
               ${{ github.repository }}:${{ github.ref_name }}
