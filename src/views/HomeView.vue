@@ -25,18 +25,11 @@ const isWriteAccessRequested = ref( false )
 onMounted( async () => {
   try {
     // Проверяем write_access и, если нужно, запрашиваем доступ
-    // if ( !window.Telegram.WebApp.initDataUnsafe.write_access ) {
-    //   Telegram.WebApp.requestWriteAccess({
-    //     write_access_purpose: 'access_purpose',
-    //     bot_id: 7966864729,
-    //   })
-    // }    
-
     if ( !window.Telegram.WebApp.initDataUnsafe.write_access && !isWriteAccessRequested.value ) {
       isWriteAccessRequested.value = true; // Устанавливаем флаг, чтобы не запрашивать повторно
       Telegram.WebApp.requestWriteAccess({
         write_access_purpose: 'access_purpose',
-        bot_id: 7966864729,
+        bot_id: 7579563252,
       })
     }
 
@@ -213,7 +206,7 @@ async function copyLink() {
     }
  
    try {
-       const botName = 'weorganize_bot'
+       const botName = 'geohodton_bot'
        const eventLink = `https://t.me/${ botName }/act?startapp=registration_${ eventId }`
 
       if ( navigator.clipboard && window.isSecureContext ) {

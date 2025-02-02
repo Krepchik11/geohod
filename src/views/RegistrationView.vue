@@ -13,8 +13,6 @@ const eventStore = useEventStore()
 const router = useRouter()
 const route = useRoute()
 
-// const isAgreementEnabled = ref( true )
-
 onMounted(() => {
   loadEvent()
   loadParticipants() 

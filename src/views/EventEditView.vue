@@ -112,7 +112,6 @@ function formattedDate( date ) {
 
 <template>
   <div class="event-creation">
-    <!-- <Header>{{ isEditMode ? 'Редактирование мероприятия' : 'Создание мероприятия' }}</Header> -->
     <Header>Создание мероприятия</Header>
     <div class="event-creation__section">
       <div 
@@ -184,7 +183,6 @@ function formattedDate( date ) {
           @click="saveEvent" 
         >
           Ок
-          <!-- {{ isEditMode ? 'Сохранить' : 'Создать' }} -->
         </button>
       </div>
     </div> 

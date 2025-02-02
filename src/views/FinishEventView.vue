@@ -13,7 +13,6 @@ const route = useRoute()
 const router = useRouter()
 const eventStore = useEventStore()
 
-// const notificationsEnabled = ref( false )
 const votingLinkEnabled = ref( false )
 const donationRequestEnabled = ref( false )
 const donationInfo = ref( '' )
@@ -54,7 +53,6 @@ function formattedDate( date ) {
 async function finishEvent() {
   try {
     const payload = {
-      // notifyParticipants: notificationsEnabled.value,
       sendPollLink: votingLinkEnabled.value,
       sendDonationRequest: donationRequestEnabled.value,
       donationInfo: donationInfo.value,
@@ -106,18 +104,6 @@ onMounted(() => {
       <div class="finish-section__members-send">
         <div class="finish-section__members-send-title">Направить участникам</div>
         <div class="finish-section__members-send-options">
-          <!-- <div class="finish-section__checkbox">
-            <label>
-              <input
-                type="checkbox"
-                v-model="notificationsEnabled"
-              />
-              Уведомление об окончании
-            </label>
-            <span class="finish-section__checkbox-status">
-              {{ notificationsEnabled ? 'Вкл.' : 'Выкл.' }}
-            </span>
-          </div> -->
           <div class="finish-section__checkbox">
             <input
                 type="checkbox"
@@ -127,9 +113,6 @@ onMounted(() => {
             <label for="votingLinkEnabled">
               Ссылку для голосования
             </label>
-            <!-- <span class="finish-section__checkbox-status">
-              {{ votingLinkEnabled ? 'Вкл.' : 'Выкл.' }}
-            </span> -->
           </div>
           <div class="finish-section__checkbox">
             <input
@@ -140,9 +123,6 @@ onMounted(() => {
             <label for="donationRequestEnabled">
               Инф. о размере доната
             </label>
-            <!-- <span class="finish-section__checkbox-status">
-              {{ donationRequestEnabled ? 'Вкл.' : 'Выкл.' }}
-            </span> -->
             <div v-if="donationRequestEnabled" class="finish-section__input">
               <CustomInput
                 ref="childInput"
