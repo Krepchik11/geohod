@@ -215,7 +215,7 @@ async function copyLink() {
   try {
     //  const botName = 'geohodton_bot'
     const botName = 'weorganize_bot'
-     const eventLink = `https://t.me/${ botName }/act?startapp=registration_${ eventId }`
+     const eventLink = `https://t.me/${ botName }/app?startapp=registration_${ eventId }`
     if ( navigator.clipboard && window.isSecureContext ) {
       await navigator.clipboard.writeText( eventLink )
       showSuccessToast( 'Ссылка скопирована в буфер обмена.' )

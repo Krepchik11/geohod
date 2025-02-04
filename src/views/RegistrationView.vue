@@ -109,6 +109,9 @@ async function loadParticipants() {
     const data = await get( `/api/v1/events/${ eventId.value }/participants` )
     if ( !data || !data.participants ) throw new Error( 'Участники не найдены.' )
 
+    console.log('data',data);
+    
+
     participants.value = data.participants
     
     
