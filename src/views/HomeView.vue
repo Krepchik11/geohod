@@ -23,13 +23,18 @@ const registeredEvents = computed( () => eventStore.registeredEvents )
 const isWriteAccessRequested = ref( false )
 
 onMounted( async () => {
+  console.log('монтируем список');
+  
   try {
+    console.log('window.Telegram.WebApp.initDataUnsafe.write_access', window.Telegram.WebApp.initDataUnsafe.write_access);
+    
     // Проверяем write_access и, если нужно, запрашиваем доступ
     if ( !window.Telegram.WebApp.initDataUnsafe.write_access && !isWriteAccessRequested.value ) {
       isWriteAccessRequested.value = true; // Устанавливаем флаг, чтобы не запрашивать повторно
       Telegram.WebApp.requestWriteAccess({
         write_access_purpose: 'access_purpose',
-        bot_id: 7579563252,
+        // bot_id: 7579563252,
+        bot_id: 7966864729,
       })
     }
 
@@ -208,7 +213,8 @@ async function copyLink() {
    }
 
   try {
-     const botName = 'geohodton_bot'
+    //  const botName = 'geohodton_bot'
+    const botName = 'weorganize_bot'
      const eventLink = `https://t.me/${ botName }/act?startapp=registration_${ eventId }`
     if ( navigator.clipboard && window.isSecureContext ) {
       await navigator.clipboard.writeText( eventLink )
