@@ -22,19 +22,14 @@ const registeredEvents = computed( () => eventStore.registeredEvents )
 
 const isWriteAccessRequested = ref( false )
 
-onMounted( async () => {
-  console.log('монтируем список');
-  
-  try {
-    console.log('window.Telegram.WebApp.initDataUnsafe.write_access', window.Telegram.WebApp.initDataUnsafe.write_access);
-    
+onMounted( async () => { 
+  try {   
     // Проверяем write_access и, если нужно, запрашиваем доступ
     if ( !window.Telegram.WebApp.initDataUnsafe.write_access && !isWriteAccessRequested.value ) {
       isWriteAccessRequested.value = true; // Устанавливаем флаг, чтобы не запрашивать повторно
       Telegram.WebApp.requestWriteAccess({
         write_access_purpose: 'access_purpose',
-        // bot_id: 7579563252,
-        bot_id: 7966864729,
+        bot_id: 7579563252,
       })
     }
 
@@ -51,22 +46,17 @@ onMounted( async () => {
 
 const initData = window.Telegram.WebApp.initData
 
-console.log('initData',initData);
-
-
 const decodedInitData = decodeURIComponent( initData )
 
 const params = new URLSearchParams( decodedInitData )
 const userParam = params.get( 'user' )
-console.log('userParam',userParam);
+
 let extractedId = null
 
 if ( userParam ) {
   const user = JSON.parse( userParam )
   const userId = user.id; 
-  console.log('userId',userId);
   extractedId = userId
-  console.log('extractedId',extractedId);
 }
 
 
@@ -144,7 +134,7 @@ function cancelTouch( event ) {
 
 function showContextMenu( event, eventId ) {
   const selectedEvent = eventStore.events.find( e => e.id === eventId )
-  console.log('selectedEvent',selectedEvent);
+
   if ( !selectedEvent ) {
     console.error( 'Event not found:', eventId )
     return;
@@ -152,7 +142,7 @@ function showContextMenu( event, eventId ) {
 
   // Проверяем, является ли пользователь автором
   const isAuthor = Boolean( selectedEvent.author.id === extractedId )   
-  console.log('isAuthor',isAuthor);
+
   menuItems.value = isAuthor
   ? [
       { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link' },
@@ -213,8 +203,7 @@ async function copyLink() {
    }
 
   try {
-    //  const botName = 'geohodton_bot'
-    const botName = 'weorganize_bot'
+     const botName = 'geohodton_bot'
      const eventLink = `https://t.me/${ botName }/app?startapp=registration_${ eventId }`
     if ( navigator.clipboard && window.isSecureContext ) {
       await navigator.clipboard.writeText( eventLink )

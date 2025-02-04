@@ -43,10 +43,7 @@ let extractedId = null
 if ( userParam ) {
   try {
     const user = JSON.parse( userParam )
-    console.log('user', user);
-    
     extractedId = user.id 
-    console.log('extractedId', extractedId);
   } catch (error) {
     console.error( 'Ошибка парсинга userParam:', error )
   }
@@ -103,24 +100,16 @@ async function handleRegistration() {
 }
 
 async function loadParticipants() {
-  console.log('loadParticipants' );
-  
   try {
     const data = await get( `/api/v1/events/${ eventId.value }/participants` )
     if ( !data || !data.participants ) throw new Error( 'Участники не найдены.' )
 
-    console.log('data',data);
-    
-
     participants.value = data.participants
-    
-    
+
     isRegistred.value = extractedId 
-    ? participants.value.some( participant => participant.id === extractedId )
+    ? participants.value.some( participant => participant.tgUserId === extractedId )
     : false
-
-    console.log('isRegistred.value', isRegistred.value);
-
+    
   } catch ( error ) {
     console.error( 'Ошибка загрузки участников:', error )
     participants.value = []
