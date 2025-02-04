@@ -46,18 +46,24 @@ onMounted( async () => {
 
 const initData = window.Telegram.WebApp.initData
 
+console.log('initData',initData);
+
+
 const decodedInitData = decodeURIComponent( initData )
 
 const params = new URLSearchParams( decodedInitData )
 const userParam = params.get( 'user' )
-
+console.log('userParam',userParam);
 let extractedId = null
 
 if ( userParam ) {
   const user = JSON.parse( userParam )
   const userId = user.id; 
+  console.log('userId',userId);
   extractedId = userId
+  console.log('extractedId',extractedId);
 }
+
 
 const contextMenuVisible = ref( false )
 const contextMenuPosition = ref( { x: 0, y: 0 } )
@@ -113,113 +119,108 @@ let touchTimer = null
 let isLongPress = false
 
 function startTouch( event, eventId ) {
-    isLongPress = false
-
-    touchTimer = setTimeout(() => {
-        isLongPress = true
-        showContextMenu( event.touches[ 0 ], eventId )
-    }, 600)
-
-    event.target.addEventListener( 'touchmove', cancelTouch, { passive: false } )
-    event.target.addEventListener( 'touchcancel', cancelTouch, { passive: false } )
+  isLongPress = false
+  touchTimer = setTimeout(() => {
+    isLongPress = true
+    showContextMenu( event.touches[ 0 ], eventId )
+  }, 600)
+  event.target.addEventListener( 'touchmove', cancelTouch, { passive: false } )
+  event.target.addEventListener( 'touchcancel', cancelTouch, { passive: false } )
 }
 
 function cancelTouch( event ) {
-    clearTimeout( touchTimer )
-    if ( isLongPress ) {
-        event.preventDefault()
-        event.stopPropagation()
-    }
-    event.target.removeEventListener( 'touchmove', cancelTouch )
+  clearTimeout( touchTimer )
+  if ( isLongPress ) {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+  event.target.removeEventListener( 'touchmove', cancelTouch )
 }
 
 function showContextMenu( event, eventId ) {
-    const selectedEvent = eventStore.events.find( e => e.id === eventId )
-    
-    if ( !selectedEvent ) {
-      console.error( 'Event not found:', eventId )
-      return;
-    }
+  const selectedEvent = eventStore.events.find( e => e.id === eventId )
+  console.log('selectedEvent',selectedEvent);
+  if ( !selectedEvent ) {
+    console.error( 'Event not found:', eventId )
+    return;
+  }
 
-    // Проверяем, является ли пользователь автором
-    const isAuthor = Boolean( selectedEvent.author.id === extractedId )   
-  
-    menuItems.value = isAuthor
-      ? [
-          { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link' },
-          { label: 'Копировать', action: 'copy', icon: 'copy' },
-          { label: 'Редактировать', action: 'edit', icon: 'edit' },
-          { label: 'Участники', action: 'participants', icon: 'people' },
-          { label: 'Отменить', action: 'delete', icon: 'delete' },
-        ]
-      : [
-          { label: 'Сообщение', action: 'messages', icon: 'messages' },
-          { label: 'Отменить', action: 'cancel', icon: 'delete' },
-        ]
+  // Проверяем, является ли пользователь автором
+  const isAuthor = Boolean( selectedEvent.author.id === extractedId )   
+  console.log('isAuthor',isAuthor);
+  menuItems.value = isAuthor
+  ? [
+      { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link' },
+      { label: 'Копировать', action: 'copy', icon: 'copy' },
+      { label: 'Редактировать', action: 'edit', icon: 'edit' },
+      { label: 'Участники', action: 'participants', icon: 'people' },
+      { label: 'Отменить', action: 'delete', icon: 'delete' },
+    ]
+  : [
+      { label: 'Сообщение', action: 'messages', icon: 'messages' },
+      { label: 'Отменить', action: 'cancel', icon: 'delete' },
+    ]
 
-    event.preventDefault()
+  event.preventDefault()
+  const menuWidth = 200
+  const menuHeight = 150
+  const windowWidth = window.innerWidth
+  const windowHeight = window.innerHeight
 
-    const menuWidth = 200
-    const menuHeight = 150
-    const windowWidth = window.innerWidth
-    const windowHeight = window.innerHeight
+  let x = event.clientX
+  let y = event.clientY
+  if ( x + menuWidth > windowWidth ) {
+      x = windowWidth - menuWidth - 10
+  }
+  if ( y + menuHeight > windowHeight ) {
+      if ( y - menuHeight > 0 ) {
+          y = y - menuHeight - 10
+      } else {
+          y = windowHeight - menuHeight - 10
+      }
+  }
 
-    let x = event.clientX
-    let y = event.clientY
-    if ( x + menuWidth > windowWidth ) {
-        x = windowWidth - menuWidth - 10
-    }
-    if ( y + menuHeight > windowHeight ) {
-        if ( y - menuHeight > 0 ) {
-            y = y - menuHeight - 10
-        } else {
-            y = windowHeight - menuHeight - 10
-        }
-    }
-
-    contextMenuPosition.value = { x, y, eventId }
-    contextMenuVisible.value = true
-
-    document.addEventListener( 'click', closeContextMenu )
+  contextMenuPosition.value = { x, y, eventId }
+  contextMenuVisible.value = true
+  document.addEventListener( 'click', closeContextMenu )
 }
 
 function closeContextMenu() {
-    contextMenuVisible.value = false
-    document.removeEventListener( 'click', closeContextMenu )
+  contextMenuVisible.value = false
+  document.removeEventListener( 'click', closeContextMenu )
 }
 
 function formattedDate( date ) {
-    if ( !date ) return '' 
-    return new Intl.DateTimeFormat( 'ru-RU', {
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric',
-    } ).format( new Date( date ) )
+  if ( !date ) return '' 
+  return new Intl.DateTimeFormat( 'ru-RU', {
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+  } ).format( new Date( date ) )
 } 
 
 async function copyLink() {
-   const eventId = contextMenuPosition.value.eventId
- 
-   if ( !eventId ) {
-      console.error( 'Event ID отсутствует' )
-      return
-    }
- 
-   try {
-       const botName = 'geohodton_bot'
-       const eventLink = `https://t.me/${ botName }/act?startapp=registration_${ eventId }`
+  const eventId = contextMenuPosition.value.eventId
 
-      if ( navigator.clipboard && window.isSecureContext ) {
-        await navigator.clipboard.writeText( eventLink )
-        showSuccessToast( 'Ссылка скопирована в буфер обмена.' )
-      } else {
-        copyTextToClipboard( eventLink )
-        showSuccessToast( 'Ссылка скопирована в буфер обмена.' )
-      }
-    } catch ( error ) {
-      console.error( 'Ошибка копирования ссылки:', error )
-      showErrorToast( 'Не удалось скопировать ссылку.' )
+  if ( !eventId ) {
+     console.error( 'Event ID отсутствует' )
+     return
+   }
+
+  try {
+     const botName = 'geohodton_bot'
+     const eventLink = `https://t.me/${ botName }/act?startapp=registration_${ eventId }`
+    if ( navigator.clipboard && window.isSecureContext ) {
+      await navigator.clipboard.writeText( eventLink )
+      showSuccessToast( 'Ссылка скопирована в буфер обмена.' )
+    } else {
+      copyTextToClipboard( eventLink )
+      showSuccessToast( 'Ссылка скопирована в буфер обмена.' )
     }
+  } catch ( error ) {
+    console.error( 'Ошибка копирования ссылки:', error )
+    showErrorToast( 'Не удалось скопировать ссылку.' )
+  }
 
 } 
 
