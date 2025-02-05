@@ -107,7 +107,7 @@ async function loadParticipants() {
     participants.value = data.participants
 
     isRegistred.value = extractedId 
-    ? participants.value.some( participant => participant.tgUserId === extractedId )
+    ? participants.value.some( participant => participant.tgUserId == extractedId )
     : false
     
   } catch ( error ) {
