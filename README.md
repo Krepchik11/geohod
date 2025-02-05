@@ -45,6 +45,7 @@ Project includes GitHub Actions workflow that automatically builds and deploys t
 
 Required GitHub Variables:
 - `VPS_HOST` - VPS hostname or IP address
+- `GEOHOD_TELEGRAM_APP_REDIRECT_LINK` - Redirect link to telegram miniapp (https://t.me/geohodton_bot/app)
 
 Required GitHub Secrets for deployment:
 - `VPS_USER` - VPS username
