@@ -73,13 +73,13 @@ jobs:
               if [ -n "$line" ]; then
                 ENV_ARGS="$ENV_ARGS -e $line"
               fi
-            done < ${{ secrets.SECRET_VARS }}
+            done << ${{ secrets.SECRET_VARS }}
             
             while IFS= read -r line || [ -n "$line" ]; do
               if [ -n "$line" ]; then
                 ENV_ARGS="$ENV_ARGS -e $line"
               fi
-            done < ${{ vars.ENV_VARS }}
+            done << ${{ vars.ENV_VARS }}
             
             rm -f /tmp/secrets.txt /tmp/envs.txt
             
