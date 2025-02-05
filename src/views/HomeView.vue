@@ -45,7 +45,7 @@ onMounted( async () => {
 })
 
 const initData = window.Telegram.WebApp.initData
-
+console.log('initData', initData);
 const decodedInitData = decodeURIComponent( initData )
 
 const params = new URLSearchParams( decodedInitData )
@@ -54,8 +54,11 @@ const userParam = params.get( 'user' )
 let extractedId = null
 
 if ( userParam ) {
+  console.log('userParam', userParam);
   const user = JSON.parse( userParam )
   const userId = user.id; 
+  console.log('user', user);
+  console.log('userId', userId);
   extractedId = userId
 }
 
@@ -133,16 +136,21 @@ function cancelTouch( event ) {
 }
 
 function showContextMenu( event, eventId ) {
+  console.log('event', event);
+  console.log('eventId', eventId);
   const selectedEvent = eventStore.events.find( e => e.id === eventId )
-
+  console.log('selectedEvent', selectedEvent);
   if ( !selectedEvent ) {
     console.error( 'Event not found:', eventId )
     return;
   }
 
   // Проверяем, является ли пользователь автором
-  const isAuthor = Boolean( selectedEvent.author.id === extractedId )   
-
+  const isAuthor = Boolean( selectedEvent.author.id == extractedId )   
+ console.log('isAuthor', isAuthor);
+ console.log('selectedEvent.author.id', selectedEvent.author.id);
+ console.log('extractedId', extractedId);
+ 
   menuItems.value = isAuthor
   ? [
       { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link' },

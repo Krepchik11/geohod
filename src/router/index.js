@@ -55,7 +55,7 @@ const router = createRouter({
           if (!data || !data.participants) throw new Error( 'Участники не найдены.' )
 
           const isRegistred = data.participants.some(
-            ( participant ) => participant.id === extractedId
+            ( participant ) => participant.tgUserId == extractedId
           )
 
           if ( isRegistred ) {
