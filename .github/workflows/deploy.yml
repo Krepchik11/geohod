@@ -56,6 +56,35 @@ jobs:
         if: always()
         run: rm ./image.tar
 
+      - name: Process environment variables
+        id: env-processing
+        run: |
+          touch processed_env.txt
+          
+          echo "${{ secrets.SECRET_VARS }}" | while IFS= read -r line; do
+            [ -z "$line" ] && continue
+            if [[ $line =~ ^[A-Za-z_][A-Za-z0-9_]*= ]]; then
+              echo "-e $line" >> processed_env.txt
+            else
+              echo "Warning: Invalid environment variable format: $line" >&2
+            fi
+          done
+          
+          echo "${{ vars.ENV_VARS }}" | while IFS= read -r line; do
+            [ -z "$line" ] && continue
+            if [[ $line =~ ^[A-Za-z_][A-Za-z0-9_]*= ]]; then
+              echo "-e $line" >> processed_env.txt
+            else
+              echo "Warning: Invalid environment variable format: $line" >&2
+            fi
+          done
+          
+          ENV_ARGS=$(cat processed_env.txt | tr '\n' ' ')
+          
+          echo "env_args=$ENV_ARGS" >> $GITHUB_OUTPUT
+          
+          rm processed_env.txt
+
       - name: VPS launch
         uses: appleboy/ssh-action@master
         with:
@@ -67,19 +96,11 @@ jobs:
             docker stop geohod-frontend || true
             docker rm geohod-frontend || true
 
-            # Extract and pass environment variables
-            SECRET_VARS="${{ secrets.SECRET_VARS }}"
-            ENV_ARGS=""
-            IFS=',' read -r -a vars <<< "$SECRET_VARS"
-            for var in "${vars[@]}"; do
-              ENV_ARGS="$ENV_ARGS -e $var"
-            done
-
             docker run -d --restart always \
               --network=geohod \
               --name geohod-frontend \
               -p 80:80 \
               -p 443:443 \
               -v /etc/letsencrypt:/etc/nginx/certs \
-              $ENV_ARGS \
+              ${{ steps.env-processing.outputs.env_args }} \
               ${{ github.repository }}:${{ github.ref_name }}
