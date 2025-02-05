@@ -59,29 +59,39 @@ jobs:
       - name: Process environment variables
         id: env-processing
         run: |
-          touch processed_env.txt
+          declare -a env_args=()
           
-          echo "${{ secrets.SECRET_VARS }}" | while IFS= read -r line; do
-            [ -z "$line" ] && continue
+          # Process secret variables using readarray
+          readarray -t secret_lines <<< "${{ secrets.SECRET_VARS }}"
+          for line in "${secret_lines[@]}"; do
+            # Skip empty lines
+            [[ -z "$line" ]] && continue
+            # Validate environment variable format
             if [[ $line =~ ^[A-Za-z_][A-Za-z0-9_]*= ]]; then
-              echo "-e $line" >> processed_env.txt
+              env_args+=("-e $line")
+            else
+              echo "Warning: Invalid secret variable format: $line" >&2
+            fi
+          done
+          
+          # Process environment variables using readarray
+          readarray -t env_lines <<< "${{ vars.ENV_VARS }}"
+          for line in "${env_lines[@]}"; do
+            # Skip empty lines
+            [[ -z "$line" ]] && continue
+            # Validate environment variable format
+            if [[ $line =~ ^[A-Za-z_][A-Za-z0-9_]*= ]]; then
+              env_args+=("-e $line")
             else
               echo "Warning: Invalid environment variable format: $line" >&2
             fi
           done
           
-          echo "${{ vars.ENV_VARS }}" | while IFS= read -r line; do
-            [ -z "$line" ] && continue
-            if [[ $line =~ ^[A-Za-z_][A-Za-z0-9_]*= ]]; then
-              echo "-e $line" >> processed_env.txt
-            else
-              echo "Warning: Invalid environment variable format: $line" >&2
-            fi
-          done
+          # Join the array elements with spaces
+          ENV_ARGS="${env_args[*]}"
           
-          ENV_ARGS=$(cat processed_env.txt | tr '\n' ' ')
-          
-          echo "env_args=$ENV_ARGS" >> $GITHUB_OUTPUT
+          # Set output using the correct GitHub Actions syntax
+          echo "env_args=${ENV_ARGS}" >> "$GITHUB_OUTPUT"
           
           rm processed_env.txt
 
