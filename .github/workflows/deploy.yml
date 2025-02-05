@@ -93,8 +93,6 @@ jobs:
           # Set output using the correct GitHub Actions syntax
           echo "env_args=${ENV_ARGS}" >> "$GITHUB_OUTPUT"
           
-          rm processed_env.txt
-
       - name: VPS launch
         uses: appleboy/ssh-action@master
         with:
