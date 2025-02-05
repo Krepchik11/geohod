@@ -61,12 +61,9 @@ jobs:
         run: |
           declare -a env_args=()
           
-          # Process secret variables using readarray
           readarray -t secret_lines <<< "${{ secrets.SECRET_VARS }}"
           for line in "${secret_lines[@]}"; do
-            # Skip empty lines
             [[ -z "$line" ]] && continue
-            # Validate environment variable format
             if [[ $line =~ ^[A-Za-z_][A-Za-z0-9_]*= ]]; then
               env_args+=("-e $line")
             else
@@ -74,12 +71,9 @@ jobs:
             fi
           done
           
-          # Process environment variables using readarray
           readarray -t env_lines <<< "${{ vars.ENV_VARS }}"
           for line in "${env_lines[@]}"; do
-            # Skip empty lines
             [[ -z "$line" ]] && continue
-            # Validate environment variable format
             if [[ $line =~ ^[A-Za-z_][A-Za-z0-9_]*= ]]; then
               env_args+=("-e $line")
             else
@@ -87,10 +81,8 @@ jobs:
             fi
           done
           
-          # Join the array elements with spaces
           ENV_ARGS="${env_args[*]}"
           
-          # Set output using the correct GitHub Actions syntax
           echo "env_args=${ENV_ARGS}" >> "$GITHUB_OUTPUT"
           
       - name: VPS launch
@@ -103,7 +95,9 @@ jobs:
             docker load < /tmp/geohod-frontend/image.tar
             docker stop geohod-frontend || true
             docker rm geohod-frontend || true
-
+            
+            echo ${{ steps.env-processing.outputs.env_args }}
+            echo "ha ${{ steps.env-processing.outputs.env_args }}"
             docker run -d --restart always \
               --network=geohod \
               --name geohod-frontend \
