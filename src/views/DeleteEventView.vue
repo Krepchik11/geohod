@@ -47,7 +47,7 @@ async function loadEvent() {
   try {
     if ( !eventId.value ) throw new Error( 'ID мероприятия отсутствует.' )
 
-    const localEvent = eventStore.events.find( event => event.id === eventId.value )
+    const localEvent = eventStore.events.find( event => event.id == eventId.value )
 
     if ( localEvent ) {
       name.value = localEvent.description

@@ -21,7 +21,7 @@ const participants = ref( [] )
 const eventId = computed( () =>  route.params.id )
 
 const selectedEvent = computed(() => {
-  const event = eventStore.events.find(event => event.id === eventId.value)
+  const event = eventStore.events.find(event => event.id == eventId.value)
   if (event) {
     return {
       ...event,

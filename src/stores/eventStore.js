@@ -34,7 +34,7 @@ export const useEventStore = defineStore( 'eventStore', {
     },
 
     incrementParticipants( id ) {
-      const event = this.events.find( event => event.id === id )
+      const event = this.events.find( event => event.id == id )
       if ( event ) event.currentParticipants += 1
     },
 

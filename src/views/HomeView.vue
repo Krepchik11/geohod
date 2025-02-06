@@ -77,7 +77,7 @@ function handleMenuSelect( item ) {
       copyLink()
       break
     case 'copy':
-      const eventToCopy = eventStore.events.find( event => event.id === contextMenuPosition.value.eventId )
+      const eventToCopy = eventStore.events.find( event => event.id == contextMenuPosition.value.eventId )
       if ( eventToCopy ) {
         router.push({
             name: 'createEvent',
@@ -133,7 +133,7 @@ function cancelTouch( event ) {
 }
 
 function showContextMenu( event, eventId ) {
-  const selectedEvent = eventStore.events.find( e => e.id === eventId )
+  const selectedEvent = eventStore.events.find( e => e.id == eventId )
 
   if ( !selectedEvent ) {
     console.error( 'Event not found:', eventId )
@@ -286,7 +286,7 @@ function sendMessageToAuthor( ) {
       return
     }
     
-    const event = eventStore.events.find( e => e.id === eventId )
+    const event = eventStore.events.find( e => e.id == eventId )
     
     if ( !event ) {
       console.error( 'Мероприятие не найдено' )
@@ -305,7 +305,7 @@ function sendMessageToAuthor( ) {
 }
 
 function isEventAuthor( event ) {
-  return event.author?.id === extractedId
+  return event.author?.id == extractedId
 }
 
 
@@ -355,7 +355,7 @@ function isEventAuthor( event ) {
                     </div>
                 </div>    
                 <ContextMenu 
-                    :visible="contextMenuVisible && contextMenuPosition.eventId === event.id"
+                    :visible="contextMenuVisible && contextMenuPosition.eventId == event.id"
                     :position="contextMenuPosition"
                     :items="menuItems"
                     @select="handleMenuSelect"
@@ -372,7 +372,6 @@ function isEventAuthor( event ) {
                 </button>
             </RouterLink>
         </div>
-        <!-- <Toast :visible="showToast">Скопировано в буфер обмена</Toast> -->
     </div>
 </template>
 

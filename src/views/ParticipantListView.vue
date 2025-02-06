@@ -35,7 +35,7 @@ const menuItems = ref([
 
 async function loadEvent() {
   try {
-    const localEvent = eventStore.events.find( event => event.id === eventId.value )
+    const localEvent = eventStore.events.find( event => event.id == eventId.value )
 
     if ( localEvent ) {
       name.value = localEvent.description
@@ -85,7 +85,7 @@ function handleMenuSelect( item ) {
 }
 
 function sendMessage( participantId ) {
-  const participant = participants.value.find( p => p.id === participantId )
+  const participant = participants.value.find( p => p.id == participantId )
   if ( participant && participant.username ) {
     const telegramUrl = `https://t.me/${ participant.username }`
     window.open( telegramUrl, '_blank' )
@@ -199,7 +199,7 @@ function formattedDate( date ) {
           <p class="participants-section__member-name">{{ participant.name || participant.username }}</p>
         </div>
         <ContextMenu 
-          :visible="contextMenuVisible && contextMenuPosition.eventId === participant.id"
+          :visible="contextMenuVisible && contextMenuPosition.eventId == participant.id"
           :position="contextMenuPosition"
           :items="menuItems"
           @select="handleMenuSelect"

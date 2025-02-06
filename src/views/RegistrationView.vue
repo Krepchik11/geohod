@@ -51,7 +51,7 @@ if ( userParam ) {
 
 async function loadEvent() {
   try {
-    const localEvent = eventStore.events.find( event => event.id === eventId.value )
+    const localEvent = eventStore.events.find( event => event.id == eventId.value )
 
     if ( localEvent ) {
       name.value = localEvent.description
@@ -153,7 +153,7 @@ function formattedDate( date ) {
             </div>
         </div>
         <Message class="registration__message" v-if="isRegistred">Вы зарегистрированы</Message>
-        <Message class="registration__message" v-if="currentParticipants === maxParticipants">Регистрация на мероприятие окончена. Группа набрана.</Message>
+        <Message class="registration__message" v-if="currentParticipants == maxParticipants">Регистрация на мероприятие окончена. Группа набрана.</Message>
         <!-- <div class="registration__agreement" v-if="currentParticipants !== maxParticipants">
           <label class="registration__agreement-lable">
             <input
@@ -169,7 +169,7 @@ function formattedDate( date ) {
         <MainButton 
           text="Зарегистрироваться"  
           @click="handleRegistration" 
-          :disabled="isDisabled || currentParticipants === maxParticipants"
+          :disabled="isDisabled || currentParticipants == maxParticipants"
           :visible="currentParticipants !== maxParticipants"
         />
         <!-- :disabled="!isAgreementEnabled || isDisabled || currentParticipants === maxParticipants" -->
