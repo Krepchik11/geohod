@@ -6,6 +6,7 @@ jobs:
   debug-print-vars:
     name: Debug print vars
     runs-on: ubuntu-latest
+    environment: Production
 
     steps:
       - name: Debug print vars
