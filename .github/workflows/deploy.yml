@@ -68,20 +68,13 @@ jobs:
             docker rm geohod-frontend || true
             
             ENV_ARGS=""
-
-            while IFS= read -r line || [ -n "$line" ]; do
-              if [ -n "$line" ]; then
-                ENV_ARGS="$ENV_ARGS -e $line"
-              fi
-            done << ${{ secrets.SECRET_VARS }}
+            for line in $(echo "$SECRETS_VARS" | tr '\n' ' '); do
+              ENV_ARGS="$ENV_ARGS -e $line"
+            done
             
-            while IFS= read -r line || [ -n "$line" ]; do
-              if [ -n "$line" ]; then
-                ENV_ARGS="$ENV_ARGS -e $line"
-              fi
-            done << ${{ vars.ENV_VARS }}
-            
-            rm -f /tmp/secrets.txt /tmp/envs.txt
+            for line in $(echo "$ENV_VARS" | tr '\n' ' '); do
+              ENV_ARGS="$ENV_ARGS -e $line"
+            done
             
             docker run -d --restart always \
               --network=geohod \
