@@ -9,6 +9,7 @@ jobs:
   build-and-publish:
     name: Build and publish docker image
     runs-on: ubuntu-latest
+    environment: Production
     permissions:
       contents: read
       packages: write
