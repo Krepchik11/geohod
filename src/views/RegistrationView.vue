@@ -216,6 +216,7 @@ function formattedDate( date ) {
   }
   &__message {
     margin-top: 20px;
+    padding: 0 18px;
   }
   &__agreement {
     padding-top: 20px;
