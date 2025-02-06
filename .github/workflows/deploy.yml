@@ -55,7 +55,7 @@ jobs:
       - name: Cleanup local file
         if: always()
         run: rm ./image.tar
-
+          
       - name: VPS launch
         uses: appleboy/ssh-action@master
         with:
@@ -66,15 +66,16 @@ jobs:
             docker load < /tmp/geohod-frontend/image.tar
             docker stop geohod-frontend || true
             docker rm geohod-frontend || true
-
-            # Extract and pass environment variables
-            SECRET_VARS="${{ secrets.SECRET_VARS }}"
+            
             ENV_ARGS=""
-            IFS=',' read -r -a vars <<< "$SECRET_VARS"
-            for var in "${vars[@]}"; do
-              ENV_ARGS="$ENV_ARGS -e $var"
+            for line in $(echo "${{ secrets.SECRETS_VARS }}" | tr '\n' ' '); do
+              ENV_ARGS="$ENV_ARGS -e $line"
             done
-
+            
+            for line in $(echo "${{ vars.ENV_VARS }}" | tr '\n' ' '); do
+              ENV_ARGS="$ENV_ARGS -e $line"
+            done
+            
             docker run -d --restart always \
               --network=geohod \
               --name geohod-frontend \
