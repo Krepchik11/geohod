@@ -12,8 +12,6 @@ import ContextMenu from '../components/ContextMenu.vue'
 const botId = import.meta.env.VITE_BOT_ID;
 const botName = import.meta.env.VITE_BOT_NAME;
 
-console.log(`Bot ID: ${botId}, Bot Name: ${botName}`);
-
 const eventStore = useEventStore()
 const router = useRouter()
 const themeParams = inject( 'themeParams' )
