@@ -68,11 +68,11 @@ jobs:
             docker rm geohod-frontend || true
             
             ENV_ARGS=""
-            for line in $(echo "$SECRETS_VARS" | tr '\n' ' '); do
+            for line in $(echo ${{ secrets.SECRETS_VARS }} | tr '\n' ' '); do
               ENV_ARGS="$ENV_ARGS -e $line"
             done
             
-            for line in $(echo "$ENV_VARS" | tr '\n' ' '); do
+            for line in $(echo ${{ vars.ENV_VARS }} | tr '\n' ' '); do
               ENV_ARGS="$ENV_ARGS -e $line"
             done
             
