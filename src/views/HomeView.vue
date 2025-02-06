@@ -9,6 +9,11 @@ import { get, del } from '../utils/api'
 import Header from '../components/Header.vue'
 import ContextMenu from '../components/ContextMenu.vue'
 
+const botId = import.meta.env.VITE_BOT_ID;
+const botName = import.meta.env.VITE_BOT_NAME;
+
+console.log(`Bot ID: ${botId}, Bot Name: ${botName}`);
+
 const eventStore = useEventStore()
 const router = useRouter()
 const themeParams = inject( 'themeParams' )
@@ -29,7 +34,7 @@ onMounted( async () => {
       isWriteAccessRequested.value = true; // Устанавливаем флаг, чтобы не запрашивать повторно
       Telegram.WebApp.requestWriteAccess({
         write_access_purpose: 'access_purpose',
-        bot_id: 7579563252,
+        bot_id: botId,
       })
     }
 
@@ -203,7 +208,6 @@ async function copyLink() {
    }
 
   try {
-     const botName = 'geohodton_bot'
      const eventLink = `https://t.me/${ botName }/app?startapp=registration_${ eventId }`
     if ( navigator.clipboard && window.isSecureContext ) {
       await navigator.clipboard.writeText( eventLink )
