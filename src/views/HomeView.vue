@@ -15,11 +15,6 @@ const botName = import.meta.env.VITE_BOT_NAME
 const eventStore = useEventStore()
 const router = useRouter()
 
-// Watch for changes in the events array and log updates
-watch(() => eventStore.events, (newEvents) => {
-  console.log('Event list updated:', newEvents)
-}, { deep: true })
-
 const {
   refreshing,
   error: eventsError,
