@@ -10,11 +10,11 @@ const props = defineProps({
   },
   isAuthor: {
     type: Boolean,
-    required: true
+    default: false
   }
 })
 
-const emit = defineEmits(['showContextMenu', 'touchStart', 'touchEnd'])
+const emit = defineEmits(['show-context-menu', 'touch-start', 'touch-end'])
 
 const { colorScheme } = useWebAppTheme()
 
@@ -31,19 +31,24 @@ function isEventFinished(eventDate) {
   if (!eventDate) return false
   return new Date(eventDate) < new Date()
 }
+
+function handleContextMenu(e) {
+  e.preventDefault()
+  emit('show-context-menu', e, props.event.id)
+}
 </script>
 
 <template>
   <div class="event-item">
     <div 
       class="event-content"
-      @click.stop="(e) => emit('showContextMenu', e, event.id)"
-      @touchstart="(e) => emit('touchStart', e, event.id)"
-      @touchend="(e) => emit('touchEnd', e)"
+      @contextmenu="handleContextMenu"
+      @touchstart="$emit('touch-start', $event, event.id)"
+      @touchend="$emit('touch-end', $event, event.id)"
     >
       <div class="event-avatar">
         <img 
-          :src="event.author?.imageUrl || '/src/assets/geohod_640-360.jpg'"
+          :src="event.author?.imageUrl || 'assets/geohod_640-360.jpg'"
           alt="Avatar" 
           class="avatar-image"
         >

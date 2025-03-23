@@ -1,32 +1,54 @@
+/* Base Theme Variables
+   These map directly to Telegram WebApp theme params */
 :root {
-    --bg_color: var(--tg-theme-bg-color);
-    --secondary_bg_color: var(--tg-theme-secondary-bg-color);
-    --section_bg_color: var(--tg-theme-section-bg-color);
-    --header_bg_color: var(--tg-theme-header-bg-color); 
-    --bottom_bar_bg_color: var(--tg-theme-bottom-bar-bg-color);
+  /* Core colors */
+  --tg-theme-bg-color: #ffffff;
+  --tg-theme-text-color: #222222;
+  --tg-theme-hint-color: #8e8e93;
+  --tg-theme-link-color: #2481cc;
+  --tg-theme-button-color: #2481cc;
+  --tg-theme-button-text-color: #ffffff;
+  --tg-theme-secondary-bg-color: #f1f1f1;
+  
+  /* UI Elements */
+  --tg-theme-header-bg-color: #ffffff;
+  --tg-theme-accent-text-color: #2481cc;
+  --tg-theme-section-bg-color: #ffffff;
+  --tg-theme-section-header-text-color: #6d6d72;
+  --tg-theme-subtitle-text-color: #8e8e93;
+  --tg-theme-destructive-text-color: #ff3b30;
+  --tg-theme-section-separator-color: #c8c7cc;
+  --tg-theme-bottom-bar-bg-color: #ffffff;
+}
 
-    --primary-blue: var(--tg-theme-button-color);
-    --primary-red: red;
-    --primary-gray: var(--tg-theme-subtitle-text-color);
-
-    /* для кол-ва участников */
-    /* светлая тема */
-    --bg-color-num: #c4c9cc;
-    --color-num: #fff;
-    /* темная тема */
-    --chatlist-pinned-color-darck: #707579;
-    --badge-text-color: #fff;
-    
-
-    --text_color: var(--tg-theme-text-color);
-    --hint_color: var(--tg-theme-hint-color);   /*темный */
-    --link_color: var(--tg-theme-link-color);
-    --button_color: var(--tg-theme-button-color);
-    --button_text_color: var(--tg-theme-button-text-color);
-    --accent_text_color: var(--tg-theme-accent-text-color);
-    --section_header_text_color: var(--tg-theme-section-header-text-color);
-    --section_separator_color: var(--tg-theme-section-separator-color);
-    --subtitle_text_color: var(--tg-theme-subtitle-text-color); /*темный */
-    --destructive_text_color: var(--tg-theme-destructive-text-color); 
-
+/* Semantic Color Tokens 
+   Application-specific color mappings */
+:root {
+  /* Layout */
+  --color-background: var(--tg-theme-bg-color);
+  --color-surface: var(--tg-theme-secondary-bg-color);
+  --color-header: var(--tg-theme-header-bg-color);
+  
+  /* Typography */
+  --color-text-primary: var(--tg-theme-text-color);
+  --color-text-secondary: var(--tg-theme-hint-color);
+  --color-text-accent: var(--tg-theme-accent-text-color);
+  --color-text-link: var(--tg-theme-link-color);
+  --color-text-destructive: var(--tg-theme-destructive-text-color);
+  
+  /* Interactive Elements */
+  --color-button-background: var(--tg-theme-button-color);
+  --color-button-text: var(--tg-theme-button-text-color);
+  --color-separator: var(--tg-theme-section-separator-color);
+  
+  /* Status Colors */
+  --color-success: #34c759;
+  --color-warning: #ff9500;
+  --color-error: var(--tg-theme-destructive-text-color);
+  
+  /* Component-specific */
+  --color-fab-background: var(--color-button-background);
+  --color-fab-text: var(--color-button-text);
+  --color-card-background: var(--color-surface);
+  --color-loading-spinner: var(--color-button-background);
 }

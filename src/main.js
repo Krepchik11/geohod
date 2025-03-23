@@ -7,28 +7,52 @@ import { VueTelegramPlugin } from 'vue-tg'
 import App from './App.vue'
 import router from './router'
 
-const app = createApp( App )
+// Create app instance
+const app = createApp(App)
 
-if ( window.Telegram?.WebApp ) {
+// Initialize theme params
+const initThemeParams = () => {
+  if (window.Telegram?.WebApp) {
+    // Inject theme params into CSS variables
     const themeParams = window.Telegram.WebApp.themeParams || {}
-    app.provide( 'themeParams', themeParams )
+    Object.entries(themeParams).forEach(([key, value]) => {
+      document.documentElement.style.setProperty(`--tg-theme-${key}`, value)
+    })
+    
+    // Provide theme params to components
+    app.provide('themeParams', themeParams)
+  }
 }
 
-app.use( createPinia() )
-app.use( router )
-app.use( VueTelegramPlugin )
+// Handle deep linking
+const handleDeepLink = () => {
+  const initData = window.Telegram?.WebApp?.initData || window.location.search
+  const params = new URLSearchParams(initData)
+  const startAppParam = params.get('start_param')
 
-const initData = window.Telegram?.WebApp?.initData || window.location.search
+  if (startAppParam?.startsWith('registration_')) {
+    const eventId = startAppParam.replace('registration_', '')
+    router.push({ 
+      name: 'registration', 
+      params: { id: eventId } 
+    }).catch(console.error)
+  }
+}
 
-const params = new URLSearchParams( initData )
+// Initialize app
+const initApp = async () => {
+  // Initialize plugins
+  app.use(createPinia())
+  app.use(router)
+  app.use(VueTelegramPlugin)
 
-const startAppParam = params.get( 'start_param' )
+  // Setup theme and routing
+  initThemeParams()
+  await router.isReady()
+  handleDeepLink()
 
-router.isReady().then(() => {
-  if (startAppParam?.startsWith( 'registration_' )) {
-    const eventId = startAppParam.replace( 'registration_', '' )
-    router.push({ name: 'registration', params: { id: eventId } }).catch( console.error )
-  } 
-})
+  // Mount app
+  app.mount('#app')
+}
 
-app.mount( '#app' )
+initApp()
