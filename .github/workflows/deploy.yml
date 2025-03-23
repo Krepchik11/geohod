@@ -4,7 +4,10 @@ on:
   release:
     types:
       - published
-
+  push:
+    branches:
+      - dev
+      
 jobs:
   build-and-publish:
     name: Build and publish docker image
