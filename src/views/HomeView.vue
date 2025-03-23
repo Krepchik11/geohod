@@ -245,8 +245,8 @@ function handleContextMenu(event, eventId) {
   }
 }
 
-function handleScroll(event) {
-  const bottom = event.target.scrollHeight === event.target.scrollTop + event.target.clientHeight;
+function handleScroll() {
+  const bottom = eventStore.events.length === eventStore.events.findIndex(e => e.id === contextMenuPosition.value.eventId) + 1;
   if (bottom) {
     eventStore.fetchEvents(); // Fetch more events when scrolled to the bottom
   }
@@ -261,7 +261,6 @@ function handleScroll(event) {
       'low-performance': isLowPerformance,
       'safe-area': true
     }"
-    @scroll="handleScroll"
   >
     <Header>
       <div class="header-content">
@@ -297,7 +296,7 @@ function handleScroll(event) {
     </div>
 
     <!-- Main Content -->
-    <div v-else-if="isWriteAccessGranted" class="home__section" role="main" @scroll="handleScroll">
+    <div v-else-if="isWriteAccessGranted" class="home__section" role="main" @scroll="handleScroll" ref="eventList">
       <!-- Skeleton Loading State -->
       <div v-if="refreshing" class="home__section" role="status" aria-label="Загрузка мероприятий">
         <div 

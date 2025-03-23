@@ -10,7 +10,7 @@ export class EventsService {
       // Return mock data in development mode if enabled
       if (isDevEnvironment && useMockData) {
         console.debug('Using mock events data')
-        return mockEvents.slice((page - 1) * size, page * size);
+        return mockEvents;
       }
 
       const response = await get(`/events?page=${page}&size=${size}`);
