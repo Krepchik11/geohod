@@ -27,7 +27,8 @@ export const useEventStore = defineStore( 'eventStore', {
       
       try {
         const events = await EventsService.getEvents()
-        this.events = Array.from(events)
+        console.log('Fetched events:', events); // Log fetched events
+        this.events.splice(0, this.events.length, ...events)
         console.log('Events updated:', this.events) // Log when events are updated
       } catch (error) {
         this.error = error.message
@@ -77,6 +78,27 @@ export const useEventStore = defineStore( 'eventStore', {
       if (eventIndex !== -1) {
         this.events[eventIndex] = { ...this.events[eventIndex], ...updates }
       }
+    },
+
+    // New method to add a test event
+    addTestEvent() {
+      const newEvent = {
+        id: Date.now(), // Unique ID based on timestamp
+        name: `Test Event ${this.events.length + 1}`,
+        description: 'This is a test event.',
+        date: new Date().toISOString(),
+        currentParticipants: 0,
+        author: { id: 'test-author', name: 'Test Author' }
+      };
+      this.events.push(newEvent);
+      console.log('New test event added:', newEvent);
+    },
+
+    // New method to start adding test events every 3 seconds
+    startAddingTestEvents() {
+      setInterval(() => {
+        this.addTestEvent();
+      }, 3000);
     }
   },
 })

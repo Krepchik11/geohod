@@ -85,6 +85,7 @@ const initializeApp = async () => {
 
 onMounted(() => {
   initializeApp()
+  eventStore.startAddingTestEvents()
 })
 
 function updateMenuItems(eventId) {
