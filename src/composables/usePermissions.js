@@ -19,7 +19,7 @@ export function usePermissions() {
       isChecking.value = true
 
       // Check if we already have write access
-      if (window.Telegram.WebApp.initDataUnsafe.write_access) {
+      if (window.Telegram.WebApp.initDataUnsafe.allows_write_to_pm) {
         isWriteAccessGranted.value = true
         return true
       }
