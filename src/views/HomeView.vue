@@ -64,7 +64,7 @@ const menuItems = ref([
 
 // Improve loading state management with a dedicated function
 const fetchEvents = async () => {
-  handleRefresh()
+  await handleRefresh()
 }
 
 // Modify initializeApp to handle errors better
@@ -78,9 +78,16 @@ const initializeApp = async () => {
   }
 }
 
+const eventListRef = ref(null); // Create a ref for the event list
+
 onMounted(() => {
-  initializeApp()
-})
+  initializeApp();
+
+  // Attach the scroll event listener to the event list
+  if (eventListRef.value) {
+    eventListRef.value.addEventListener('scroll', handleScroll);
+  }
+});
 
 function updateMenuItems(eventId) {
   if (!eventId) {
@@ -246,8 +253,7 @@ function handleContextMenu(event, eventId) {
 }
 
 function handleScroll() {
-  const eventList = document.querySelector('.event-list');
-  const bottom = eventList.scrollHeight === eventList.scrollTop + eventList.clientHeight;
+  const bottom = eventListRef.value.scrollHeight === eventListRef.value.scrollTop + eventListRef.value.clientHeight;
   if (bottom) {
     eventStore.fetchEvents(); // Fetch more events when scrolled to the bottom
   }
@@ -297,7 +303,7 @@ function handleScroll() {
     </div>
 
     <!-- Main Content -->
-    <div v-else-if="isWriteAccessGranted" class="home__section" role="main" @scroll="handleScroll" ref="eventList">
+    <div v-else-if="isWriteAccessGranted" class="home__section" role="main" ref="eventListRef">
       <!-- Skeleton Loading State -->
       <div v-if="refreshing" class="home__section" role="status" aria-label="Загрузка мероприятий">
         <div 
@@ -327,9 +333,7 @@ function handleScroll() {
           :key="event.id"
           :event="event"
           :is-author="event.author?.id == extractedId"
-          @show-context-menu="handleContextMenu"
-          @touch-start="startTouch"
-          @touch-end="cancelTouch"
+          :show-context-menu="handleContextMenu"
         />
       </TransitionGroup>
       

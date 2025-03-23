@@ -3,8 +3,6 @@ import { ref } from 'vue'
 export function useContextMenu() {
   const contextMenuVisible = ref(false)
   const contextMenuPosition = ref({ x: 0, y: 0 })
-  let touchTimer = null
-  let isLongPress = false
 
   function showContextMenu(event, eventId) {
     event.preventDefault()
@@ -33,31 +31,10 @@ export function useContextMenu() {
     document.removeEventListener('click', closeContextMenu)
   }
 
-  function startTouch(event, eventId) {
-    isLongPress = false
-    touchTimer = setTimeout(() => {
-      isLongPress = true
-      showContextMenu(event, eventId)
-    }, 600)
-    event.target.addEventListener('touchmove', cancelTouch, { passive: false })
-    event.target.addEventListener('touchcancel', cancelTouch, { passive: false })
-  }
-
-  function cancelTouch(event) {
-    clearTimeout(touchTimer)
-    if (isLongPress) {
-      event.preventDefault()
-      event.stopPropagation()
-    }
-    event.target.removeEventListener('touchmove', cancelTouch)
-  }
-
   return {
     contextMenuVisible,
     contextMenuPosition,
     showContextMenu,
-    closeContextMenu,
-    startTouch,
-    cancelTouch
+    closeContextMenu
   }
 } 

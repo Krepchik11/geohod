@@ -11,6 +11,10 @@ const props = defineProps({
   isAuthor: {
     type: Boolean,
     default: false
+  },
+  showContextMenu: {
+    type: Function,
+    required: true
   }
 })
 
@@ -32,6 +36,12 @@ function isEventFinished(eventDate) {
   return new Date(eventDate) < new Date()
 }
 
+function handleClick(event) {
+  event.stopPropagation();
+  
+  props.showContextMenu(event, props.event.id);
+}
+
 function handleContextMenu(e) {
   e.preventDefault()
   emit('show-context-menu', e, props.event.id)
@@ -39,7 +49,7 @@ function handleContextMenu(e) {
 </script>
 
 <template>
-  <div class="event-item">
+  <div class="event-item" @click="handleClick">
     <div 
       class="event-content"
       @contextmenu="handleContextMenu"
@@ -84,6 +94,7 @@ function handleContextMenu(e) {
 <style lang="scss" scoped>
 .event-item {
   margin-bottom: 16px;
+  cursor: pointer;
 }
 
 .event-content {
