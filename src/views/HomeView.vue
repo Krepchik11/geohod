@@ -6,6 +6,7 @@ import { del } from '../utils/api'
 import { useContextMenu } from '../composables/useContextMenu'
 import EventCard from '@/components/EventCard.vue'
 import { dataService } from '@/services/dataService'
+import { usePermissions } from '../composables/usePermissions'
 
 import Header from '../components/Header.vue'
 import ContextMenu from '../components/ContextMenu.vue'
@@ -27,6 +28,12 @@ const {
   startTouch,
   cancelTouch
 } = useContextMenu()
+
+const {
+  checkWriteAccess,
+  isWriteAccessGranted,
+  error: permissionError
+} = usePermissions()
 
 const isLowPerformance = computed(() => {
   const ua = window.navigator.userAgent.toLowerCase()
@@ -54,27 +61,16 @@ const menuItems = ref([
 
 const isDevEnvironment = process.env.NODE_ENV === 'development';
 
-// Add skeleton loading for better UX
+// Separate loading states
+const isEventsLoading = ref(true)
 const showSkeleton = ref(true)
-const skeletonCount = 3
 
-// Improve loading state management
+// Improve loading state management with a dedicated function
 const fetchEvents = async () => {
   try {
-    if (!isLoading.value) {
-      isLoading.value = true
-      showSkeleton.value = true
-    }
+    isEventsLoading.value = true
+    showSkeleton.value = true
     
-    // Check for write access only in production environment
-    if (!isDevEnvironment && !window.Telegram.WebApp.initDataUnsafe.write_access && !isWriteAccessRequested.value) {
-      isWriteAccessRequested.value = true
-      await Telegram.WebApp.requestWriteAccess({
-        write_access_purpose: 'access_purpose',
-        bot_id: botId,
-      })
-    }
-
     // Fetch events with minimum loading time to prevent flashing
     const [events] = await Promise.all([
       dataService.getEvents(),
@@ -84,26 +80,31 @@ const fetchEvents = async () => {
     eventStore.events = events
   } catch (err) {
     error.value = 'Не удалось загрузить мероприятия. Попробуйте обновить страницу.'
-    console.error(err)
+    console.error('Error fetching events:', err)
   } finally {
     setTimeout(() => {
-      isLoading.value = false
+      isEventsLoading.value = false
       showSkeleton.value = false
     }, 300)
   }
 }
 
-// Add pull-to-refresh functionality
-
-const refreshing = ref(false)
-const handleRefresh = async () => {
-  refreshing.value = true
-  await fetchEvents()
-  refreshing.value = false
+// Initialize app data
+const initializeApp = async () => {
+  try {
+    // First check permissions
+    await checkWriteAccess()
+    
+    // Then fetch events
+    await fetchEvents()
+  } catch (err) {
+    console.error('Error initializing app:', err)
+    error.value = err.message
+  }
 }
 
 onMounted(() => {
-  fetchEvents()
+  initializeApp()
 })
 
 function updateMenuItems(eventId) {
@@ -404,13 +405,19 @@ function handleContextMenu(event, eventId) {
       </div>
     </Header>
     
-    <!-- Loading State with Skeletons -->
-    <div 
-      v-if="showSkeleton"
-      class="home__section"
-      role="status"
-      aria-label="Загрузка мероприятий"
-    >
+    <!-- Permission Error -->
+    <div v-if="permissionError" class="error-container" role="alert">
+      <svg class="error-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+      </svg>
+      <p class="error-text">{{ permissionError }}</p>
+      <button class="retry-button" @click="checkWriteAccess">
+        Запросить разрешения
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    <div v-else-if="showSkeleton" class="home__section" role="status" aria-label="Загрузка мероприятий">
       <div 
         v-for="n in skeletonCount" 
         :key="n"
@@ -425,33 +432,11 @@ function handleContextMenu(event, eventId) {
       </div>
     </div>
 
-    <!-- Error State -->
-    <div 
-      v-else-if="error" 
-      class="error-container"
-      role="alert"
-    >
-      <svg class="error-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-      </svg>
-      <p class="error-text">{{ error }}</p>
-      <button 
-        class="retry-button"
-        @click="fetchEvents"
-      >
-        Повторить
-      </button>
-    </div>
-    
-    <!-- Content -->
-    <div 
-      v-else 
-      class="home__section"
-      role="main"
-    >
+    <!-- Main Content -->
+    <div v-else-if="isWriteAccessGranted" class="home__section" role="main">
       <!-- Empty State -->
       <div 
-        v-if="!eventStore.events.length"
+        v-if="!eventStore.events?.length"
         class="empty-state"
       >
         <svg class="empty-icon" viewBox="0 0 24 24" aria-hidden="true">
