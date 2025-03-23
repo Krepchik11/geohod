@@ -9,14 +9,14 @@ export const dataService = {
     if (isDevEnvironment && useMockData) {
       return Promise.resolve(mockEvents);
     }
-    return get('/api/events');
+    return get('/events');
   },
 
   async getUsers() {
     if (isDevEnvironment && useMockData) {
       return Promise.resolve(mockUsers);
     }
-    return get('/api/users');
+    return get('/users');
   },
 
   async createEvent(eventData) {
@@ -29,7 +29,7 @@ export const dataService = {
       mockEvents.push(newEvent);
       return Promise.resolve(newEvent);
     }
-    return post('/api/events', eventData);
+    return post('/events', eventData);
   },
 
   async updateEvent(eventId, eventData) {
@@ -41,6 +41,6 @@ export const dataService = {
       }
       return Promise.reject(new Error('Event not found'));
     }
-    return put(`/api/events/${eventId}`, eventData);
+    return put(`/events/${eventId}`, eventData);
   }
 }; 
