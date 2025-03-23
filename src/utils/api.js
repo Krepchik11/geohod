@@ -3,7 +3,7 @@ import axios from 'axios';
 const initData = window.Telegram.WebApp.initData
 
 const api = axios.create({
-  baseURL: '/api', 
+  baseURL: '/api/v1', 
   headers: {
     'Content-Type': 'application/json',
     'Authorization': `${ initData }`,
