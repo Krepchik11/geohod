@@ -1,23 +1,22 @@
+import { get, post, put } from '../utils/api';
 import { mockEvents, mockUsers } from './mockData';
 
 const isDevEnvironment = process.env.NODE_ENV === 'development';
-const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true' 
+const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
 export const dataService = {
   async getEvents() {
     if (isDevEnvironment && useMockData) {
       return Promise.resolve(mockEvents);
     }
-    // Your actual API call here
-    return fetch('/api/events').then(res => res.json());
+    return get('/api/events');
   },
 
   async getUsers() {
     if (isDevEnvironment && useMockData) {
       return Promise.resolve(mockUsers);
     }
-    // Your actual API call here
-    return fetch('/api/users').then(res => res.json());
+    return get('/api/users');
   },
 
   async createEvent(eventData) {
@@ -30,12 +29,7 @@ export const dataService = {
       mockEvents.push(newEvent);
       return Promise.resolve(newEvent);
     }
-    // Your actual API call here
-    return fetch('/api/events', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(eventData)
-    }).then(res => res.json());
+    return post('/api/events', eventData);
   },
 
   async updateEvent(eventId, eventData) {
@@ -47,11 +41,6 @@ export const dataService = {
       }
       return Promise.reject(new Error('Event not found'));
     }
-    // Your actual API call here
-    return fetch(`/api/events/${eventId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(eventData)
-    }).then(res => res.json());
+    return put(`/api/events/${eventId}`, eventData);
   }
 }; 

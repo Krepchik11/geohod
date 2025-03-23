@@ -553,13 +553,7 @@ function handleContextMenu(event, eventId) {
   border: none;
   padding: 8px;
   color: var(--color-text-secondary);
-  cursor: pointer;
-  border-radius: 50%;
   transition: all 0.2s ease;
-
-  &:hover {
-    background-color: var(--color-surface);
-  }
 
   &:active {
     transform: scale(0.95);
