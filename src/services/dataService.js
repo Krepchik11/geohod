@@ -9,7 +9,9 @@ export const dataService = {
     if (isDevEnvironment && useMockData) {
       return Promise.resolve(mockEvents);
     }
-    return get('/events').content;
+    const events = get('/events').content;
+    console.log(events);
+    return events;
   },
 
   async getUsers() {

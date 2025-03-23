@@ -1,49 +1,59 @@
 export const mockEvents = [
   {
     id: '1',
-    title: 'Team Planning Meeting',
-    description: 'Weekly team sync to discuss project progress',
-    date: '2024-03-25T10:00:00',
-    status: 'active',
-    participants: ['john@example.com', 'sarah@example.com']
+    author: {
+      id: "555",
+      username: "qwake",
+      name: "Aleksei"
+    },
+    name: "Team Planning Meeting",
+    description: "Weekly team sync to discuss project progress",
+    date: "2025-03-23T13:58:25.266Z",
+    maxParticipants: 30,
+    currentParticipants: 15,
+    status: "ACTIVE"
   },
   {
     id: '2',
-    title: 'Product Launch',
-    description: 'New feature release presentation',
-    date: '2024-03-26T15:30:00',
-    status: 'active',
-    participants: ['mike@example.com', 'anna@example.com']
+    author: {
+      id: "777",
+      username: "geohod",
+      name: "Geo Hod"
+    },
+    name: "Product Launch",
+    description: "New feature release presentation",
+    date: "2025-03-23T13:58:25.266Z",
+    maxParticipants: 30,
+    currentParticipants: 0,
+    status: "ACTIVE"
   },
   {
     id: '3',
-    title: 'Client Meeting',
-    description: 'Quarterly review with major client',
-    date: '2024-03-24T09:00:00',
-    status: 'finished',
-    participants: ['john@example.com', 'mike@example.com']
+    author: {
+      id: "999",
+      username: "jonsy",
+      name: "Mike Johnson"
+    },
+    name: "Client Meeting",
+    description: "Quarterly review with major client",
+    date: "2025-03-23T13:58:25.266Z",
+    maxParticipants: 30,
+    currentParticipants: 7,
+    status: "FINISHED"
   }
 ];
 
 export const mockUsers = [
   {
-    id: '1',
-    email: 'john@example.com',
-    name: 'John Doe'
+    id: '555',
+    name: 'Aleksei'
   },
   {
     id: '2',
-    email: 'sarah@example.com',
-    name: 'Sarah Smith'
+    name: 'Geo Hod'
   },
   {
-    id: '3',
-    email: 'mike@example.com',
+    id: '999',
     name: 'Mike Johnson'
-  },
-  {
-    id: '4',
-    email: 'anna@example.com',
-    name: 'Anna Brown'
   }
 ]; 

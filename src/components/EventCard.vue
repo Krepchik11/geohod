@@ -54,8 +54,8 @@ function handleContextMenu(e) {
         >
       </div>
       <div class="event-details">
-        <div class="event-name">{{ event.description }}</div>
-        <div class="event-description">{{ formattedDate(event.date) }}</div>
+        <div class="event-name">{{ event.name }}</div>
+        <div class="event-date">{{ formattedDate(event.date) }}</div>
       </div>
       <div class="event-right">
         <div 
@@ -117,7 +117,7 @@ function handleContextMenu(e) {
   margin-bottom: 4px;
 }
 
-.event-description {
+.event-date {
   font-size: 14px;
   color: var(--primary-gray);
 }
