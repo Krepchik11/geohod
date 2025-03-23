@@ -2,22 +2,27 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
-import { del } from '../utils/api'
 import { useContextMenu } from '../composables/useContextMenu'
 import EventCard from '@/components/EventCard.vue'
 import { dataService } from '@/services/dataService'
 import { usePermissions } from '../composables/usePermissions'
+import { useEventManagement } from '../composables/useEventManagement'
 
 import Header from '../components/Header.vue'
 import ContextMenu from '../components/ContextMenu.vue'
 
-const botId = import.meta.env.VITE_BOT_ID
 const botName = import.meta.env.VITE_BOT_NAME
 
 const eventStore = useEventStore()
 const router = useRouter()
-const refreshing = ref(false)
-const error = ref(null)
+const {
+  refreshing,
+  error: eventsError,
+  handleRefresh,
+  copyEventLink,
+  cancelEventRegistration,
+  isLoading
+} = useEventManagement()
 
 const {
   contextMenuVisible,
@@ -84,7 +89,7 @@ const fetchEvents = async () => {
     // Debug log after assignment
     console.log('Store events after update:', eventStore.events)
   } catch (err) {
-    error.value = 'Не удалось загрузить мероприятия. Попробуйте обновить страницу.'
+    eventsError.value = 'Не удалось загрузить мероприятия. Попробуйте обновить страницу.'
     console.error('Error fetching events:', err)
   } finally {
     // Remove the setTimeout to avoid potential race conditions
@@ -100,7 +105,7 @@ const initializeApp = async () => {
     await fetchEvents()
   } catch (err) {
     console.error('Error initializing app:', err)
-    error.value = err.message || 'Произошла ошибка при загрузке приложения'
+    eventsError.value = err.message || 'Произошла ошибка при загрузке приложения'
   }
 }
 
@@ -183,11 +188,28 @@ function updateMenuItems(eventId) {
   ]
 }
 
-function handleMenuSelect( item ) {
-  switch ( item.action ) {
+async function handleMenuSelect(item) {
+  const eventId = contextMenuPosition.value.eventId
+  
+  switch (item.action) {
     case 'copy-link':
-      copyLink()
+      const success = await copyEventLink(eventId, botName)
+      showNotification({
+        title: success ? 'Успешно' : 'Ошибка',
+        message: success ? 'Ссылка скопирована' : 'Не удалось скопировать ссылку',
+        type: success ? 'success' : 'error'
+      })
       break
+      
+    case 'cancel':
+      const cancelled = await cancelEventRegistration(eventId)
+      showNotification({
+        title: cancelled ? 'Успешно' : 'Ошибка',
+        message: cancelled ? 'Участие отменено' : 'Не удалось отменить участие',
+        type: cancelled ? 'success' : 'error'
+      })
+      break
+      
     case 'copy':
       const eventToCopy = eventStore.events.find( event => event.id == contextMenuPosition.value.eventId )
       if ( eventToCopy ) {
@@ -210,9 +232,6 @@ function handleMenuSelect( item ) {
     case 'delete':
       router.push( { name: 'delete', params: { id: contextMenuPosition.value.eventId } } )
       break
-    case 'cancel':
-      cancelRegistration()
-      break 
     case 'messages':
       sendMessageToAuthor()
       break       
@@ -220,130 +239,6 @@ function handleMenuSelect( item ) {
       console.log( 'Неизвестное действие' )
   }
   closeContextMenu()
-}
-
-async function copyLink() {
-  const eventId = contextMenuPosition.value.eventId
-
-  if (!eventId) {
-    console.error('Event ID отсутствует')
-    return
-  }
-
-  try {
-    const eventLink = `https://t.me/${botName}/app?startapp=registration_${eventId}`
-    
-    // Copy the link
-    if (navigator.clipboard && window.isSecureContext) {
-      await navigator.clipboard.writeText(eventLink)
-    } else {
-      copyTextToClipboard(eventLink)
-    }
-
-    // Try to provide feedback if available
-    if (window.Telegram?.WebApp?.hapticFeedback) {
-      try {
-        window.Telegram.WebApp.hapticFeedback.notificationOccurred('success')
-      } catch (e) {
-        console.debug('Haptic feedback not available:', e)
-      }
-    }
-
-    // Show success message
-    showNotification({
-      title: 'Успешно',
-      message: 'Ссылка скопирована в буфер обмена',
-      type: 'success'
-    })
-  } catch (error) {
-    console.error('Ошибка копирования ссылки:', error)
-    showNotification({
-      title: 'Ошибка',
-      message: 'Не удалось скопировать ссылку',
-      type: 'error'
-    })
-  }
-}
-
-function copyTextToClipboard( text ) {
-  const textArea = document.createElement( 'textarea' )
-  textArea.value = text
-  textArea.style.position = 'fixed'
-  document.body.appendChild( textArea )
-  textArea.focus()
-  textArea.select()
-  try {
-    document.execCommand( 'copy' )
-  } catch ( error ) {
-    console.error( 'Ошибка при использовании execCommand:', error )
-  }
-  document.body.removeChild( textArea )
-}
-
-// Replace showSuccessToast and showErrorToast with a single notification function
-function showNotification(options) {
-  const { title, message, type = 'default' } = options
-  
-  try {
-    // Provide haptic feedback if available
-    if (window.Telegram?.WebApp?.hapticFeedback) {
-      try {
-        window.Telegram.WebApp.hapticFeedback.notificationOccurred(type)
-      } catch (e) {
-        console.debug('Haptic feedback failed:', e)
-      }
-    }
-
-    // Show notification with proper fallback
-    if (window.Telegram?.WebApp) {
-      try {
-        // For newer versions that support showPopup
-        window.Telegram.WebApp.showPopup({
-          title,
-          message,
-          buttons: [{type: 'ok'}]
-        })
-      } catch (e) {
-        // Fallback to showAlert for older versions
-        window.Telegram.WebApp.showAlert(`${title}\n${message}`)
-      }
-    } else {
-      // Fallback for web/non-Telegram environment
-      alert(`${title}: ${message}`)
-    }
-  } catch (error) {
-    console.debug('Notification system not available:', error)
-    // Final fallback
-    alert(`${title}: ${message}`)
-  }
-}
-
-async function cancelRegistration() {
-  const eventId = contextMenuPosition.value.eventId
-
-  if (!eventId) {
-    console.error('Event ID отсутствует')
-    return
-  }
-
-  try {
-    await del(`/api/v1/events/${eventId}/unregister`)
-    eventStore.events = eventStore.events.filter((event) => event.id !== eventId)
-    await eventStore.fetchEvents()
-    
-    showNotification({
-      title: 'Успешно',
-      message: 'Участие отменено',
-      type: 'success'
-    })
-  } catch (error) {
-    console.error('Ошибка при отмене регистрации:', error)
-    showNotification({
-      title: 'Ошибка',
-      message: 'Не удалось отменить участие. Пожалуйста, попробуйте еще раз.',
-      type: 'error'
-    })
-  }
 }
 
 function sendMessageToAuthor( ) {
@@ -384,17 +279,6 @@ function handleContextMenu(event, eventId) {
   }
 }
 
-async function handleRefresh() {
-  if (refreshing.value) return
-  
-  refreshing.value = true
-  try {
-    await fetchEvents()
-  } finally {
-    refreshing.value = false
-  }
-}
-
 </script>
 
 <template>
@@ -410,9 +294,9 @@ async function handleRefresh() {
         <h1 class="header-title">Мои мероприятия</h1>
         <button 
           class="refresh-button"
-          :class="{ 'is-refreshing': refreshing }"
+          :class="{ 'is-refreshing': refreshing || isLoading }"
           @click="handleRefresh"
-          :disabled="refreshing"
+          :disabled="refreshing || isLoading"
           aria-label="Обновить список"
         >
           <svg class="refresh-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -422,6 +306,11 @@ async function handleRefresh() {
       </div>
     </Header>
     
+    <!-- Loading State -->
+    <div v-if="isLoading" class="loading-indicator" role="status" aria-label="Загрузка мероприятий">
+      <p>Загрузка мероприятий...</p>
+    </div>
+
     <!-- Permission Error -->
     <div v-if="permissionError" class="error-container" role="alert">
       <svg class="error-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -433,44 +322,27 @@ async function handleRefresh() {
       </button>
     </div>
 
-    <!-- Loading State -->
-    <div v-else-if="showSkeleton" class="home__section" role="status" aria-label="Загрузка мероприятий">
-      <div 
-        v-for="n in skeletonCount" 
-        :key="n"
-        class="skeleton-card"
-        aria-hidden="true"
-      >
-        <div class="skeleton-header"></div>
-        <div class="skeleton-content">
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line"></div>
-        </div>
-      </div>
-    </div>
-
     <!-- Main Content -->
     <div v-else-if="isWriteAccessGranted" class="home__section" role="main">
-      <!-- Empty State -->
-      <div 
-        v-if="!eventStore.events?.length"
-        class="empty-state"
-      >
-        <svg class="empty-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm0 4c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm6 12H6v-1.4c0-2 4-3.1 6-3.1s6 1.1 6 3.1V19z"/>
-        </svg>
-        <p class="empty-text">У вас пока нет мероприятий</p>
-        <RouterLink 
-          to="/create"
-          class="empty-action"
+      <!-- Skeleton Loading State -->
+      <div v-if="isLoading" class="home__section" role="status" aria-label="Загрузка мероприятий">
+        <div 
+          v-for="n in 3" 
+          :key="n"
+          class="skeleton-card"
+          aria-hidden="true"
         >
-          Создать мероприятие
-        </RouterLink>
+          <div class="skeleton-header"></div>
+          <div class="skeleton-content">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Event List -->
       <TransitionGroup 
-        v-else
+        v-if="!isLoading"
         name="event-list"
         tag="div"
         class="event-list"
@@ -777,5 +649,12 @@ async function handleRefresh() {
   .event-list {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 20px;
+  font-size: 16px;
+  color: var(--color-text-secondary);
 }
 </style>
