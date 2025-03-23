@@ -4,7 +4,6 @@ import { useRouter } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 import { useContextMenu } from '../composables/useContextMenu'
 import EventCard from '@/components/EventCard.vue'
-import { dataService } from '@/services/dataService'
 import { usePermissions } from '../composables/usePermissions'
 import { useEventManagement } from '../composables/useEventManagement'
 
@@ -63,39 +62,9 @@ const menuItems = ref([
   }
 ]) // Initialize with common actions by default
 
-const isDevEnvironment = process.env.NODE_ENV === 'development';
-
-// Separate loading states
-const isEventsLoading = ref(true)
-const showSkeleton = ref(true)
-
 // Improve loading state management with a dedicated function
 const fetchEvents = async () => {
-  try {
-    isEventsLoading.value = true
-    showSkeleton.value = true
-    
-    // Add logging to debug the response
-    const [events] = await Promise.all([
-      dataService.getEvents(),
-      new Promise(resolve => setTimeout(resolve, 300))
-    ])
-    
-    console.log('Fetched events:', events) // Debug log
-    
-    // Ensure events is an array before assignment
-    eventStore.events = Array.isArray(events) ? events : []
-    
-    // Debug log after assignment
-    console.log('Store events after update:', eventStore.events)
-  } catch (err) {
-    eventsError.value = 'Не удалось загрузить мероприятия. Попробуйте обновить страницу.'
-    console.error('Error fetching events:', err)
-  } finally {
-    // Remove the setTimeout to avoid potential race conditions
-    isEventsLoading.value = false
-    showSkeleton.value = false
-  }
+  handleRefresh()
 }
 
 // Modify initializeApp to handle errors better
@@ -108,11 +77,6 @@ const initializeApp = async () => {
     eventsError.value = err.message || 'Произошла ошибка при загрузке приложения'
   }
 }
-
-// Add watcher for store events to debug reactivity
-watch(() => eventStore.events, (newEvents) => {
-  console.log('Events store updated:', newEvents)
-}, { deep: true })
 
 onMounted(() => {
   initializeApp()
@@ -342,7 +306,7 @@ function handleContextMenu(event, eventId) {
 
       <!-- Event List -->
       <TransitionGroup 
-        v-if="!isLoading"
+        v-if="eventStore.events.length > 0"
         name="event-list"
         tag="div"
         class="event-list"

@@ -14,10 +14,6 @@ export class EventsService {
       }
 
       const response = await get('/events')
-      console.log('Response received:', response); // Log the entire response for debugging
-      if (!response.content) {
-        console.warn('Response does not contain content:', response); // Warn if content is missing
-      }
       return response.content;
     } catch (error) {
       console.error('Failed to fetch events:', error)
