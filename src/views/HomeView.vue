@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 import { del } from '../utils/api'
@@ -16,8 +16,7 @@ const botName = import.meta.env.VITE_BOT_NAME
 
 const eventStore = useEventStore()
 const router = useRouter()
-const isLoading = ref(true)
-const isWriteAccessRequested = ref(false)
+const refreshing = ref(false)
 const error = ref(null)
 
 const {
@@ -71,37 +70,44 @@ const fetchEvents = async () => {
     isEventsLoading.value = true
     showSkeleton.value = true
     
-    // Fetch events with minimum loading time to prevent flashing
+    // Add logging to debug the response
     const [events] = await Promise.all([
       dataService.getEvents(),
       new Promise(resolve => setTimeout(resolve, 300))
     ])
     
-    eventStore.events = events
+    console.log('Fetched events:', events) // Debug log
+    
+    // Ensure events is an array before assignment
+    eventStore.events = Array.isArray(events) ? events : []
+    
+    // Debug log after assignment
+    console.log('Store events after update:', eventStore.events)
   } catch (err) {
     error.value = 'Не удалось загрузить мероприятия. Попробуйте обновить страницу.'
     console.error('Error fetching events:', err)
   } finally {
-    setTimeout(() => {
-      isEventsLoading.value = false
-      showSkeleton.value = false
-    }, 300)
+    // Remove the setTimeout to avoid potential race conditions
+    isEventsLoading.value = false
+    showSkeleton.value = false
   }
 }
 
-// Initialize app data
+// Modify initializeApp to handle errors better
 const initializeApp = async () => {
   try {
-    // First check permissions
     await checkWriteAccess()
-    
-    // Then fetch events
     await fetchEvents()
   } catch (err) {
     console.error('Error initializing app:', err)
-    error.value = err.message
+    error.value = err.message || 'Произошла ошибка при загрузке приложения'
   }
 }
+
+// Add watcher for store events to debug reactivity
+watch(() => eventStore.events, (newEvents) => {
+  console.log('Events store updated:', newEvents)
+}, { deep: true })
 
 onMounted(() => {
   initializeApp()
@@ -378,6 +384,17 @@ function handleContextMenu(event, eventId) {
   }
 }
 
+async function handleRefresh() {
+  if (refreshing.value) return
+  
+  refreshing.value = true
+  try {
+    await fetchEvents()
+  } finally {
+    refreshing.value = false
+  }
+}
+
 </script>
 
 <template>
@@ -395,7 +412,7 @@ function handleContextMenu(event, eventId) {
           class="refresh-button"
           :class="{ 'is-refreshing': refreshing }"
           @click="handleRefresh"
-          :disabled="refreshing || isLoading"
+          :disabled="refreshing"
           aria-label="Обновить список"
         >
           <svg class="refresh-icon" viewBox="0 0 24 24" aria-hidden="true">
