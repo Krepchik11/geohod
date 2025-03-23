@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 import { useContextMenu } from '../composables/useContextMenu'
@@ -78,16 +78,32 @@ const initializeApp = async () => {
   }
 }
 
-const eventListRef = ref(null); // Create a ref for the event list
-
 onMounted(() => {
   initializeApp();
-
-  // Attach the scroll event listener to the event list
-  if (eventListRef.value) {
-    eventListRef.value.addEventListener('scroll', handleScroll);
-  }
+  
+  // Attach event listeners for closing the context menu
+  window.addEventListener('scroll', closeContextMenuOnScroll);
+  window.addEventListener('click', closeContextMenuOnClick);
 });
+
+onBeforeUnmount(() => {
+  // Clean up event listeners
+  window.removeEventListener('scroll', closeContextMenuOnScroll);
+  window.removeEventListener('click', closeContextMenuOnClick);
+});
+
+function closeContextMenuOnScroll() {
+  if (contextMenuVisible.value) {
+    closeContextMenu();
+  }
+}
+
+function closeContextMenuOnClick(event) {
+  const contextMenu = document.querySelector('.context-menu'); // Adjust selector as needed
+  if (contextMenu && !contextMenu.contains(event.target)) {
+    closeContextMenu();
+  }
+}
 
 function updateMenuItems(eventId) {
   if (!eventId) {
@@ -252,13 +268,6 @@ function handleContextMenu(event, eventId) {
   }
 }
 
-function handleScroll() {
-  const bottom = eventListRef.value.scrollHeight === eventListRef.value.scrollTop + eventListRef.value.clientHeight;
-  if (bottom) {
-    eventStore.fetchEvents(); // Fetch more events when scrolled to the bottom
-  }
-}
-
 </script>
 
 <template>
@@ -303,7 +312,7 @@ function handleScroll() {
     </div>
 
     <!-- Main Content -->
-    <div v-else-if="isWriteAccessGranted" class="home__section" role="main" ref="eventListRef">
+    <div v-else-if="isWriteAccessGranted" class="home__section" role="main">
       <!-- Skeleton Loading State -->
       <div v-if="refreshing" class="home__section" role="status" aria-label="Загрузка мероприятий">
         <div 
