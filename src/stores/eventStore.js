@@ -27,7 +27,8 @@ export const useEventStore = defineStore( 'eventStore', {
       
       try {
         const events = await EventsService.getEvents()
-        this.events = events
+        this.events = Array.from(events)
+        console.log('Events updated:', this.events) // Log when events are updated
       } catch (error) {
         this.error = error.message
         this.events = []

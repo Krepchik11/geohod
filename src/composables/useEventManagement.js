@@ -6,13 +6,11 @@ export function useEventManagement() {
   const eventStore = useEventStore()
   const refreshing = ref(false)
   const error = ref(null)
-  const isLoading = ref(false)
 
   const handleRefresh = async () => {
     if (refreshing.value) return
     
     refreshing.value = true
-    isLoading.value = true
     try {
       await eventStore.fetchEvents() // Fetch events from the store
     } catch (err) {
@@ -24,7 +22,6 @@ export function useEventManagement() {
       })
     } finally {
       refreshing.value = false
-      isLoading.value = false
     }
   }
 
@@ -80,7 +77,6 @@ export function useEventManagement() {
   return {
     refreshing,
     error,
-    isLoading,
     handleRefresh,
     copyEventLink,
     cancelEventRegistration,

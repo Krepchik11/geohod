@@ -14,13 +14,18 @@ const botName = import.meta.env.VITE_BOT_NAME
 
 const eventStore = useEventStore()
 const router = useRouter()
+
+// Watch for changes in the events array and log updates
+watch(() => eventStore.events, (newEvents) => {
+  console.log('Event list updated:', newEvents)
+}, { deep: true })
+
 const {
   refreshing,
   error: eventsError,
   handleRefresh,
   copyEventLink,
-  cancelEventRegistration,
-  isLoading
+  cancelEventRegistration
 } = useEventManagement()
 
 const {
@@ -258,9 +263,9 @@ function handleContextMenu(event, eventId) {
         <h1 class="header-title">Мои мероприятия</h1>
         <button 
           class="refresh-button"
-          :class="{ 'is-refreshing': refreshing || isLoading }"
+          :class="{ 'is-refreshing': refreshing }"
           @click="handleRefresh"
-          :disabled="refreshing || isLoading"
+          :disabled="refreshing"
           aria-label="Обновить список"
         >
           <svg class="refresh-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -271,7 +276,7 @@ function handleContextMenu(event, eventId) {
     </Header>
     
     <!-- Loading State -->
-    <div v-if="isLoading" class="loading-indicator" role="status" aria-label="Загрузка мероприятий">
+    <div v-if="refreshing" class="loading-indicator" role="status" aria-label="Загрузка мероприятий">
       <p>Загрузка мероприятий...</p>
     </div>
 
@@ -289,7 +294,7 @@ function handleContextMenu(event, eventId) {
     <!-- Main Content -->
     <div v-else-if="isWriteAccessGranted" class="home__section" role="main">
       <!-- Skeleton Loading State -->
-      <div v-if="isLoading" class="home__section" role="status" aria-label="Загрузка мероприятий">
+      <div v-if="refreshing" class="home__section" role="status" aria-label="Загрузка мероприятий">
         <div 
           v-for="n in 3" 
           :key="n"
@@ -306,7 +311,7 @@ function handleContextMenu(event, eventId) {
 
       <!-- Event List -->
       <TransitionGroup 
-        v-if="eventStore.events.length > 0"
+        v-if="!refreshing"
         name="event-list"
         tag="div"
         class="event-list"
