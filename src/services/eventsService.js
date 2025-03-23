@@ -14,7 +14,7 @@ export class EventsService {
       }
 
       const response = await get(`/events?page=${page}&size=${size}`);
-      return response.content;
+      return response;
     } catch (error) {
       console.error('Failed to fetch events:', error)
       throw new Error('Failed to fetch events')

@@ -10,6 +10,7 @@ export const useEventStore = defineStore( 'eventStore', {
     error: null,
     currentPage: 0, // Track the current page
     pageSize: 10, // Set the default page size
+    totalPages: 0, // Track total pages
   }),
   getters: {
     registeredEvents( state ) {
@@ -24,14 +25,15 @@ export const useEventStore = defineStore( 'eventStore', {
   },
   actions: {
     async fetchEvents() {
-      if (this.isLoading) return; // Prevent multiple fetches at the same time
+      if (this.isLoading || (this.currentPage > 0 && this.currentPage >= this.totalPages)) return; // Prevent multiple fetches and check for total pages
       this.isLoading = true;
       this.error = null;
 
       try {
-        const events = await EventsService.getEvents(this.currentPage, this.pageSize);
-        this.events.push(...events); // Append new events
+        const response = await EventsService.getEvents(this.currentPage, this.pageSize);
+        this.events.push(...response.content); // Append new events
         this.currentPage++; // Increment the page for the next fetch
+        this.totalPages = response.page.totalPages; // Update total pages
       } catch (error) {
         this.error = error.message;
       } finally {

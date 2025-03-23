@@ -21,13 +21,6 @@ const props = defineProps({
   }
 })
 
-// Add console log to debug props
-console.log('ContextMenu props:', {
-  visible: props.visible,
-  position: props.position,
-  items: props.items
-})
-
 const positionStyle = computed(() => {
   if (!props.position) return {}
   

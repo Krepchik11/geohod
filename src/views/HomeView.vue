@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
 import { useContextMenu } from '../composables/useContextMenu'
@@ -246,7 +246,8 @@ function handleContextMenu(event, eventId) {
 }
 
 function handleScroll() {
-  const bottom = eventStore.events.length === eventStore.events.findIndex(e => e.id === contextMenuPosition.value.eventId) + 1;
+  const eventList = document.querySelector('.event-list');
+  const bottom = eventList.scrollHeight === eventList.scrollTop + eventList.clientHeight;
   if (bottom) {
     eventStore.fetchEvents(); // Fetch more events when scrolled to the bottom
   }
