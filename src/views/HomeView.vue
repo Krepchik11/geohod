@@ -1,78 +1,78 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import { inject } from 'vue'
-import { useWebAppTheme } from 'vue-tg';
-import { useRouter, RouterLink } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useEventStore } from '../stores/eventStore'
-import { get, del } from '../utils/api'
+import { del } from '../utils/api'
+import { useContextMenu } from '../composables/useContextMenu'
 
 import Header from '../components/Header.vue'
 import ContextMenu from '../components/ContextMenu.vue'
+import EventCard from '../components/EventCard.vue'
 
-const botId = import.meta.env.VITE_BOT_ID;
-const botName = import.meta.env.VITE_BOT_NAME;
+const botId = import.meta.env.VITE_BOT_ID
+const botName = import.meta.env.VITE_BOT_NAME
 
 const eventStore = useEventStore()
 const router = useRouter()
-const themeParams = inject( 'themeParams' )
-const { colorScheme } = useWebAppTheme()
+const isLoading = ref(true)
+const isWriteAccessRequested = ref(false)
 
-const isDarkTheme = themeParams?.bg_color && themeParams.bg_color.toLowerCase() === '#212121'
+const {
+  contextMenuVisible,
+  contextMenuPosition,
+  showContextMenu,
+  closeContextMenu,
+  startTouch,
+  cancelTouch
+} = useContextMenu()
 
-const isLoading = ref( true )
+// Extract user ID from Telegram init data
+const extractedId = (() => {
+  const initData = window.Telegram.WebApp.initData
+  const params = new URLSearchParams(decodeURIComponent(initData))
+  const userParam = params.get('user')
+  return userParam ? JSON.parse(userParam).id : null
+})()
 
-const registeredEvents = computed( () => eventStore.registeredEvents )
+const menuItems = ref([])
 
-const isWriteAccessRequested = ref( false )
-
-onMounted( async () => { 
-  try {   
-    // Проверяем write_access и, если нужно, запрашиваем доступ
-    if ( !window.Telegram.WebApp.initDataUnsafe.write_access && !isWriteAccessRequested.value ) {
-      isWriteAccessRequested.value = true; // Устанавливаем флаг, чтобы не запрашивать повторно
+onMounted(async () => {
+  try {
+    if (!window.Telegram.WebApp.initDataUnsafe.write_access && !isWriteAccessRequested.value) {
+      isWriteAccessRequested.value = true
       Telegram.WebApp.requestWriteAccess({
         write_access_purpose: 'access_purpose',
         bot_id: botId,
       })
     }
 
-
-
-    // Если доступ получен или уже был, загружаем данные
-    eventStore.fetchEvents()
-    isLoading.value = false
+    await eventStore.fetchEvents()
   } catch (error) {
-    console.error( 'Error fetching events on mount:', error )
-    isLoading.value = false;
+    console.error('Error fetching events:', error)
+  } finally {
+    isLoading.value = false
   }
 })
 
-const initData = window.Telegram.WebApp.initData
+function updateMenuItems(eventId) {
+  const selectedEvent = eventStore.events.find(e => e.id == eventId)
+  if (!selectedEvent) return
 
-const decodedInitData = decodeURIComponent( initData )
+  const isAuthor = selectedEvent.author.id == extractedId
 
-const params = new URLSearchParams( decodedInitData )
-const userParam = params.get( 'user' )
-
-let extractedId = null
-
-if ( userParam ) {
-  const user = JSON.parse( userParam )
-  const userId = user.id; 
-  extractedId = userId
+  menuItems.value = isAuthor
+    ? [
+        { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link' },
+        { label: 'Копировать', action: 'copy', icon: 'copy' },
+        { label: 'Редактировать', action: 'edit', icon: 'edit' },
+        { label: 'Участники', action: 'participants', icon: 'people' },
+        { label: 'Отменить', action: 'delete', icon: 'delete' },
+      ]
+    : [
+        { label: 'Сообщение', action: 'messages', icon: 'messages' },
+        { label: 'Отменить', action: 'cancel', icon: 'delete' },
+      ]
 }
-
-
-const contextMenuVisible = ref( false )
-const contextMenuPosition = ref( { x: 0, y: 0 } )
-
-const menuItems = ref([
-  { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link' },
-  { label: 'Копировать', action: 'copy', icon: 'copy' },
-  { label: 'Редактировать', action: 'edit', icon: 'edit' },
-  { label: 'Участники', action: 'participants', icon: 'people' },
-  { label: 'Отменить', action: 'delete', icon: 'delete' },
-])
 
 function handleMenuSelect( item ) {
   switch ( item.action ) {
@@ -112,90 +112,6 @@ function handleMenuSelect( item ) {
   }
   closeContextMenu()
 }
-
-let touchTimer = null
-let isLongPress = false
-
-function startTouch( event, eventId ) {
-  isLongPress = false
-  touchTimer = setTimeout(() => {
-    isLongPress = true
-    showContextMenu( event.touches[ 0 ], eventId )
-  }, 600)
-  event.target.addEventListener( 'touchmove', cancelTouch, { passive: false } )
-  event.target.addEventListener( 'touchcancel', cancelTouch, { passive: false } )
-}
-
-function cancelTouch( event ) {
-  clearTimeout( touchTimer )
-  if ( isLongPress ) {
-    event.preventDefault()
-    event.stopPropagation()
-  }
-  event.target.removeEventListener( 'touchmove', cancelTouch )
-}
-
-function showContextMenu( event, eventId ) {
-  const selectedEvent = eventStore.events.find( e => e.id == eventId )
-
-  if ( !selectedEvent ) {
-    console.error( 'Event not found:', eventId )
-    return;
-  }
-
-  // Проверяем, является ли пользователь автором
-  const isAuthor = Boolean( selectedEvent.author.id == extractedId )   
-
-  menuItems.value = isAuthor
-  ? [
-      { label: 'Копировать ссылку', action: 'copy-link', icon: 'copy-link' },
-      { label: 'Копировать', action: 'copy', icon: 'copy' },
-      { label: 'Редактировать', action: 'edit', icon: 'edit' },
-      { label: 'Участники', action: 'participants', icon: 'people' },
-      { label: 'Отменить', action: 'delete', icon: 'delete' },
-    ]
-  : [
-      { label: 'Сообщение', action: 'messages', icon: 'messages' },
-      { label: 'Отменить', action: 'cancel', icon: 'delete' },
-    ]
-
-  event.preventDefault()
-  const menuWidth = 200
-  const menuHeight = 150
-  const windowWidth = window.innerWidth
-  const windowHeight = window.innerHeight
-
-  let x = event.clientX
-  let y = event.clientY
-  if ( x + menuWidth > windowWidth ) {
-      x = windowWidth - menuWidth - 10
-  }
-  if ( y + menuHeight > windowHeight ) {
-      if ( y - menuHeight > 0 ) {
-          y = y - menuHeight - 10
-      } else {
-          y = windowHeight - menuHeight - 10
-      }
-  }
-
-  contextMenuPosition.value = { x, y, eventId }
-  contextMenuVisible.value = true
-  document.addEventListener( 'click', closeContextMenu )
-}
-
-function closeContextMenu() {
-  contextMenuVisible.value = false
-  document.removeEventListener( 'click', closeContextMenu )
-}
-
-function formattedDate( date ) {
-  if ( !date ) return '' 
-  return new Intl.DateTimeFormat( 'ru-RU', {
-      day: 'numeric',
-      month: 'numeric',
-      year: 'numeric',
-  } ).format( new Date( date ) )
-} 
 
 async function copyLink() {
   const eventId = contextMenuPosition.value.eventId
@@ -252,11 +168,6 @@ function showErrorToast( message ) {
   }
 }
 
-function isEventFinished( eventDate ) {
-  if ( !eventDate ) return false
-  return new Date( eventDate ) < new Date()
-}
-
 async function cancelRegistration() {
   const eventId = contextMenuPosition.value.eventId
 
@@ -278,7 +189,6 @@ async function cancelRegistration() {
     showErrorToast( 'Не удалось отменить участие. Пожалуйста, попробуйте еще раз.' )
   }
 }
-
 
 function sendMessageToAuthor( ) {
     const eventId = contextMenuPosition.value.eventId
@@ -306,190 +216,77 @@ function sendMessageToAuthor( ) {
     window.open( telegramUrl, '_blank' )
 }
 
-function isEventAuthor( event ) {
-  return event.author?.id == extractedId
-}
-
-
 </script>
 
 <template>
-    <div class="home">
-        <Header>Мои мероприятия</Header>
-        <div v-if="isLoading">Загрузка...</div>
-        <div class="home__section">
-            <div 
-                v-for="( event, index ) in eventStore.events" 
-                :key="index" 
-                class="home__event event"
-                @click.stop="( e ) => showContextMenu( e, event.id )"
-                @touchstart="( e ) => startTouch( e, event.id )"
-                @touchend="cancelTouch"
-            >
-                <div class="event__link">
-                    <div class="event__inner">
-                        <div class="event__image-wrapper">
-                            <img 
-                                :src="event.author?.imageUrl || '/src/assets/geohod_640-360.jpg'"
-                                alt="img avatar" 
-                                class="event__image"
-                            >
-                        </div>
-                        <div class="event__content">
-                            <h3 class="event__title">{{ event.description }}</h3>
-                            <div class="event__details">
-                               <p class="event__date">{{ formattedDate( event.date ) }}</p>
-                               <p 
-                                  class="event__participants"
-                                 :class="['event__participants', colorScheme === 'dark' ? 'event__participants-dark' : '']"
-                                >{{ event.currentParticipants }}</p>
-                            </div>
-                            <div class="event__finish">
-                                <RouterLink
-                                v-if="isEventFinished( event.date ) && isEventAuthor( event )"
-                                :to="{ name: 'finish', params: { id: event.id } }"
-                                class="event__finish-link"
-                              >
-                                Завершить
-                              </RouterLink>
-                            </div>
-                        </div>
-                    </div>
-                </div>    
-                <ContextMenu 
-                    :visible="contextMenuVisible && contextMenuPosition.eventId == event.id"
-                    :position="contextMenuPosition"
-                    :items="menuItems"
-                    @select="handleMenuSelect"
-                    @close="closeContextMenu"
-               />
-            </div>
-        </div>
-        <div class="home__btn-wrapper">
-            <RouterLink to="/create">
-                <button class="home__btn-create">
-                    <svg class="home__btn-icon" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24" width="24px" height="24px" fill="currentColor">
-                        <path d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"/>
-                    </svg>
-                </button>
-            </RouterLink>
-        </div>
+  <div class="home">
+    <Header>Мои мероприятия</Header>
+    
+    <div v-if="isLoading" class="loading">Загрузка...</div>
+    
+    <div v-else class="home__section">
+      <EventCard
+        v-for="event in eventStore.events"
+        :key="event.id"
+        :event="event"
+        :is-author="event.author?.id == extractedId"
+        @show-context-menu="showContextMenu"
+        @touch-start="startTouch"
+        @touch-end="cancelTouch"
+      />
+      
+      <ContextMenu 
+        :visible="contextMenuVisible"
+        :position="contextMenuPosition"
+        :items="menuItems"
+        @select="handleMenuSelect"
+        @close="closeContextMenu"
+      />
     </div>
-</template>
 
+    <RouterLink to="/create" class="fab">
+      <svg class="icon-plus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px" fill="currentColor">
+        <path d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"/>
+      </svg>
+    </RouterLink>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .home {
   position: relative;
+  min-height: 100vh;
+  
   &__section {
-    padding: 0 18px 100px 18px;
-  }
-  &__btn-wrapper {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 100px;   
-  }
-  &__btn-create {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    background-color: var(--primary-blue);
-    border: none;
-    cursor: pointer;
-    margin-right: 20px;
-  }
-  &__btn-icon {
-    color: white;
+    padding: 0 16px 100px;
   }
 }
 
-.event {
+.loading {
+  text-align: center;
+  padding: 20px;
+}
+
+.fab {
+  position: fixed;
+  bottom: 64px;
+  right: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--primary-blue);
+  color: #fff;
   display: flex;
-  white-space: normal; 
-  overflow-wrap: anywhere; 
-  word-break: break-word;
-  &__link {
-    width: 100%;
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-  }
-  &__inner {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    padding-bottom: 10px;
-  } 
-  &__title {
-    padding-top: 4px;
-    padding-bottom: 2px;
-    font-size: 1em;
-    line-height: 1.375rem;
-    font-weight: 500;
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis;
-    max-width: 100%;
-  }
-  &__content {
-    width: 80%;
-    border-bottom: 0.5px solid var(--primary-gray);
-    padding-bottom: 10px;
-  }
-  &__image-wrapper {
-    width: 54px;
-    height: 54px;
-    overflow: hidden;
-    border-radius: 50%;
-  }
-  &__image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  &__participants {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 20px;
-    background-color: var(--bg-color-num);
-    color: var(--color-num);
-    border-radius: 10px;
-  }
-  &__participants-darck {
-    background-color: var(--chatlist-pinned-color-darck);
-    color: var(--badge-text-color);
-  }
-  &__details {
-    display: flex;
-    justify-content: space-between;
-  }
-  &__date {
-    color: var(--primary-gray);
-    font-size: 1em;
-    line-height: 1.375rem;
-  }
-  &__finish {
-    display: flex;
-    justify-content: flex-end;
-  }
-  &__finish-link {
-    display: flex;
-    color: var(--primary-blue);
-    text-decoration: none;
-    font-weight: 500;
-    padding-top: 10px;
-    padding-right: 12px;
-    max-width: 100px;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  text-decoration: none;
+  
+  .icon-plus {
+    width: 24px;
+    height: 24px;
   }
 }
-
 </style>
