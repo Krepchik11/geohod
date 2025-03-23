@@ -232,14 +232,23 @@ function sendMessageToAuthor( ) {
 }
 
 function handleContextMenu(event, eventId) {
-  event.preventDefault()
+  event.preventDefault();
   
   // Update menu items synchronously before showing the menu
-  updateMenuItems(eventId)
+  updateMenuItems(eventId);
   
   // Show menu immediately if we have items
   if (menuItems.value.length > 0) {
-    showBaseContextMenu(event, eventId)
+    const { clientX, clientY } = event; // Get touch position
+    contextMenuPosition.value = { x: clientX, y: clientY, eventId }; // Set position based on touch
+    showBaseContextMenu(event, eventId);
+  }
+}
+
+function handleScroll(event) {
+  const bottom = event.target.scrollHeight === event.target.scrollTop + event.target.clientHeight;
+  if (bottom) {
+    eventStore.fetchEvents(); // Fetch more events when scrolled to the bottom
   }
 }
 
@@ -252,6 +261,7 @@ function handleContextMenu(event, eventId) {
       'low-performance': isLowPerformance,
       'safe-area': true
     }"
+    @scroll="handleScroll"
   >
     <Header>
       <div class="header-content">
@@ -287,7 +297,7 @@ function handleContextMenu(event, eventId) {
     </div>
 
     <!-- Main Content -->
-    <div v-else-if="isWriteAccessGranted" class="home__section" role="main">
+    <div v-else-if="isWriteAccessGranted" class="home__section" role="main" @scroll="handleScroll">
       <!-- Skeleton Loading State -->
       <div v-if="refreshing" class="home__section" role="status" aria-label="Загрузка мероприятий">
         <div 
@@ -378,6 +388,9 @@ function handleContextMenu(event, eventId) {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  background-color: var(--color-header-background);
+  padding: 3px;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .header-title {

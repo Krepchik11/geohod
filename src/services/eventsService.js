@@ -5,15 +5,15 @@ const isDevEnvironment = process.env.NODE_ENV === 'development'
 const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true'
 
 export class EventsService {
-  static async getEvents() {
+  static async getEvents(page = 0, size = 10) {
     try {
       // Return mock data in development mode if enabled
       if (isDevEnvironment && useMockData) {
         console.debug('Using mock events data')
-        return mockEvents
+        return mockEvents.slice((page - 1) * size, page * size);
       }
 
-      const response = await get('/events')
+      const response = await get(`/events?page=${page}&size=${size}`);
       return response.content;
     } catch (error) {
       console.error('Failed to fetch events:', error)

@@ -7,7 +7,9 @@ export const useEventStore = defineStore( 'eventStore', {
     registeredEventIds: [], // Список ID зарегистрированных мероприятий
     disabledEventId: null,
     isLoading: false,
-    error: null
+    error: null,
+    currentPage: 0, // Track the current page
+    pageSize: 10, // Set the default page size
   }),
   getters: {
     registeredEvents( state ) {
@@ -22,17 +24,18 @@ export const useEventStore = defineStore( 'eventStore', {
   },
   actions: {
     async fetchEvents() {
-      this.isLoading = true
-      this.error = null
-      
+      if (this.isLoading) return; // Prevent multiple fetches at the same time
+      this.isLoading = true;
+      this.error = null;
+
       try {
-        const events = await EventsService.getEvents()
-        this.events = events
+        const events = await EventsService.getEvents(this.currentPage, this.pageSize);
+        this.events.push(...events); // Append new events
+        this.currentPage++; // Increment the page for the next fetch
       } catch (error) {
-        this.error = error.message
-        this.events = []
+        this.error = error.message;
       } finally {
-        this.isLoading = false
+        this.isLoading = false;
       }
     },
     
